@@ -1,4 +1,5 @@
 #include "../include/bubble_sort.h"
+#include <cstddef>
 #include <cstdlib>      
 #include <ctime>         
 #include <gtest/gtest.h> 
@@ -10,8 +11,8 @@ TEST(BubbleSortTest, SortsVectorCorrectly)
 
 
     std::vector<int> unsorted;
-    const int size = 5000;
-    for (int i = 0; i < size; ++i)
+    const size_t size = 5000;
+    for (size_t i = 0; i < size; ++i)
     {
         unsorted.push_back(rand() % 100);
     }
@@ -40,6 +41,7 @@ TEST(BubbleSortTest, HandlesAlreadySortedVector)
     }
 
     bubble_sort(sorted);
+   
     for (size_t i = 0; i < sorted.size() - 1; ++i)
     {
         EXPECT_LE(sorted[i], sorted[i + 1]);
@@ -53,7 +55,9 @@ TEST(BubbleSortTest, HandlesDescendingOrderVector)
     {
         descending.push_back(i);
     }
+  
     bubble_sort(descending);
+  
     for (size_t i = 0; i < descending.size() - 1; ++i)
     {
         EXPECT_LE(descending[i], descending[i + 1]);
