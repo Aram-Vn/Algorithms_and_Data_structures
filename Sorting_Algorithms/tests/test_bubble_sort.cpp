@@ -11,7 +11,7 @@ TEST(BubbleSortTest, SortsVectorCorrectly)
 
 
     std::vector<int> unsorted;
-    const size_t size = 5000;
+    const size_t size = 90000;
     for (size_t i = 0; i < size; ++i)
     {
         unsorted.push_back(rand() % 100);
@@ -35,7 +35,7 @@ TEST(BubbleSortTest, HandlesEmptyVector)
 TEST(BubbleSortTest, HandlesAlreadySortedVector)
 {
     std::vector<int> sorted;
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 90000; ++i)
     {
         sorted.push_back(i);
     }
@@ -51,7 +51,7 @@ TEST(BubbleSortTest, HandlesAlreadySortedVector)
 TEST(BubbleSortTest, HandlesDescendingOrderVector)
 {
     std::vector<int> descending;
-    for (int i = 5000; i > 0; --i)
+    for (int i = 90000; i > 0; --i)
     {
         descending.push_back(i);
     }

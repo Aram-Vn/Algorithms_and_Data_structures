@@ -9,7 +9,7 @@ TEST(mergeSortTest, SortsVecCorrectly)
     srand(time(0));
 
     std::vector<int> unsorted;
-    const size_t size = 5000;
+    const size_t size = 90000;
     for (size_t i = 0; i < size; ++i)
     {
         unsorted.push_back(rand() % 100);
@@ -33,7 +33,7 @@ TEST(mergeSortTest, HandlesEmptyVector)
 TEST(mergeSortTest, HandlesAlreadySortedVector)
 {
     std::vector<int> sorted;
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 90000; ++i)
     {
         sorted.push_back(i);
     }
@@ -49,7 +49,7 @@ TEST(mergeSortTest, HandlesAlreadySortedVector)
 TEST(mergeSortTest, HandlesDescendingOrderVector)
 {
     std::vector<int> descending;
-    for (int i = 5000; i > 0; --i)
+    for (int i = 90000; i > 0; --i)
     {
         descending.push_back(i);
     }
