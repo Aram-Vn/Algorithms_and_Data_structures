@@ -1,4 +1,8 @@
 #ifndef SELECTION_SORT_CPP
 #define SELECTION_SORT_CPP
 
-#endif // SELECTION_SORT_CPP    int lengthOfLongestSubstring(string s) {
+#include <vector>
+
+void selection_sort(std::vector<int>& arr);
+
+#endif // SELECTION_SORT_CPP 

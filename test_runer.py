@@ -58,9 +58,9 @@ def exit_gracefully(signal, frame):
 options = {
     '1': test_bubble_sort,
     '2': test_insertion_sort,
-    '3': test_merge_sort,
+    '3': test_selection_sort,
     '4': test_quick_sort,
-    '5': test_selection_sort,
+    '5': test_merge_sort,
     '6': lambda: console.print("Ending the loop.", style="bold green")
 }
 
@@ -71,9 +71,9 @@ if __name__ == "__main__":
         console.print("Enter the number corresponding to the sorting algorithm you want to test:")
         console.print("1. Bubble Sort")
         console.print("2. Insertion Sort")
-        console.print("3. Merge Sort")
+        console.print("3. Selection Sort")
         console.print("4. Quick Sort")
-        console.print("5. Selection Sort")
+        console.print("5. Merge Sort")
         console.print("6. Finish testing")
         console.print("   chose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
