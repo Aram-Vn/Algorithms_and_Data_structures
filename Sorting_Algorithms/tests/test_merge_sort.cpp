@@ -12,7 +12,7 @@ TEST(mergeSortTest, SortsVecCorrectly)
     const size_t size = 90000;
     for (size_t i = 0; i < size; ++i)
     {
-        unsorted.push_back(rand() % 100);
+        unsorted.push_back(rand() % 10000 - 5000);
     }
 
     mergeSort(unsorted);

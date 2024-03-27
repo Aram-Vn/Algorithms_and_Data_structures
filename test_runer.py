@@ -41,6 +41,13 @@ def test_selection_sort():
     subprocess.run(['./selection_sort_test'])
     subprocess.run(['rm', 'selection_sort_test'])
     console.print("\n" + "-" * 40 + "\n", style="bold cyan")
+    
+def test_counting_sort():
+    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_counting_sort.cpp', 'Sorting_Algorithms/src/6__counting_sort.cpp', '-o', 'counting_sortTest_test', '-lgtest', '-lgtest_main'])
+    console.print("\n**********selection_sort_test**********\n", style="bold cyan")
+    subprocess.run(['./counting_sortTest_test'])
+    subprocess.run(['rm', 'counting_sortTest_test'])
+    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
 def cleanup_test_files(files):
     for file in files:
@@ -61,7 +68,8 @@ options = {
     '3': test_selection_sort,
     '4': test_quick_sort,
     '5': test_merge_sort,
-    '6': lambda: console.print("Ending the loop.", style="bold green")
+    '6': test_counting_sort,
+    '7': lambda: console.print("Ending the loop.", style="bold green")
 }
 
 if __name__ == "__main__":
@@ -74,7 +82,8 @@ if __name__ == "__main__":
         console.print("3. Selection Sort")
         console.print("4. Quick Sort")
         console.print("5. Merge Sort")
-        console.print("6. Finish testing")
+        console.print("6  Counting Sort")
+        console.print("7. Finish testing")
         console.print("   chose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 

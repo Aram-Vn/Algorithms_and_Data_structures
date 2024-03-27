@@ -1,10 +1,11 @@
-#include "../include/selection_sort.h"
+#include "../include/counting_sort.h"
 #include <cstddef>
 #include <cstdlib>
 #include <ctime>
 #include <gtest/gtest.h>
 
-TEST(SlectionSortTest, SortsVectorCorrectly)
+// Define test cases
+TEST(CountingSortTest, SortsVectorCorrectly)
 {
     srand(time(0));
 
@@ -15,7 +16,7 @@ TEST(SlectionSortTest, SortsVectorCorrectly)
         unsorted.push_back(rand() % 10000 - 5000);
     }
 
-    selection_sort(unsorted);
+    counting_sort(unsorted);
 
     for (size_t i = 0; i < unsorted.size() - 1; ++i)
     {
@@ -23,14 +24,14 @@ TEST(SlectionSortTest, SortsVectorCorrectly)
     }
 }
 
-TEST(SlectionSortTest, HandlesEmptyVector)
+TEST(CountingSortTest, HandlesEmptyVector)
 {
     std::vector<int> empty;
-    selection_sort(empty);
+    counting_sort(empty);
     EXPECT_EQ(empty.size(), 0);
 }
 
-TEST(SlectionSortTest, HandlesAlreadySortedVector)
+TEST(CountingSortTest, HandlesAlreadySortedVector)
 {
     std::vector<int> sorted;
     for (int i = 0; i < 90000; ++i)
@@ -38,7 +39,7 @@ TEST(SlectionSortTest, HandlesAlreadySortedVector)
         sorted.push_back(i);
     }
 
-    selection_sort(sorted);
+    counting_sort(sorted);
 
     for (size_t i = 0; i < sorted.size() - 1; ++i)
     {
@@ -46,7 +47,7 @@ TEST(SlectionSortTest, HandlesAlreadySortedVector)
     }
 }
 
-TEST(SlectionSortTest, HandlesDescendingOrderVector)
+TEST(CountingSortTest, HandlesDescendingOrderVector)
 {
     std::vector<int> descending;
     for (int i = 90000; i > 0; --i)
@@ -54,7 +55,7 @@ TEST(SlectionSortTest, HandlesDescendingOrderVector)
         descending.push_back(i);
     }
 
-    selection_sort(descending);
+    counting_sort(descending);
 
     for (size_t i = 0; i < descending.size() - 1; ++i)
     {
