@@ -13,6 +13,16 @@ TEST_FILES = []
 
 def compile_and_run_test(test_file, algorithm_source, z):
     try:
+   
+        if not os.path.exists(f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}') or not os.path.exists(f'{TESTS_PATH}/{test_file}.cpp'):
+            if not os.path.exists(f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}'):
+                console.print(f"\nError: {SORTING_ALGORITHMS_PATH}/{algorithm_source} not found.", style="bold red")
+            if not os.path.exists(f'{TESTS_PATH}/{test_file}.cpp'):
+                console.print(f"\nError: {TESTS_PATH}/{test_file} not found.", style="bold red")
+        
+            return
+
+           
         subprocess.run(['g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main'])
         print('g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main')
         print(f'./{z}')
@@ -73,6 +83,7 @@ def main():
         if choice in options:
             if choice == '7':
                 options[choice]()
+                cleanup_test_files(TEST_FILES)
                 break
             else:
                 algorithm_name = options[choice]
