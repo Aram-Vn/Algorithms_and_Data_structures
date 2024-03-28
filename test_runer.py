@@ -27,9 +27,8 @@ def compile_and_run_test(test_file, algorithm_source, z):
     console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
 
-def test_sorting_algorithm(algorithm_name, algorithm_source, num):
-    algorithm_source_without_extension = algorithm_source.split('.')[0]
-    compile_and_run_test(f'test_{algorithm_name}', f'{num}__{algorithm_source}', f'{algorithm_source_without_extension}_test')
+def test_sorting_algorithm(algorithm_name, num):
+    compile_and_run_test(f'test_{algorithm_name}', f'{num}__{algorithm_name}.cpp', f'{algorithm_name}_test')
 
 def cleanup_test_files(files):
     for file in files:
@@ -45,12 +44,12 @@ def exit_gracefully(signal, frame):
     exit()
 
 options = {
-    '1': ('bubble_sort', 'bubble_sort.cpp'),
-    '2': ('insertion_sort', 'insertion_sort.cpp'),
-    '3': ('selection_sort', 'selection_sort.cpp'),
-    '4': ('quick_sort', 'quic_sort.cpp'),
-    '5': ('merge_sort', 'merge_sort.cpp'),
-    '6': ('counting_sort', 'counting_sort.cpp'),
+    '1': 'bubble_sort',
+    '2': 'insertion_sort',
+    '3': 'selection_sort',
+    '4': 'quick_sort',
+    '5': 'merge_sort',
+    '6': 'counting_sort',
     '7': lambda: console.print("Ending the loop.", style="bold green")
 }
 
@@ -76,8 +75,8 @@ def main():
                 options[choice]()
                 break
             else:
-                algorithm_name, algorithm_source = options[choice]
-                test_sorting_algorithm(algorithm_name, algorithm_source, choice)
+                algorithm_name = options[choice]
+                test_sorting_algorithm(algorithm_name, choice)
         else:
             console.print("Invalid choice. Please enter a number between 1 and 6.", style="bold red")
 
