@@ -7,47 +7,29 @@ from rich.console import Console
 
 console = Console()
 
-def test_bubble_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_bubble_sort.cpp', 'Sorting_Algorithms/src/1__bubble_sort.cpp', '-o', 'bubble_sort_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********_bubble_sort_test_**********\n", style="bold cyan")
-    subprocess.run(['./bubble_sort_test'])
-    subprocess.run(['rm', 'bubble_sort_test'])
+SORTING_ALGORITHMS_PATH = 'Sorting_Algorithms/src'
+TESTS_PATH = 'Sorting_Algorithms/tests'
+TEST_FILES = []
+
+def compile_and_run_test(test_file, algorithm_source, z):
+    try:
+        subprocess.run(['g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main'])
+        print('g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main')
+        print(f'./{z}')
+        console.print(f"\n**********_{test_file}_**********\n", style="bold cyan")
+        subprocess.run([f'./{z}'], check=True)
+        TEST_FILES.append(z)
+        
+    except subprocess.CalledProcessError as e: 
+        console.print('\nError:', e, style="red")
+        console.print(f"\nError executing command: {e.cmd}", style="red")
+
     console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
-def test_insertion_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_insertion_sort.cpp', 'Sorting_Algorithms/src/2__insertion_sort.cpp', '-o', 'insertion_sort_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********_insertion_sort_test_**********\n", style="bold cyan")
-    subprocess.run(['./insertion_sort_test'])
-    subprocess.run(['rm', 'insertion_sort_test'])
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
-def test_merge_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_merge_sort.cpp', 'Sorting_Algorithms/src/5__merge_sort.cpp', '-o', 'merge_sort_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********merge_sort_test**********\n", style="bold cyan")
-    subprocess.run(['./merge_sort_test'])
-    subprocess.run(['rm', 'merge_sort_test'])
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
-
-def test_quick_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_quick_sort.cpp', 'Sorting_Algorithms/src/4__quic_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********quick_sort_test**********\n", style="bold cyan")
-    subprocess.run(['./quick_sort_test'])
-    subprocess.run(['rm', 'quick_sort_test'])
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
-
-def test_selection_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_selection_sort.cpp', 'Sorting_Algorithms/src/3__selection_sort.cpp', '-o', 'selection_sort_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********selection_sort_test**********\n", style="bold cyan")
-    subprocess.run(['./selection_sort_test'])
-    subprocess.run(['rm', 'selection_sort_test'])
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
-    
-def test_counting_sort():
-    subprocess.run(['g++', 'Sorting_Algorithms/tests/test_counting_sort.cpp', 'Sorting_Algorithms/src/6__counting_sort.cpp', '-o', 'counting_sortTest_test', '-lgtest', '-lgtest_main'])
-    console.print("\n**********selection_sort_test**********\n", style="bold cyan")
-    subprocess.run(['./counting_sortTest_test'])
-    subprocess.run(['rm', 'counting_sortTest_test'])
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
+def test_sorting_algorithm(algorithm_name, algorithm_source, num):
+    algorithm_source_without_extension = algorithm_source.split('.')[0]
+    compile_and_run_test(f'test_{algorithm_name}', f'{num}__{algorithm_source}', f'{algorithm_source_without_extension}_test')
 
 def cleanup_test_files(files):
     for file in files:
@@ -57,22 +39,22 @@ def cleanup_test_files(files):
             pass
 
 def exit_gracefully(signal, frame):
-    cleanup_test_files(['bubble_sort_test', 'insertion_sort_test', 'merge_sort_test', 'quick_sort_test', 'selection_sort_test'])
+    cleanup_test_files(TEST_FILES)
     console.print("\nCleanup complete.", style="bold cyan")
     console.print("Ending the loop.", style="bold green")
     exit()
 
 options = {
-    '1': test_bubble_sort,
-    '2': test_insertion_sort,
-    '3': test_selection_sort,
-    '4': test_quick_sort,
-    '5': test_merge_sort,
-    '6': test_counting_sort,
+    '1': ('bubble_sort', 'bubble_sort.cpp'),
+    '2': ('insertion_sort', 'insertion_sort.cpp'),
+    '3': ('selection_sort', 'selection_sort.cpp'),
+    '4': ('quick_sort', 'quic_sort.cpp'),
+    '5': ('merge_sort', 'merge_sort.cpp'),
+    '6': ('counting_sort', 'counting_sort.cpp'),
     '7': lambda: console.print("Ending the loop.", style="bold green")
 }
 
-if __name__ == "__main__":
+def main():
     signal.signal(signal.SIGINT, exit_gracefully)
 
     while True:
@@ -82,16 +64,22 @@ if __name__ == "__main__":
         console.print("3. Selection Sort")
         console.print("4. Quick Sort")
         console.print("5. Merge Sort")
-        console.print("6  Counting Sort")
+        console.print("6. Counting Sort")
         console.print("7. Finish testing")
-        console.print("   chose from [green bold](1 - 6)[green bold]")
+        console.print("   Choose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
         choice = input()
 
         if choice in options:
-            options[choice]()
-            if choice == '6':
+            if choice == '7':
+                options[choice]()
                 break
+            else:
+                algorithm_name, algorithm_source = options[choice]
+                test_sorting_algorithm(algorithm_name, algorithm_source, choice)
         else:
             console.print("Invalid choice. Please enter a number between 1 and 6.", style="bold red")
+
+if __name__ == "__main__":
+    main()

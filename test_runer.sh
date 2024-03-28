@@ -1,13 +1,14 @@
 #!/bin/bash
 
 while true; do
-    echo "Enter the number corresponding to the sorting algorithm you want to test:"
+    echo -e "\nEnter the number corresponding to the sorting algorithm you want to test:"
     echo "1. Bubble Sort"
     echo "2. Insertion Sort"
     echo "3. Merge Sort"
     echo "4. Quick Sort"
     echo "5. Selection Sort"
-    echo -e  "6. End the loop or just press <ctrl + c>\n"
+    echo "6. Counting Sort"
+    echo -e  "7. End the loop or just press <ctrl + c>\n"
 
     read choice
 
@@ -43,6 +44,13 @@ while true; do
             rm selection_sort_test
             ;;
         6)
+            g++ Sorting_Algorithms/tests/test_counting_sort.cpp Sorting_Algorithms/src/6__counting_sort.cpp -o counting_sortTest_test -lgtest -lgtest_main
+            echo -e "   \n**********Counting Sort**********\n"
+            ./counting_sortTest_test
+            rm counting_sortTest_test
+            ;;
+        
+        7)
             echo "Ending the loop."
             break
             ;;
