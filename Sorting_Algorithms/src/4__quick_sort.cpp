@@ -2,33 +2,33 @@
 #include <utility>
 #include <vector>
 
-int pivotFinder(std::vector<int>& arr, int start_p, int end_r)
+int pivotFinder(std::vector<int>& arr, int start, int end)
 {
-    int pivotInd_x = arr[end_r];
+    int pivot = arr[end];
 
-    int i = start_p - 1;
+    int i = start - 1;
 
-    for (int j = start_p; j <= end_r - 1; ++j)
+    for (int j = start; j <= end - 1; ++j)
     {
-        if (arr[j] <= pivotInd_x)
+        if (arr[j] <= pivot)
         {
             ++i;
             std::swap(arr[i], arr[j]);
         }
     }
 
-    std::swap(arr[i + 1], arr[end_r]);
+    std::swap(arr[i + 1], arr[end]);
     return i + 1;
 }
 
-void quickSortHelper(std::vector<int>& arr, int start_p, int end_r)
+void quickSortHelper(std::vector<int>& arr, int start, int end)
 {
-    if (start_p < end_r)
+    if (start < end)
     {
-        int pivotInd = pivotFinder(arr, start_p, end_r);
+        int pivotInd = pivotFinder(arr, start, end);
 
-        quickSortHelper(arr, start_p, pivotInd - 1);
-        quickSortHelper(arr, pivotInd + 1, end_r);
+        quickSortHelper(arr, start, pivotInd - 1);
+        quickSortHelper(arr, pivotInd + 1, end);
     }
 }
 

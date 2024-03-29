@@ -24,11 +24,9 @@ def compile_and_run_test(test_file, algorithm_source, z):
 
            
         subprocess.run(['g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main'])
-        print('g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main')
-        print(f'./{z}')
         console.print(f"\n**********_{test_file}_**********\n", style="bold cyan")
-        subprocess.run([f'./{z}'], check=True)
         TEST_FILES.append(z)
+        subprocess.run([f'./{z}'], check=True)
         
     except subprocess.CalledProcessError as e: 
         console.print('\nError:', e, style="red")

@@ -1,70 +1,109 @@
 #include "../include/merge_sort.h"
-#include <cstdlib>
-#include <ctime>
 #include <gtest/gtest.h>
-#include <vector>
 
-TEST(mergeSortTest, SortsVecCorrectly)
+class MergeSortTest : public ::testing::Test
 {
-    srand(time(0));
+protected:
+    void SetUp() override
+    {
+        if (useSpecificSeed)
+        {
+            srand(specificSeed);
+        }
+        else
+        {
+            srand(time(0));
+        }
+    }
+
+    bool isSorted(const std::vector<int>& vec)
+    {
+        for (size_t i = 0; i < vec.size() - 1; ++i)
+        {
+            if (vec[i] > vec[i + 1])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const size_t size = 90000;
+    const size_t range = 5000;
+    bool useSpecificSeed = false;
+    size_t specificSeed = 465489480787;
+};
+
+TEST_F(MergeSortTest, SortsVectorCorrectlyWith__RandomSeed)
+{
+    useSpecificSeed = false;
 
     std::vector<int> unsorted;
-    const size_t size = 90000;
+
     for (size_t i = 0; i < size; ++i)
     {
-        unsorted.push_back(rand() % 10000 - 5000);
+        unsorted.push_back(rand() % 10000 - range);
     }
 
     mergeSort(unsorted);
 
-    for (size_t i = 0; i < unsorted.size() - 1; ++i)
-    {
-        EXPECT_LE(unsorted[i], unsorted[i + 1]);
-    }
+    EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST(mergeSortTest, HandlesEmptyVector)
+TEST_F(MergeSortTest, SortsVectorCorrectlyWith__SpecificSeed)
 {
-    std::vector<int> empty;
-    mergeSort(empty);
-    EXPECT_EQ(empty.size(), 0);
-}
+    useSpecificSeed = true;
 
-TEST(mergeSortTest, HandlesAlreadySortedVector)
-{
-    std::vector<int> sorted;
-    for (int i = 0; i < 90000; ++i)
+    std::vector<int> unsorted;
+
+    for (size_t i = 0; i < size; ++i)
     {
-        sorted.push_back(i);
+        unsorted.push_back(rand() % 10000 - range);
     }
 
-    mergeSort(sorted);
+    mergeSort(unsorted);
 
-    for (size_t i = 0; i < sorted.size() - 1; ++i)
-    {
-        EXPECT_LE(sorted[i], sorted[i + 1]);
-    }
+    EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST(mergeSortTest, HandlesDescendingOrderVector)
+TEST_F(MergeSortTest, SortsVectorCorrectlyWith__DescendingOrderVector)
 {
-    std::vector<int> descending;
-    for (int i = 90000; i > 0; --i)
+    std::vector<int> descending(size);
+
+    for (size_t i = size; i > 0; --i)
     {
-        descending.push_back(i);
+        descending[size - i] = i;
     }
 
     mergeSort(descending);
 
-    for (size_t i = 0; i < descending.size() - 1; ++i)
+    EXPECT_TRUE(isSorted(descending));
+}
+
+TEST_F(MergeSortTest, Handles__EmptyVector)
+{
+    std::vector<int> empty;
+
+    mergeSort(empty);
+
+    EXPECT_EQ(empty.size(), 0);
+}
+
+TEST_F(MergeSortTest, Handles__AlreadySortedVector)
+{
+    std::vector<int> sorted(size);
+    for (size_t i = 0; i < size; ++i)
     {
-        EXPECT_LE(descending[i], descending[i + 1]);
+        sorted[i] = i;
     }
+
+    mergeSort(sorted);
+
+    EXPECT_TRUE(isSorted(sorted));
 }
 
 int main(int argc, char** argv)
 {
-    srand(time(0));
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

@@ -1,13 +1,20 @@
 #include "../include/insertion_sort.h"
-#include <cstdlib>
-#include <ctime>
 #include <gtest/gtest.h>
-#include <vector>
 
 class InsertionSortTest : public ::testing::Test
 {
 protected:
-    void SetUp() override { srand(time(0)); }
+    void SetUp() override
+    {
+        if (useSpecificSeed)
+        {
+            srand(specificSeed);
+        }
+        else
+        {
+            srand(time(0));
+        }
+    }
 
     bool isSorted(const std::vector<int>& vec)
     {
@@ -22,16 +29,20 @@ protected:
     }
 
     const size_t size = 90000;
+    const size_t range = 5000;
+    bool useSpecificSeed = false;
+    size_t specificSeed = 465489480787;
 };
 
-TEST_F(InsertionSortTest, SortsVectorCorrectly)
+TEST_F(InsertionSortTest, SortsVectorCorrectlyWith__RandomSeed)
 {
+    useSpecificSeed = false;
 
     std::vector<int> unsorted;
 
     for (size_t i = 0; i < size; ++i)
     {
-        unsorted.push_back(rand() % 10000 - 5000);
+        unsorted.push_back(rand() % 10000 - range);
     }
 
     insertion_sort(unsorted);
@@ -39,29 +50,23 @@ TEST_F(InsertionSortTest, SortsVectorCorrectly)
     EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST_F(InsertionSortTest, HandlesEmptyVector)
+TEST_F(InsertionSortTest, SortsVectorCorrectlyWith__SpecificSeed)
 {
-    std::vector<int> empty;
+    useSpecificSeed = true;
 
-    insertion_sort(empty);
+    std::vector<int> unsorted;
 
-    EXPECT_EQ(empty.size(), 0);
-}
-
-TEST_F(InsertionSortTest, HandlesAlreadySortedVector)
-{
-    std::vector<int> sorted(size);
     for (size_t i = 0; i < size; ++i)
     {
-        sorted[i] = i;
+        unsorted.push_back(rand() % 10000 - range);
     }
 
-    insertion_sort(sorted);
+    insertion_sort(unsorted);
 
-    EXPECT_TRUE(isSorted(sorted));
+    EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST_F(InsertionSortTest, HandlesDescendingOrderVector)
+TEST_F(InsertionSortTest, SortsVectorCorrectlyWith__DescendingOrderVector)
 {
     std::vector<int> descending(size);
 
@@ -73,6 +78,28 @@ TEST_F(InsertionSortTest, HandlesDescendingOrderVector)
     insertion_sort(descending);
 
     EXPECT_TRUE(isSorted(descending));
+}
+
+TEST_F(InsertionSortTest, Handles__EmptyVector)
+{
+    std::vector<int> empty;
+
+    insertion_sort(empty);
+
+    EXPECT_EQ(empty.size(), 0);
+}
+
+TEST_F(InsertionSortTest, Handles__AlreadySortedVector)
+{
+    std::vector<int> sorted(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        sorted[i] = i;
+    }
+
+    insertion_sort(sorted);
+
+    EXPECT_TRUE(isSorted(sorted));
 }
 
 int main(int argc, char** argv)

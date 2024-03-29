@@ -1,13 +1,20 @@
 #include "../include/quick_sort.h"
-#include <cstdlib>
-#include <ctime>
 #include <gtest/gtest.h>
-#include <vector>
 
 class QuickSortSortTest : public ::testing::Test
 {
 protected:
-    void SetUp() override { srand(time(0)); }
+    void SetUp() override
+    {
+        if (useSpecificSeed)
+        {
+            srand(specificSeed);
+        }
+        else
+        {
+            srand(time(0));
+        }
+    }
 
     bool isSorted(const std::vector<int>& vec)
     {
@@ -22,15 +29,20 @@ protected:
     }
 
     const size_t size = 90000;
+    const size_t range = 5000;
+    bool useSpecificSeed = false;
+    size_t specificSeed = 465489480787;
 };
 
-TEST_F(QuickSortSortTest, SortsVectorCorrectly)
+TEST_F(QuickSortSortTest, SortsVectorCorrectlyWith__RandomSeed)
 {
+    useSpecificSeed = false;
+
     std::vector<int> unsorted;
 
     for (size_t i = 0; i < size; ++i)
     {
-        unsorted.push_back(rand() % 10000 - 5000);
+        unsorted.push_back(rand() % 10000 - range);
     }
 
     quickSort(unsorted);
@@ -38,29 +50,23 @@ TEST_F(QuickSortSortTest, SortsVectorCorrectly)
     EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST_F(QuickSortSortTest, HandlesEmptyVector)
+TEST_F(QuickSortSortTest, SortsVectorCorrectlyWith__SpecificSeed)
 {
-    std::vector<int> empty;
+    useSpecificSeed = true;
 
-    quickSort(empty);
+    std::vector<int> unsorted;
 
-    EXPECT_EQ(empty.size(), 0);
-}
-
-TEST_F(QuickSortSortTest, HandlesAlreadySortedVector)
-{
-    std::vector<int> sorted(size);
     for (size_t i = 0; i < size; ++i)
     {
-        sorted[i] = i;
+        unsorted.push_back(rand() % 10000 - range);
     }
 
-    quickSort(sorted);
+    quickSort(unsorted);
 
-    EXPECT_TRUE(isSorted(sorted));
+    EXPECT_TRUE(isSorted(unsorted));
 }
 
-TEST_F(QuickSortSortTest, HandlesDescendingOrderVector)
+TEST_F(QuickSortSortTest, SortsVectorCorrectlyWith__DescendingOrderVector)
 {
     std::vector<int> descending(size);
 
@@ -72,6 +78,28 @@ TEST_F(QuickSortSortTest, HandlesDescendingOrderVector)
     quickSort(descending);
 
     EXPECT_TRUE(isSorted(descending));
+}
+
+TEST_F(QuickSortSortTest, Handles__EmptyVector)
+{
+    std::vector<int> empty;
+
+    quickSort(empty);
+
+    EXPECT_EQ(empty.size(), 0);
+}
+
+TEST_F(QuickSortSortTest, Handles__AlreadySortedVector)
+{
+    std::vector<int> sorted(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        sorted[i] = i;
+    }
+
+    quickSort(sorted);
+
+    EXPECT_TRUE(isSorted(sorted));
 }
 
 int main(int argc, char** argv)
