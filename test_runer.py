@@ -9,12 +9,13 @@ console = Console()
 
 SORTING_ALGORITHMS_PATH = 'Sorting_Algorithms/src'
 TESTS_PATH = 'Sorting_Algorithms/tests'
+QUICK_SORT_DIR_PATH= 'Sorting_Algorithms/src/4__quick_sort'
 TEST_FILES = []
 
 
 def test_Quick_Sort(chise, pivot):
     try:           
-        subprocess.run(['g++', f'Sorting_Algorithms/src/4__quick_sort/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
+        subprocess.run(['g++', f'{QUICK_SORT_DIR_PATH}/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
         console.print(f'\n**********_quick_sort_test_{pivot}**********\n', style="bold cyan")
         TEST_FILES.append('quick_sort_test')
         subprocess.run(['./quick_sort_test'], check=True)
@@ -86,13 +87,13 @@ def main():
 
     while True:
         console.print("Enter the number corresponding to the sorting algorithm you want to test:")
-        console.print("1. Bubble Sort")
-        console.print("2. Insertion Sort")
-        console.print("3. Selection Sort")
-        console.print("4. Quick Sort")
-        console.print("5. Merge Sort")
-        console.print("6. Counting Sort")
-        console.print("7. Finish testing", style="red")
+        console.print("[green bold]1.[/green bold] Bubble Sort")
+        console.print("[green bold]2.[/green bold] Insertion Sort")
+        console.print("[green bold]3.[/green bold] Selection Sort")
+        console.print("[green bold]4.[/green bold] Quick Sort")
+        console.print("[green bold]5.[/green bold] Merge Sort")
+        console.print("[green bold]6.[/green bold] Counting Sort")
+        console.print("[green bold]7.[/green bold] Finish testing", style="red")
         console.print("   Choose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
@@ -108,7 +109,7 @@ def main():
                 console.print("[green bold]D.[/green bold] Random Pivot")
                 console.print("[green bold]E.[/green bold] end Quick Sort chise\n", style="red")
 
-                quick_sort_choice = input("Enter your choice (a/A/ b/B c/C d/D): ").upper()
+                quick_sort_choice = input("Enter your choice (a/A/ b/B c/C d/D e/E): ").upper()
                 
                 if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
                     if(quick_sort_choice == 'E'):
