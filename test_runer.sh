@@ -32,7 +32,7 @@ while true; do
             rm merge_sort_test
             ;;
         4)
-            g++ Sorting_Algorithms/tests/test_quick_sort.cpp Sorting_Algorithms/src/4__quic_sort.cpp -o quick_sort_test -lgtest -lgtest_main
+            g++ Sorting_Algorithms/tests/test_quick_sort.cpp Sorting_Algorithms/src/4__quick_sort.cpp -o quick_sort_test -lgtest -lgtest_main
             echo -e "   \n**********quick_sort_test**********\n"
             ./quick_sort_test
             rm quick_sort_test
