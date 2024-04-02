@@ -11,6 +11,21 @@ SORTING_ALGORITHMS_PATH = 'Sorting_Algorithms/src'
 TESTS_PATH = 'Sorting_Algorithms/tests'
 TEST_FILES = []
 
+
+def test_Quick_Sort(chise, pivot):
+    try:           
+        subprocess.run(['g++', f'Sorting_Algorithms/src/4__quick_sort/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
+        console.print(f'\n**********_quick_sort_test_{pivot}**********\n', style="bold cyan")
+        TEST_FILES.append('quick_sort_test')
+        subprocess.run(['./quick_sort_test'], check=True)
+        
+    except subprocess.CalledProcessError as e: 
+        console.print('\nError:', e, style="red")
+        console.print(f"\nError executing command: {e.cmd}", style="red")
+
+    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
+
+
 def compile_and_run_test(test_file, algorithm_source, z):
     try:
    
@@ -37,20 +52,7 @@ def compile_and_run_test(test_file, algorithm_source, z):
 
 def test_sorting_algorithm(algorithm_name, num):
     compile_and_run_test(f'test_{algorithm_name}', f'{num}__{algorithm_name}.cpp', f'{algorithm_name}_test')
-
-def test_Quick_Sort(chise, pivot):
-    try:           
-        subprocess.run(['g++', f'Sorting_Algorithms/src/4__quick_sort/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
-        print('g++', f'Sorting_Algorithms/src/4__quick_sort/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main')
-        console.print(f'\n**********_quick_sort_test_{pivot}**********\n', style="bold cyan")
-        TEST_FILES.append('quick_sort_test')
-        subprocess.run(['./quick_sort_test'], check=True)
-        
-    except subprocess.CalledProcessError as e: 
-        console.print('\nError:', e, style="red")
-        console.print(f"\nError executing command: {e.cmd}", style="red")
-
-    console.print("\n" + "-" * 40 + "\n", style="bold cyan")
+    
 
 def cleanup_test_files(files):
     for file in files:
@@ -106,7 +108,7 @@ def main():
                 console.print("[green bold]D.[/green bold] Random Pivot")
                 console.print("[green bold]E.[/green bold] end Quick Sort chise\n", style="red")
 
-                quick_sort_choice = input("Enter your choice (A/B/C/D): ").upper()
+                quick_sort_choice = input("Enter your choice (a/A/ b/B c/C d/D): ").upper()
                 
                 if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
                     if(quick_sort_choice == 'E'):
