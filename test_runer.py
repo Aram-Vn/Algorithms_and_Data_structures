@@ -3,19 +3,32 @@
 import subprocess
 import os
 import signal
+from types import FrameType
+from typing import List, Union, Callable
 from rich.console import Console
 
-console = Console()
+console: Console = Console()
 
-SORTING_ALGORITHMS_PATH = 'Sorting_Algorithms/src'
-TESTS_PATH = 'Sorting_Algorithms/tests'
-QUICK_SORT_DIR_PATH= 'Sorting_Algorithms/src/4__quick_sort'
-TEST_FILES = []
+SORTING_ALGORITHMS_PATH: str = 'Sorting_Algorithms/src'
+TESTS_PATH: str = 'Sorting_Algorithms/tests'
+QUICK_SORT_DIR_PATH: str = 'Sorting_Algorithms/src/4__quick_sort'
+TEST_FILES: List[str] = []
 
 
-def test_Quick_Sort(chise, pivot):
-    try:           
-        subprocess.run(['g++', f'{QUICK_SORT_DIR_PATH}/{chise}__quick_sort_{pivot}.cpp', f'{TESTS_PATH}/test_quick_sort.cpp', '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
+def test_Quick_Sort(chise: str, pivot: str) -> None:
+    Quick_Sort_path: str = f'{QUICK_SORT_DIR_PATH}/{chise}__quick_sort_{pivot}.cpp'
+    Quick_Sort_test_path: str = f'{TESTS_PATH}/test_quick_sort.cpp'
+    
+    try:        
+        if not os.path.exists(Quick_Sort_path) or not os.path.exists(Quick_Sort_test_path):
+            if not os.path.exists(Quick_Sort_path):
+                console.print(f"\nError: '{Quick_Sort_path}' not found.", style="bold red")
+            if not os.path.exists(Quick_Sort_test_path):
+                console.print(f"\nError: '{Quick_Sort_test_path}' not found.", style="bold red")
+        
+            return
+           
+        subprocess.run(['g++', Quick_Sort_path, Quick_Sort_test_path, '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
         console.print(f'\n**********_quick_sort_test_{pivot}**********\n', style="bold cyan")
         TEST_FILES.append('quick_sort_test')
         subprocess.run(['./quick_sort_test'], check=True)
@@ -27,19 +40,20 @@ def test_Quick_Sort(chise, pivot):
     console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
 
-def compile_and_run_test(test_file, algorithm_source, z):
+def compile_and_run_test(test_file: str, algorithm_source: str, z: str) -> None:
     try:
-   
-        if not os.path.exists(f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}') or not os.path.exists(f'{TESTS_PATH}/{test_file}.cpp'):
-            if not os.path.exists(f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}'):
-                console.print(f"\nError: {SORTING_ALGORITHMS_PATH}/{algorithm_source} not found.", style="bold red")
-            if not os.path.exists(f'{TESTS_PATH}/{test_file}.cpp'):
-                console.print(f"\nError: {TESTS_PATH}/{test_file} not found.", style="bold red")
+        sorthing_algorithm_path: str = f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}'
+        test_path: str = f'{TESTS_PATH}/{test_file}.cpp'
+        
+        if not os.path.exists(sorthing_algorithm_path) or not os.path.exists(test_path):
+            if not os.path.exists(sorthing_algorithm_path):
+                console.print(f"\nError: {sorthing_algorithm_path} not found.", style="bold red")
+            if not os.path.exists(test_path):
+                console.print(f"\nError: {test_path} not found.", style="bold red")
         
             return
 
-           
-        subprocess.run(['g++', f'{TESTS_PATH}/{test_file}.cpp', f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}', '-o', f'{z}', '-lgtest', '-lgtest_main'])
+        subprocess.run(['g++', test_path, sorthing_algorithm_path, '-o', f'{z}', '-lgtest', '-lgtest_main'])
         console.print(f"\n**********_{test_file}_**********\n", style="bold cyan")
         TEST_FILES.append(z)
         subprocess.run([f'./{z}'], check=True)
@@ -51,26 +65,26 @@ def compile_and_run_test(test_file, algorithm_source, z):
     console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
 
-def test_sorting_algorithm(algorithm_name, num):
+def test_sorting_algorithm(algorithm_name: str, num: str) -> None:
     compile_and_run_test(f'test_{algorithm_name}', f'{num}__{algorithm_name}.cpp', f'{algorithm_name}_test')
     
 
-def cleanup_test_files(files):
+def cleanup_test_files(files: List[str]) -> None:
     for file in files:
         try:
             os.remove(file)
         except FileNotFoundError:
             pass
 
-def exit_gracefully(signal, frame):
+def exit_gracefully(signal: signal.Signals, frame: Union[FrameType, None]) -> None:
     cleanup_test_files(TEST_FILES)
     console.print("\nCleanup complete.", style="bold cyan")
     console.print("Ending the loop.", style="bold green")
     exit()
 
 
-def main():
-    options = {
+def main() -> None:
+    options: dict[str, Union[str, Callable[[], None]]] = {
         '1': 'bubble_sort',
         '2': 'insertion_sort',
         '3': 'selection_sort',
@@ -97,7 +111,7 @@ def main():
         console.print("   Choose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
-        choice = input()
+        choice: str = input()
 
 
         if choice == '4':
@@ -109,13 +123,13 @@ def main():
                 console.print("[green bold]D.[/green bold] Random Pivot")
                 console.print("[green bold]E.[/green bold] end Quick Sort chise\n", style="red")
 
-                quick_sort_choice = input("Enter your choice (a/A/ b/B c/C d/D e/E): ").upper()
+                quick_sort_choice: str = input("Enter your choice (a/A/ b/B c/C d/D e/E): ").upper()
                 
                 if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
                     if(quick_sort_choice == 'E'):
                         break
                     else:
-                        pivot_name = options[quick_sort_choice]
+                        pivot_name: str = options[quick_sort_choice]
                         test_Quick_Sort(quick_sort_choice, pivot_name)
 
                 else:
@@ -127,7 +141,7 @@ def main():
                     cleanup_test_files(TEST_FILES)
                     break
                 else:
-                    algorithm_name = options[choice]
+                    algorithm_name: str = options[choice]
                     test_sorting_algorithm(algorithm_name, choice)
             else:
                 console.print("Invalid choice. Please enter a number between 1 and 6.", style="bold red")
