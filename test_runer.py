@@ -94,7 +94,8 @@ def main() -> None:
         'D': 'Random',
         '5': 'merge_sort',
         '6': 'counting_sort',
-        '7': lambda: console.print("Ending the loop.", style="bold green")  
+        '7': 'Linked_List_Merge_Sort',
+        '8': lambda: console.print("Ending the loop.", style="bold green")  
     }
 
     signal.signal(signal.SIGINT, exit_gracefully)
@@ -107,7 +108,8 @@ def main() -> None:
         console.print("[green bold]4.[/green bold] Quick Sort")
         console.print("[green bold]5.[/green bold] Merge Sort")
         console.print("[green bold]6.[/green bold] Counting Sort")
-        console.print("[green bold]7.[/green bold] Finish testing", style="red")
+        console.print("[green bold]7.[/green bold] linkedList merge sort")
+        console.print("[green bold]8.[/green bold] Finish testing", style="red")
         console.print("   Choose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
@@ -136,7 +138,7 @@ def main() -> None:
                     console.print("Invalid choice. Please enter A, B, C, or D.", style="bold red")
         else:
             if choice in options:
-                if choice == '7':
+                if choice == '8':
                     options[choice]()
                     cleanup_test_files(TEST_FILES)
                     break
