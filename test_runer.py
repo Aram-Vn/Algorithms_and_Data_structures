@@ -102,19 +102,16 @@ def main() -> None:
 
     while True:
         console.print("Enter the number corresponding to the sorting algorithm you want to test:")
-        console.print("[green bold]1.[/green bold] Bubble Sort")
-        console.print("[green bold]2.[/green bold] Insertion Sort")
-        console.print("[green bold]3.[/green bold] Selection Sort")
-        console.print("[green bold]4.[/green bold] Quick Sort")
-        console.print("[green bold]5.[/green bold] Merge Sort")
-        console.print("[green bold]6.[/green bold] Counting Sort")
-        console.print("[green bold]7.[/green bold] linkedList merge sort")
+        
+        for key, value in options.items():
+            if key.isdigit() and int(key) >= 1 and int(key) <= 7:
+                console.print(f"[green bold]{key}.[/green bold] {value}")
+       
         console.print("[green bold]8.[/green bold] Finish testing", style="red")
         console.print("   Choose from [green bold](1 - 6)[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
         choice: str = input()
-
 
         if choice == '4':
             while True:        
