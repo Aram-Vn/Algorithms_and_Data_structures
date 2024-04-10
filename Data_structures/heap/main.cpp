@@ -1,5 +1,6 @@
 #include <heap.h>
 #include <vector>
+#include <iostream>
 
 int main()
 {
@@ -15,12 +16,17 @@ int main()
 
     my::Heap<int> a;
 
-    a.push(3);
-    a.push(2);
-    a.push(4);
-    a.push(1);
-    a.push(5);
-    a.push(9);
+        if(!h.empty()){
 
-    a.print();
+            a.push(3);
+            a.push(2);
+            a.push(4);
+            a.push(1);
+            a.push(5);
+            a.push(9);
+
+            a.print();
+        }
+
+    std::cout << a.size();
 }

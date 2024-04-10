@@ -22,14 +22,16 @@ namespace my {
         size_t   parent(size_t ind); //
         size_t   left(size_t ind);   //
         size_t   right(size_t i);    //
-        void     push(const T& val);
-        void     pop();
-        const T& top();
-        void     print();
+        void     push(const T& val); //
+        void     pop();              //
+        const T& top();              //
+        bool     empty();            //
+        size_t   size();             //
+        void     print();            //
 
     private:
-        void make_heap();
-        void heapify_down(size_t ind);
+        void make_heap();              //
+        void heapify_down(size_t ind); //
 
     private:
         std::vector<T> m_heap;

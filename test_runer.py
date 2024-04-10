@@ -93,7 +93,8 @@ def main() -> None:
         '5': 'merge_sort',
         '6': 'counting_sort',
         '7': 'Linked_List_Merge_Sort',
-        '8': 'Finish testing', 
+        '8': 'heap_sort',
+        '9': 'Finish testing', 
     }
     
     quick_sort_options: dict[str, str] = {
@@ -112,7 +113,7 @@ def main() -> None:
     while True:
         console.print("Enter the number corresponding to the sorting algorithm you want to test:\n", style="bold #00AAA6 u")
         for key, value in options.items():
-            if key == '8':
+            if key == str(len(options)):
                 console.print(f"[green bold]{key}.[/green bold] {value}", style="b red")
             else:
                 console.print(f"[green bold]{key}.[/green bold] {value}")
@@ -144,7 +145,7 @@ def main() -> None:
                     console.print("Invalid choice. Please enter A, B, C, or D.", style="bold red")
         else:
             if choice in options:
-                if choice == '8':
+                if choice == str(len(options)):
                     console.print("Ending the loop.", style="bold green")  
                     cleanup_test_files(TEST_FILES)
                     break

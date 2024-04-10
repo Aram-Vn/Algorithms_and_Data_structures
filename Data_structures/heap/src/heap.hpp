@@ -113,6 +113,18 @@ const T& my::Heap<T, Cmp>::top()
 }
 
 template <typename T, typename Cmp>
+bool my::Heap<T, Cmp>::empty()
+{
+    return m_size == 0;
+}
+
+template <typename T, typename Cmp>
+size_t my::Heap<T, Cmp>::size()
+{
+    return m_size;
+}
+
+template <typename T, typename Cmp>
 void my::Heap<T, Cmp>::print()
 {
     for (int i = 0; i < m_size; ++i)
