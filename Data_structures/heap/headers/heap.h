@@ -12,6 +12,7 @@ namespace my {
     {
     public:
         ~Heap() = default;                                   //
+        Heap(const Cmp& cmp = Cmp());                        //
         Heap(std::vector<T>& input, const Cmp& cmp = Cmp()); //
 
         template <typename RandomAccessIterator>

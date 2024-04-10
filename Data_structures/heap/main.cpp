@@ -13,15 +13,14 @@ int main()
     my::Heap<int> h(vec.begin() + 3, vec.end());
     h.print();
 
-    std::cout << min.top() << std::endl;
-    min.print();
+    my::Heap<int> a;
 
-    std::cout << min.top() << std::endl;
-    min.print();
+    a.push(3);
+    a.push(2);
+    a.push(4);
+    a.push(1);
+    a.push(5);
+    a.push(9);
 
-    std::cout << max.top() << std::endl;
-    max.print();
-
-    std::cout << max.top() << std::endl;
-    max.print();
+    a.print();
 }

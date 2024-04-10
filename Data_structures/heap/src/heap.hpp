@@ -8,6 +8,14 @@ my::Heap<T, Cmp>::Heap(std::vector<T>& input, const Cmp& cmp)
 }
 
 template <typename T, typename Cmp>
+my::Heap<T, Cmp>::Heap(const Cmp& cmp)
+    : m_heap{},
+      m_size(0),
+      m_cmp(cmp)
+{
+}
+
+template <typename T, typename Cmp>
 template <typename RandomAccessIterator>
 my::Heap<T, Cmp>::Heap(RandomAccessIterator first, RandomAccessIterator last)
     : m_heap(first, last),
@@ -102,10 +110,8 @@ const T& my::Heap<T, Cmp>::top()
     {
         throw std::out_of_range("Heap is empty");
     }
-    T tmp = m_heap[0];
-    this->pop();
 
-    return tmp;
+    return m_heap[0];
 }
 
 template <typename T, typename Cmp>
