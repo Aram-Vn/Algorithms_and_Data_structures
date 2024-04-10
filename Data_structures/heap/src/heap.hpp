@@ -75,11 +75,9 @@ void my::Heap<T, Cmp>::heapify_down(size_t ind)
 template <typename T, typename Cmp>
 void my::Heap<T, Cmp>::push(const T& val)
 {
-    // Add the new element to the end of the vector
     m_heap.push_back(val);
     ++m_size;
 
-    // Percolate up: Compare the new element with its parent and swap if necessary
     size_t index = m_size - 1;
     while (index > 0 && m_cmp(val, m_heap[parent(index)]))
     {
