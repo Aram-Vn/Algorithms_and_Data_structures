@@ -153,7 +153,7 @@ def main() -> None:
                     algorithm_name: str = options[choice]
                     test_sorting_algorithm(algorithm_name, choice)
             else:
-                console.print("Invalid choice. Please enter a number between 1 and 6.", style="bold red")
+                console.print(f"Invalid choice. Please enter a number between 1 and {len(options)}.", style="bold red")
 
 if __name__ == "__main__":
     main()
