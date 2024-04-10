@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-void bubble_sort(std::vector<int>& vec)
+void bubble_sort(std::vector<int> &vec)
 {
     bool flag = true;
 

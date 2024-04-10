@@ -16,7 +16,7 @@ protected:
         }
     }
 
-    bool isSorted(const std::vector<int>& vec)
+    bool isSorted(const std::vector<int> &vec)
     {
         for (size_t i = 0; i < vec.size() - 1; ++i)
         {
@@ -28,10 +28,10 @@ protected:
         return true;
     }
 
-    const size_t size = 90000;
-    const size_t range = 5000;
-    bool useSpecificSeed = false;
-    size_t specificSeed = 465489480787;
+    const size_t size            = 90000;
+    const size_t range           = 5000;
+    bool         useSpecificSeed = false;
+    size_t       specificSeed    = 465489480787;
 };
 
 TEST_F(SelectionSortTest, SortsVectorCorrectlyWith__RandomSeed)
@@ -102,7 +102,7 @@ TEST_F(SelectionSortTest, Handles__AlreadySortedVector)
     EXPECT_TRUE(isSorted(sorted));
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

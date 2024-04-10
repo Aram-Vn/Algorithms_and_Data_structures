@@ -2,7 +2,7 @@
 #include <utility>
 #include <vector>
 
-int medianOfThree(std::vector<int>& arr, int start, int end)
+int medianOfThree(std::vector<int> &arr, int start, int end)
 {
     int mid = start + (end - start) / 2;
 
@@ -16,13 +16,13 @@ int medianOfThree(std::vector<int>& arr, int start, int end)
     return mid;
 }
 
-int pivotFinder(std::vector<int>& arr, int start, int end)
+int pivotFinder(std::vector<int> &arr, int start, int end)
 {
     int mid = medianOfThree(arr, start, end);
     std::swap(arr[mid], arr[end - 1]);
 
     int pivot = arr[end - 1];
-    int i = start - 1;
+    int i     = start - 1;
 
     for (int j = start; j <= end - 2; ++j)
     {
@@ -36,7 +36,7 @@ int pivotFinder(std::vector<int>& arr, int start, int end)
     return i + 1;
 }
 
-void quickSortHelper(std::vector<int>& arr, int start, int end)
+void quickSortHelper(std::vector<int> &arr, int start, int end)
 {
     if (start < end)
     {
@@ -47,7 +47,7 @@ void quickSortHelper(std::vector<int>& arr, int start, int end)
     }
 }
 
-void quickSort(std::vector<int>& arr)
+void quickSort(std::vector<int> &arr)
 {
     quickSortHelper(arr, 0, arr.size() - 1);
 }

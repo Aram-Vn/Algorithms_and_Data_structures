@@ -16,9 +16,9 @@ protected:
         }
     }
 
-    bool isSorted(const Forward_list& list)
+    bool isSorted(const Forward_list &list)
     {
-        Forward_list::Node* current = list.m_head;
+        Forward_list::Node *current = list.m_head;
         while (current != nullptr && current->next != nullptr)
         {
             if (current->data > current->next->data)
@@ -30,10 +30,10 @@ protected:
         return true;
     }
 
-    const size_t size = 90000;
-    const size_t range = 5000;
-    bool useSpecificSeed = false;
-    size_t specificSeed = 465489480787;
+    const size_t size            = 90000;
+    const size_t range           = 5000;
+    bool         useSpecificSeed = false;
+    size_t       specificSeed    = 465489480787;
 };
 
 TEST_F(MergeSortTest, SortsListCorrectly__RandomSeed)
@@ -113,7 +113,7 @@ TEST_F(MergeSortTest, Handles__SingleElement)
     EXPECT_TRUE(isSorted(single_element_list));
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
