@@ -1,7 +1,7 @@
 #include "../include/counting_sort.h"
 #include <limits>
 
-void counting_sort(std::vector<int> &vec)
+void counting_sort(std::vector<int>& vec)
 {
     if (vec.size() <= 1)
     {
@@ -36,7 +36,7 @@ void counting_sort(std::vector<int> &vec)
     }
 }
 
-std::pair<int, int> min_max(std::vector<int> &vec)
+std::pair<int, int> min_max(std::vector<int>& vec)
 {
     int max = std::numeric_limits<int>::min();
     int min = std::numeric_limits<int>::max();

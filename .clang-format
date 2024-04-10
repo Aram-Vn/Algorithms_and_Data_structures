@@ -17,7 +17,7 @@ BraceWrapping:
     SplitEmptyFunction: true
 IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: false
-PointerBindsToType: false
+PointerBindsToType: true
 SpacesBeforeTrailingComments: 1
 TabWidth: 4
 UseTab: Never

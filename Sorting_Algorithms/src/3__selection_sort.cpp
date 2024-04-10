@@ -1,7 +1,7 @@
 #include "../include/selection_sort.h"
 #include <utility>
 
-void selection_sort(std::vector<int> &arr)
+void selection_sort(std::vector<int>& arr)
 {
     int min_ind = 0;
 

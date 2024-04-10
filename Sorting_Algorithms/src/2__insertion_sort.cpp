@@ -1,7 +1,7 @@
 #include "../include/insertion_sort.h"
 #include <vector>
 
-void insertion_sort(std::vector<int> &vec)
+void insertion_sort(std::vector<int>& vec)
 {
     int tmp = 0;
 

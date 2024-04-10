@@ -9,7 +9,7 @@ int getRandom(int start, int end)
     return start + rand() % (end - start + 1);
 }
 
-int pivotFinder(std::vector<int> &arr, int start, int end)
+int pivotFinder(std::vector<int>& arr, int start, int end)
 {
     int pivotIndex = getRandom(start, end);
 
@@ -31,7 +31,7 @@ int pivotFinder(std::vector<int> &arr, int start, int end)
     return i + 1;
 }
 
-void quickSortHelper(std::vector<int> &arr, int start, int end)
+void quickSortHelper(std::vector<int>& arr, int start, int end)
 {
     if (start < end)
     {
@@ -42,7 +42,7 @@ void quickSortHelper(std::vector<int> &arr, int start, int end)
     }
 }
 
-void quickSort(std::vector<int> &arr)
+void quickSort(std::vector<int>& arr)
 {
     srand(time(nullptr));
     quickSortHelper(arr, 0, arr.size() - 1);

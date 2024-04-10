@@ -1,5 +1,5 @@
 template <typename T, typename Cmp>
-my::Heap<T, Cmp>::Heap(std::vector<T> &input, const Cmp &cmp)
+my::Heap<T, Cmp>::Heap(std::vector<T>& input, const Cmp& cmp)
     : m_heap(input),
       m_size(input.size()),
       m_cmp(cmp)
@@ -62,6 +62,50 @@ void my::Heap<T, Cmp>::heapify_down(size_t ind)
         std::swap(m_heap[ind], m_heap[largest]);
         heapify_down(largest);
     }
+}
+
+template <typename T, typename Cmp>
+void my::Heap<T, Cmp>::push(const T& val)
+{
+    // Add the new element to the end of the vector
+    m_heap.push_back(val);
+    ++m_size;
+
+    // Percolate up: Compare the new element with its parent and swap if necessary
+    size_t index = m_size - 1;
+    while (index > 0 && m_cmp(val, m_heap[parent(index)]))
+    {
+        std::swap(m_heap[index], m_heap[parent(index)]);
+        index = parent(index);
+    }
+}
+
+template <typename T, typename Cmp>
+void my::Heap<T, Cmp>::pop()
+{
+    if (m_size == 0)
+    {
+        return;
+    }
+
+    std::swap(m_heap[0], m_heap[m_size - 1]);
+    m_heap.pop_back();
+    --m_size;
+
+    heapify_down(0);
+}
+
+template <typename T, typename Cmp>
+const T& my::Heap<T, Cmp>::top()
+{
+    if (m_size == 0)
+    {
+        throw std::out_of_range("Heap is empty");
+    }
+    T tmp = m_heap[0];
+    this->pop();
+
+    return tmp;
 }
 
 template <typename T, typename Cmp>

@@ -16,7 +16,7 @@ protected:
         }
     }
 
-    bool isSorted(const std::vector<int> &vec)
+    bool isSorted(const std::vector<int>& vec)
     {
         for (size_t i = 0; i < vec.size() - 1; ++i)
         {
@@ -102,7 +102,7 @@ TEST_F(QuickSortSortTest, Handles__AlreadySortedVector)
     EXPECT_TRUE(isSorted(sorted));
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

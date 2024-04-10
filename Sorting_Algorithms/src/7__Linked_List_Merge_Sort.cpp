@@ -19,7 +19,7 @@ Forward_list ::~Forward_list()
 {
     while (m_head)
     {
-        Node *temp = m_head;
+        Node* temp = m_head;
         m_head     = m_head->next;
         delete temp;
     }
@@ -27,7 +27,7 @@ Forward_list ::~Forward_list()
 
 void Forward_list::push(int new_data)
 {
-    Node *new_node = new Node(new_data);
+    Node* new_node = new Node(new_data);
     if (m_head == nullptr)
     {
         m_head = new_node;
@@ -41,7 +41,7 @@ void Forward_list::push(int new_data)
 
 void Forward_list::print()
 {
-    Node *current = m_head;
+    Node* current = m_head;
     while (current != nullptr)
     {
         std::cout << current->data << " ";
@@ -50,9 +50,9 @@ void Forward_list::print()
     std::cout << std::endl;
 }
 
-Forward_list::Node *Forward_list::SortedMerge(Node *first, Node *second)
+Forward_list::Node* Forward_list::SortedMerge(Node* first, Node* second)
 {
-    Node *result = nullptr;
+    Node* result = nullptr;
 
     if (first == nullptr)
     {
@@ -77,10 +77,10 @@ Forward_list::Node *Forward_list::SortedMerge(Node *first, Node *second)
     return result;
 }
 
-void Forward_list::splitList(Node *source, Node *&firstRef, Node *&secondRef)
+void Forward_list::splitList(Node* source, Node*& firstRef, Node*& secondRef)
 {
-    Node *slow = source;
-    Node *fast = source->next;
+    Node* slow = source;
+    Node* fast = source->next;
 
     while (fast != nullptr)
     {
@@ -98,13 +98,13 @@ void Forward_list::splitList(Node *source, Node *&firstRef, Node *&secondRef)
     slow->next = nullptr;
 }
 
-void Forward_list::MergeSorthelper(Node *&head)
+void Forward_list::MergeSorthelper(Node*& head)
 {
     if (head == nullptr || head->next == nullptr)
         return;
 
-    Node *firstHalf;
-    Node *secondHalf;
+    Node* firstHalf;
+    Node* secondHalf;
     splitList(head, firstHalf, secondHalf);
 
     MergeSorthelper(firstHalf);

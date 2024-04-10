@@ -12,4 +12,16 @@ int main()
 
     my::Heap<int> h(vec.begin() + 3, vec.end());
     h.print();
+
+    std::cout << min.top() << std::endl;
+    min.print();
+
+    std::cout << min.top() << std::endl;
+    min.print();
+
+    std::cout << max.top() << std::endl;
+    max.print();
+
+    std::cout << max.top() << std::endl;
+    max.print();
 }
