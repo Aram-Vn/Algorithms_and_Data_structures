@@ -4,8 +4,9 @@ import subprocess
 import os
 import signal
 from types import FrameType
-from typing import List, Union, Callable
+from typing import List, Union
 from rich.console import Console
+from pyfiglet import figlet_format
 
 console: Console = Console()
 
@@ -84,31 +85,40 @@ def exit_gracefully(signal: signal.Signals, frame: Union[FrameType, None]) -> No
 
 
 def main() -> None:
-    options: dict[str, Union[str, Callable[[], None]]] = {
+    options: dict[str, str] = {
         '1': 'bubble_sort',
         '2': 'insertion_sort',
         '3': 'selection_sort',
+        '4': 'quick_sort',
+        '5': 'merge_sort',
+        '6': 'counting_sort',
+        '7': 'Linked_List_Merge_Sort',
+        '8': 'Finish testing', 
+    }
+    
+    quick_sort_options: dict[str, str] = {
         'A': 'first',
         'B': 'last',
         'C': 'medianOfThree',
         'D': 'Random',
-        '5': 'merge_sort',
-        '6': 'counting_sort',
-        '7': 'Linked_List_Merge_Sort',
-        '8': lambda: console.print("Ending the loop.", style="bold green")  
     }
 
     signal.signal(signal.SIGINT, exit_gracefully)
 
+    text: str = "Sorting Algorithms"
+    ascii_art = figlet_format(text, font="slant")
+    console.print(ascii_art, style="bold cyan")
+    
     while True:
-        console.print("Enter the number corresponding to the sorting algorithm you want to test:")
-        
+        console.print("Enter the number corresponding to the sorting algorithm you want to test:\n", style="bold #00AAA6 u")
         for key, value in options.items():
-            if key.isdigit() and int(key) >= 1 and int(key) <= 7:
+            if key == '8':
+                console.print(f"[green bold]{key}.[/green bold] {value}", style="b red")
+            else:
                 console.print(f"[green bold]{key}.[/green bold] {value}")
+                
        
-        console.print("[green bold]8.[/green bold] Finish testing", style="red")
-        console.print("   Choose from [green bold](1 - 6)[green bold]")
+        console.print(f"   Choose from [green bold](1 - {len(options)})[green bold]")
         console.print("\n" + "-" * 40 + "\n", style="bold cyan")
 
         choice: str = input()
@@ -116,19 +126,18 @@ def main() -> None:
         if choice == '4':
             while True:        
                 console.print("Choose the version of Quick Sort:")
-                console.print("[green bold]A.[/green bold] First Element Pivot")
-                console.print("[green bold]B.[/green bold] Last Element Pivot")
-                console.print("[green bold]C.[/green bold] Median of Three Pivot")
-                console.print("[green bold]D.[/green bold] Random Pivot")
+                
+                for key, value in quick_sort_options.items():
+                   console.print(f"[green bold]{key}.[/green bold] {value}", style="")
+                    
                 console.print("[green bold]E.[/green bold] end Quick Sort chise\n", style="red")
-
                 quick_sort_choice: str = input("Enter your choice (a/A/ b/B c/C d/D e/E): ").upper()
                 
                 if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
                     if(quick_sort_choice == 'E'):
                         break
                     else:
-                        pivot_name: str = options[quick_sort_choice]
+                        pivot_name: str = quick_sort_options[quick_sort_choice]
                         test_Quick_Sort(quick_sort_choice, pivot_name)
 
                 else:
@@ -136,7 +145,7 @@ def main() -> None:
         else:
             if choice in options:
                 if choice == '8':
-                    options[choice]()
+                    console.print("Ending the loop.", style="bold green")  
                     cleanup_test_files(TEST_FILES)
                     break
                 else:

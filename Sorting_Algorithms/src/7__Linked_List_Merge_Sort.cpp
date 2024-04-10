@@ -48,10 +48,6 @@ void Forward_list::print()
     std::cout << std::endl;
 }
 
-void Forward_list::MergeSort()
-{
-    MergeSorthelper(m_head);
-}
 
 Forward_list::Node* Forward_list::SortedMerge(Node* first, Node* second)
 {
@@ -114,4 +110,9 @@ void Forward_list::MergeSorthelper(Node*& head)
     MergeSorthelper(secondHalf);
 
     head = SortedMerge(firstHalf, secondHalf);
+}
+
+void Forward_list::MergeSort()
+{
+    MergeSorthelper(m_head);
 }

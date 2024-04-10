@@ -1,5 +1,9 @@
 [Sorting Algorithms](#sorting-algorithms)
 
+# pre requirements
+``` bash
+pip install -r requirements.txt
+```
 
 # Sorting Algorithms
 - [Bubble sort](#bubble-sort)
