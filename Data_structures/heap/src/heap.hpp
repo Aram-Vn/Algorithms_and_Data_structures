@@ -1,17 +1,17 @@
 template <typename T, typename Cmp>
-my::Heap<T, Cmp>::Heap(std::vector<T>& input, const Cmp& cmp)
+my::Heap<T, Cmp>::Heap(container_type& input)
     : m_heap(input),
       m_size(input.size()),
-      m_cmp(cmp)
+      m_cmp(Cmp{})
 {
     make_heap();
 }
 
 template <typename T, typename Cmp>
-my::Heap<T, Cmp>::Heap(const Cmp& cmp)
+my::Heap<T, Cmp>::Heap()
     : m_heap{},
       m_size(0),
-      m_cmp(cmp)
+      m_cmp(Cmp{})
 {
 }
 
@@ -73,7 +73,7 @@ void my::Heap<T, Cmp>::heapify_down(size_t ind)
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::push(const T& val)
+void my::Heap<T, Cmp>::push(const_reference val)
 {
     m_heap.push_back(val);
     ++m_size;
@@ -102,7 +102,7 @@ void my::Heap<T, Cmp>::pop()
 }
 
 template <typename T, typename Cmp>
-const T& my::Heap<T, Cmp>::top()
+typename my::Heap<T, Cmp>::const_reference my::Heap<T, Cmp>::top()
 {
     if (m_size == 0)
     {
@@ -119,7 +119,7 @@ bool my::Heap<T, Cmp>::empty()
 }
 
 template <typename T, typename Cmp>
-size_t my::Heap<T, Cmp>::size()
+typename my::Heap<T, Cmp>::size_type my::Heap<T, Cmp>::size()
 {
     return m_size;
 }

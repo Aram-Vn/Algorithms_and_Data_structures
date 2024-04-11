@@ -4,13 +4,13 @@
 
 void heap_sort(std::vector<int>& vec)
 {
-    size_t n = vec.size();
-    for (int i = n / 2 - 1; i >= 0; i--)
+    size_t size = vec.size();
+    for (int i = size / 2 - 1; i >= 0; i--)
     {
-        heapify(vec, i, n);
+        heapify(vec, i, size);
     }
 
-    for (int i = n - 1; i > 0; i--)
+    for (int i = size - 1; i > 0; i--)
     {
         std::swap(vec[0], vec[i]);
         heapify(vec, 0, i);

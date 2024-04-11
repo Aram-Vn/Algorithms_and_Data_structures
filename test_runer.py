@@ -26,7 +26,6 @@ def test_Quick_Sort(chise: str, pivot: str) -> None:
                 console.print(f"\nError: '{Quick_Sort_path}' not found.", style="bold red")
             if not os.path.exists(Quick_Sort_test_path):
                 console.print(f"\nError: '{Quick_Sort_test_path}' not found.", style="bold red")
-        
             return
            
         subprocess.run(['g++', Quick_Sort_path, Quick_Sort_test_path, '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
@@ -51,7 +50,6 @@ def compile_and_run_test(test_file: str, algorithm_source: str, z: str) -> None:
                 console.print(f"\nError: {sorthing_algorithm_path} not found.", style="bold red")
             if not os.path.exists(test_path):
                 console.print(f"\nError: {test_path} not found.", style="bold red")
-        
             return
 
         subprocess.run(['g++', test_path, sorthing_algorithm_path, '-o', f'{z}', '-lgtest', '-lgtest_main'])
@@ -153,7 +151,9 @@ def main() -> None:
                     algorithm_name: str = options[choice]
                     test_sorting_algorithm(algorithm_name, choice)
             else:
-                console.print(f"Invalid choice. Please enter a number between 1 and {len(options)}.", style="bold red")
+                console.print("\n" + "-" * 60 + "\n", style="bold red \n")
+                console.print(f"Invalid choice. Please enter a number between 1 and {len(options)}.", style="bold red \n")
+                console.print("\n" + "-" * 60 + "\n", style="bold red \n")
 
 if __name__ == "__main__":
     main()

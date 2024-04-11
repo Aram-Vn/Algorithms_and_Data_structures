@@ -5,7 +5,7 @@ project(heap_tests)
 find_package(GTest REQUIRED)
 
 include_directories(${GTEST_INCLUDE_DIRS})
-include_directories(${CMAKE_SOURCE_DIR}/headers)  # Include your headers
+include_directories(${CMAKE_SOURCE_DIR}/headers)  
 
 add_executable(heap_tests test_heap.cpp)
 
