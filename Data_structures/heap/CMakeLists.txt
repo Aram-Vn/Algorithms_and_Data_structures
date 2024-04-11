@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(heap)
+project(priority_queue)
 
-add_executable(heap main.cpp)
+add_executable(priority_queue main.cpp)
 
-target_include_directories(heap PRIVATE 
+target_include_directories(priority_queue PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/headers
         ${CMAKE_CURRENT_SOURCE_DIR}/src )
         
 add_subdirectory(tests)
+
+target_compile_options(priority_queue PRIVATE -Wall -Werror)

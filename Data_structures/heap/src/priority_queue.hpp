@@ -1,5 +1,5 @@
 template <typename T, typename Cmp>
-my::Heap<T, Cmp>::Heap(container_type& input)
+my::priority_queue<T, Cmp>::priority_queue(container_type& input)
     : m_heap(input),
       m_size(input.size()),
       m_cmp(Cmp{})
@@ -8,7 +8,7 @@ my::Heap<T, Cmp>::Heap(container_type& input)
 }
 
 template <typename T, typename Cmp>
-my::Heap<T, Cmp>::Heap()
+my::priority_queue<T, Cmp>::priority_queue()
     : m_heap{},
       m_size(0),
       m_cmp(Cmp{})
@@ -17,7 +17,7 @@ my::Heap<T, Cmp>::Heap()
 
 template <typename T, typename Cmp>
 template <typename RandomAccessIterator>
-my::Heap<T, Cmp>::Heap(RandomAccessIterator first, RandomAccessIterator last)
+my::priority_queue<T, Cmp>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
     : m_heap(first, last),
       m_size(last - first),
       m_cmp()
@@ -26,7 +26,7 @@ my::Heap<T, Cmp>::Heap(RandomAccessIterator first, RandomAccessIterator last)
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::make_heap()
+void my::priority_queue<T, Cmp>::make_heap()
 {
     for (int i = (m_size / 2) - 1; i >= 0; --i)
     {
@@ -35,25 +35,25 @@ void my::Heap<T, Cmp>::make_heap()
 }
 
 template <typename T, typename Cmp>
-size_t Heap<T, Cmp>::parent(size_t ind)
+size_t priority_queue<T, Cmp>::parent(size_t ind)
 {
     return (ind - 1) / 2;
 }
 
 template <typename T, typename Cmp>
-size_t my::Heap<T, Cmp>::left(size_t ind)
+size_t my::priority_queue<T, Cmp>::left(size_t ind)
 {
     return 2 * ind + 1;
 }
 
 template <typename T, typename Cmp>
-size_t my::Heap<T, Cmp>::right(size_t ind)
+size_t my::priority_queue<T, Cmp>::right(size_t ind)
 {
     return 2 * ind + 2;
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::heapify_down(size_t ind)
+void my::priority_queue<T, Cmp>::heapify_down(size_t ind)
 {
     size_t largest = ind;
     size_t l       = left(ind);
@@ -73,7 +73,7 @@ void my::Heap<T, Cmp>::heapify_down(size_t ind)
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::push(const_reference val)
+void my::priority_queue<T, Cmp>::push(const_reference val)
 {
     m_heap.push_back(val);
     ++m_size;
@@ -87,7 +87,7 @@ void my::Heap<T, Cmp>::push(const_reference val)
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::pop()
+void my::priority_queue<T, Cmp>::pop()
 {
     if (m_size == 0)
     {
@@ -102,30 +102,30 @@ void my::Heap<T, Cmp>::pop()
 }
 
 template <typename T, typename Cmp>
-typename my::Heap<T, Cmp>::const_reference my::Heap<T, Cmp>::top()
+typename my::priority_queue<T, Cmp>::const_reference my::priority_queue<T, Cmp>::top()
 {
     if (m_size == 0)
     {
-        throw std::out_of_range("Heap is empty");
+        throw std::out_of_range("priority_queue is empty");
     }
 
     return m_heap[0];
 }
 
 template <typename T, typename Cmp>
-bool my::Heap<T, Cmp>::empty()
+bool my::priority_queue<T, Cmp>::empty()
 {
     return m_size == 0;
 }
 
 template <typename T, typename Cmp>
-typename my::Heap<T, Cmp>::size_type my::Heap<T, Cmp>::size()
+typename my::priority_queue<T, Cmp>::size_type my::priority_queue<T, Cmp>::size()
 {
     return m_size;
 }
 
 template <typename T, typename Cmp>
-void my::Heap<T, Cmp>::print()
+void my::priority_queue<T, Cmp>::print()
 {
     for (int i = 0; i < m_size; ++i)
     {
