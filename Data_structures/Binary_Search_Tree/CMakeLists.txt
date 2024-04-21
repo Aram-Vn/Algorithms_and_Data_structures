@@ -5,9 +5,18 @@ project(Binary_Search_Tree)
 add_executable(Binary_Search_Tree main.cpp)
 
 target_include_directories(Binary_Search_Tree PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/src )
+    ${CMAKE_CURRENT_SOURCE_DIR}/headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
-# add_subdirectory(tests)
+target_compile_options(Binary_Search_Tree PRIVATE 
+    -Wall 
+    -Werror 
+    -fsanitize=address 
+    -fsanitize=undefined
+)
 
-target_compile_options(Binary_Search_Tree PRIVATE -Wall -Werror)
+target_link_options(Binary_Search_Tree PRIVATE 
+    -fsanitize=address 
+    -fsanitize=undefined
+)

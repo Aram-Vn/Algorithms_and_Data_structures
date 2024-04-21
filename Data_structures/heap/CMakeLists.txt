@@ -10,4 +10,14 @@ target_include_directories(priority_queue PRIVATE
         
 add_subdirectory(tests)
 
-target_compile_options(priority_queue PRIVATE -Wall -Werror -fsanitize=address) # -fsanitize=undefined)
+target_compile_options(priority_queue PRIVATE 
+    -Wall 
+    -Werror 
+    -fsanitize=address 
+    -fsanitize=undefined
+)
+
+target_link_options(priority_queue PRIVATE 
+    -fsanitize=address 
+    -fsanitize=undefined
+)
