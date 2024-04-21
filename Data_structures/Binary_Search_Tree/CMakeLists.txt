@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Binary_Search_Tree)
+
+add_executable(Binary_Search_Tree main.cpp)
+
+target_include_directories(Binary_Search_Tree PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/src )
+
+# add_subdirectory(tests)
+
+target_compile_options(Binary_Search_Tree PRIVATE -Wall -Werror)

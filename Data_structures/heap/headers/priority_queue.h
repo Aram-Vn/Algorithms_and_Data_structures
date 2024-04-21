@@ -17,7 +17,7 @@ namespace my {
         using container_type  = std::vector<value_type>;
 
     public:
-        ~priority_queue() = default;
+        ~priority_queue() {}
         priority_queue();
         priority_queue(container_type& input);
 
