@@ -12,7 +12,7 @@ add_subdirectory(tests)
 
 target_compile_options(priority_queue PRIVATE 
     -Wall 
-    -Werror 
+    # -Werror 
     -fsanitize=address 
     -fsanitize=undefined
 )

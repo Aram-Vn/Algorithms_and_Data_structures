@@ -150,25 +150,25 @@ std::unique_ptr<typename BST<T>::Node> BST<T>::Delete(const T& val, std::unique_
         return nullptr;
     }
 
-    if (val < root->val)
+    if (val < root->val) // If the value is less than the current node's value, delete from the left subtree
     {
         root->left = Delete(val, std::move(root->left));
     }
-    else if (val > root->val)
+    else if (val > root->val) // If the value is greater than the current node's value, delete from the right subtree
     {
         root->right = Delete(val, std::move(root->right));
     }
-    else
+    else // Node with the value to be deleted found
     {
-        if (!root->left)
+        if (root->left == nullptr) // Case 1: Node has no left child
         {
             return std::move(root->right);
         }
-        else if (!root->right)
+        else if (root->right == nullptr) // Case 2: Node has no right child
         {
             return std::move(root->left);
         }
-        else
+        else // Case 3: Node has both left and right children
         {
             Node* tmp   = find_min(root->right.get());
             root->val   = tmp->val;

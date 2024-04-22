@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/aram/dev/Algorithms_and_Data_structures/Data_structures/build",
+  "command": "/usr/bin/clang++ -I/home/aram/dev/Algorithms_and_Data_structures/Data_structures/Binary_Search_Tree/headers -I/home/aram/dev/Algorithms_and_Data_structures/Data_structures/Binary_Search_Tree/src -g -Wall -Werror -fsanitize=address -fsanitize=undefined -o CMakeFiles/Binary_Search_Tree.dir/main.cpp.o -c /home/aram/dev/Algorithms_and_Data_structures/Data_structures/Binary_Search_Tree/main.cpp",
+  "file": "/home/aram/dev/Algorithms_and_Data_structures/Data_structures/Binary_Search_Tree/main.cpp",
+  "output": "CMakeFiles/Binary_Search_Tree.dir/main.cpp.o"
+}
+]

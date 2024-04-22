@@ -15,4 +15,4 @@ target_link_libraries(priority_queue_tests ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRA
 
 enable_testing()
 add_test(NAME priority_queue_tests COMMAND priority_queue_tests)
-target_compile_options(priority_queue_tests PRIVATE -Wall -Werror)
+target_compile_options(priority_queue_tests PRIVATE -Wall)

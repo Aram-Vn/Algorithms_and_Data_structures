@@ -32,15 +32,15 @@ int main()
     std::cout << "\nBST after deletion: 3 7" << std::endl;
     bst.inorderTraversal();
 
-    // searchValue = 10;
-    // if (bst.search(searchValue))
-    // {
-    //     std::cout << searchValue << " found in the BST.\n";
-    // }
-    // else
-    // {
-    //     std::cout << searchValue << " not found in the BST.\n";
-    // }
+    searchValue = 10;
+    if (bst.search(searchValue))
+    {
+        std::cout << searchValue << " found in the BST.\n";
+    }
+    else
+    {
+        std::cout << searchValue << " not found in the BST.\n";
+    }
 
     return 0;
 }
