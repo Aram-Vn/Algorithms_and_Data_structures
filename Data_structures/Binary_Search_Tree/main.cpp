@@ -24,15 +24,23 @@ int main()
         std::cout << searchValue << " not found in the BST.\n";
     }
 
-    searchValue = 10;
-    if (bst.search(searchValue))
-    {
-        std::cout << searchValue << " found in the BST.\n";
-    }
-    else
-    {
-        std::cout << searchValue << " not found in the BST.\n";
-    }
+    std::cout << bst.find_min() << std::endl;
+    std::cout << bst.find_max() << std::endl;
+    bst.Delete(3);
+    bst.Delete(7);
+
+    std::cout << "\nBST after deletion: 3 7" << std::endl;
+    bst.inorderTraversal();
+
+    // searchValue = 10;
+    // if (bst.search(searchValue))
+    // {
+    //     std::cout << searchValue << " found in the BST.\n";
+    // }
+    // else
+    // {
+    //     std::cout << searchValue << " not found in the BST.\n";
+    // }
 
     return 0;
 }
