@@ -20,3 +20,5 @@ target_link_options(Binary_Search_Tree PRIVATE
     -fsanitize=address 
     -fsanitize=undefined
 )
+
+target_compile_features(Binary_Search_Tree PRIVATE cxx_std_20)

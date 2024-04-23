@@ -2,18 +2,17 @@
 
 int main()
 {
-    BST<int> bst;
-    bst.insert(5);
-    bst.insert(3);
-    bst.insert(7);
-    bst.insert(1);
-    bst.insert(4);
-    bst.insert(6);
-    bst.insert(8);
 
-    std::cout << "Inorder Traversal: ";
+    BST<int> bst = { 60, 50, 70, 40, 55, 65, 80, 30, 45, 53, 58, 63, 68, 75, 90, 20, 35, 42 };
+
+    std::cout << "Inorder Traversal: \n";
     bst.inorderTraversal();
+    bst.postTraversal();
+    bst.preTraversal();
+    bst.levelOrderTraversal();
 
+    std::cout << bst.getSuccessor(40) << std::endl;
+    std::cout << bst.getPredecessor(40) << std::endl;
     int searchValue = 6;
     if (bst.search(searchValue))
     {
@@ -26,10 +25,10 @@ int main()
 
     std::cout << bst.find_min() << std::endl;
     std::cout << bst.find_max() << std::endl;
-    bst.Delete(3);
-    bst.Delete(7);
+    bst.Delete(70);
+    bst.Delete(50);
 
-    std::cout << "\nBST after deletion: 3 7" << std::endl;
+    std::cout << "\nBST after deletion: 50 70" << std::endl;
     bst.inorderTraversal();
 
     searchValue = 10;
@@ -42,5 +41,6 @@ int main()
         std::cout << searchValue << " not found in the BST.\n";
     }
 
+    std::cout << bst.getHeight() << std::endl;
     return 0;
 }
