@@ -36,7 +36,9 @@ namespace my {
         void                        insert(const T& val);
         std::size_t                 getHeight() const;
         void                        clear();
-        void                        inorder();
+        void                        preOrder() const;
+        void                        inOrder() const;
+        void                        postOrder() const;
         std::vector<std::vector<T>> levelOrderTraversal();
         void                        DeleteNode(const T val);
         const T&                    findMin() const;

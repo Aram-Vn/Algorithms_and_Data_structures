@@ -12,8 +12,12 @@ int main()
     }
 
     avl.DeleteNode(10);
+    avl.DeleteNode(11);
+    avl.DeleteNode(1);
     avl.levelOrderTraversal();
-    avl.inorder();
+    avl.inOrder();
+    avl.postOrder();
+    avl.preOrder();
 
     avl.clear();
     std::cout << avl.getHeight() << std::endl;

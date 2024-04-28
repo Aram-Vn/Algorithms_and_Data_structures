@@ -1,4 +1,5 @@
 #include "../headers/AVL_Tree.h"
+#include <functional>
 #include <stdexcept>
 namespace my {
     template <typename T>
@@ -23,8 +24,32 @@ namespace my {
         clear(m_root);
     }
 
+    //-------------------------_preOrder_-----------------------------//
     template <typename T>
-    void AVL_tree<T>::inorder()
+    void AVL_tree<T>::preOrder() const
+    {
+        if (m_root == nullptr)
+        {
+            return;
+        }
+
+        std::function<void(Node*)> preorderLambda = [&preorderLambda](Node* root)
+        {
+            if (root)
+            {
+                std::cout << root->val << " ";
+                preorderLambda(root->left);
+                preorderLambda(root->right);
+            }
+        };
+
+        preorderLambda(m_root);
+        std::cout << std::endl;
+    }
+
+    //-------------------------_inOrder_-----------------------------//
+    template <typename T>
+    void AVL_tree<T>::inOrder() const
     {
         if (m_root == nullptr)
         {
@@ -33,20 +58,38 @@ namespace my {
 
         std::function<void(Node*)> inorderLambda = [&inorderLambda](Node* root)
         {
-            if (root->left)
+            if (root)
             {
                 inorderLambda(root->left);
-            }
-
-            std::cout << root->val << " ";
-
-            if (root->right)
-            {
+                std::cout << root->val << " ";
                 inorderLambda(root->right);
             }
         };
 
         inorderLambda(m_root);
+        std::cout << std::endl;
+    }
+
+    //-------------------------_postOrder_-----------------------------//
+    template <typename T>
+    void AVL_tree<T>::postOrder() const
+    {
+        if (m_root == nullptr)
+        {
+            return;
+        }
+
+        std::function<void(Node*)> postorderLambda = [&postorderLambda](Node* root)
+        {
+            if (root)
+            {
+                postorderLambda(root->left);
+                postorderLambda(root->right);
+                std::cout << root->val << " ";
+            }
+        };
+
+        postorderLambda(m_root);
         std::cout << std::endl;
     }
 
@@ -73,7 +116,8 @@ namespace my {
         {
             node->right = insert(val, node->right);
         }
-        else {
+        else
+        {
             return node;
         }
 
@@ -116,7 +160,7 @@ namespace my {
     {
         if (node == nullptr)
         {
-            return nullptr;
+            return node;
         }
 
         if (val < node->val)
@@ -124,74 +168,52 @@ namespace my {
             node->left = DeleteNode(val, node->left);
         }
         else if (val > node->val)
+
         {
             node->right = DeleteNode(val, node->right);
         }
-        else
+        else // Node with the value to be deleted found
         {
-            // Node to be deleted is found
-
-            if (node->left == nullptr || node->right == nullptr)
+            if (node->left == nullptr) // Case 1: Node has no left child
             {
-                // Node has one or zero children
-                Node* temp = node->left ? node->left : node->right;
-
-                if (temp == nullptr)
-                {
-                    // Node has zero children
-                    temp = node;
-                    node = nullptr;
-                }
-                else
-                {
-                    // Node has one child
-                    *node = *temp; // Copy the contents of the non-empty child
-                }
-
-                delete temp;
+                Node* tmp = node->right;
+                delete node;
+                return tmp;
             }
-            else
+            else if (node->right == nullptr) // Case 2: Node has no right child
             {
-                // Node has two children
-                // Find the inorder successor (smallest node in the right subtree)
-                Node* temp = findMin(node->right);
-
-                // Copy the inorder successor's data to this node
-                node->val = temp->val;
-
-                // Delete the inorder successor
-                node->right = DeleteNode(temp->val, node->right);
+                Node* tmp = node->left;
+                delete node;
+                return tmp;
             }
-        }
-
-        // If the tree had only one node then return
-        if (node == nullptr)
-        {
-            return nullptr;
+            else // Case 3: Node has both left and right children
+            {
+                Node* tmp   = findMin(node->right);
+                node->val   = tmp->val;
+                node->right = DeleteNode(node->val, node->right);
+            }
         }
 
         // Update height and balance factor of the current node
         int balanceFactor = getBalancingFactor(node);
 
-        // Balancing the tree
-        // Left Left Case
-        if (balanceFactor > 1 && getBalancingFactor(node->left) >= 0)
+        if (balanceFactor > 1 && getBalancingFactor(node->left) >= 0) // Left Left Case
         {
             return rr_rotation(node);
         }
-        // Right Right Case
-        if (balanceFactor < -1 && getBalancingFactor(node->right) <= 0)
+
+        if (balanceFactor < -1 && getBalancingFactor(node->right) <= 0) // Right Right Case
         {
             return ll_rotation(node);
         }
-        // Left Right Case
-        if (balanceFactor > 1 && getBalancingFactor(node->left) < 0)
+
+        if (balanceFactor > 1 && getBalancingFactor(node->left) < 0) // Left Right Case
         {
             node->left = ll_rotation(node->left);
             return rr_rotation(node);
         }
-        // Right Left Case
-        if (balanceFactor < -1 && getBalancingFactor(node->right) > 0)
+
+        if (balanceFactor < -1 && getBalancingFactor(node->right) > 0) // Right Left Case
         {
             node->right = rr_rotation(node->right);
             return ll_rotation(node);
