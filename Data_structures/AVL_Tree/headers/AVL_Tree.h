@@ -38,14 +38,18 @@ namespace my {
         void                        clear();
         void                        inorder();
         std::vector<std::vector<T>> levelOrderTraversal();
+        void                        DeleteNode(const T val);
+        const T&                    findMin() const;
 
     private:
-        Node*                       insert(const T& val, Node* node);
-        void                        clear(Node* node);
-        std::size_t                 getHeight(Node* root) const;
-        int                         getBalancingFactor(Node* root);
-        Node*                       ll_rotation(Node* node);
-        Node*                       rr_rotation(Node* node);
+        Node*       insert(const T& val, Node* node);
+        void        clear(Node* node);
+        std::size_t getHeight(Node* root) const;
+        int         getBalancingFactor(Node* root);
+        Node*       ll_rotation(Node* node);
+        Node*       rr_rotation(Node* node);
+        Node*       DeleteNode(const T& val, Node* node);
+        Node*       findMin(Node* root) const;
 
     private:
         Node* m_root;

@@ -1,4 +1,5 @@
-// #include "../headers/AVL_Tree.h"
+#include "../headers/AVL_Tree.h"
+#include <stdexcept>
 namespace my {
     template <typename T>
     AVL_tree<T>::AVL_tree()
@@ -68,31 +69,129 @@ namespace my {
         {
             node->left = insert(val, node->left);
         }
-        else
+        else if (val > node->val)
         {
             node->right = insert(val, node->right);
+        }
+        else {
+            return node;
         }
 
         int balanceFactor = getBalancingFactor(node);
 
+        if (balanceFactor > 1 && val < node->left->val) // Left Left Case
+        {
+            return rr_rotation(node);
+        }
+
+        if (balanceFactor < -1 && val > node->right->val) // Right Right Case
+        {
+            return ll_rotation(node);
+        }
+
+        if (balanceFactor > 1 && val > node->left->val) // Left Right Case
+        {
+            node->left = ll_rotation(node->left);
+            return rr_rotation(node);
+        }
+
+        if (balanceFactor < -1 && val < node->right->val) // Right Left Case
+        {
+            node->right = rr_rotation(node->right);
+            return ll_rotation(node);
+        }
+
+        return node;
+    }
+
+    //-------------------------_DeleteNode_-----------------------------//
+    template <typename T>
+    void AVL_tree<T>::DeleteNode(const T val)
+    {
+        m_root = DeleteNode(val, m_root);
+    }
+
+    template <typename T>
+    typename AVL_tree<T>::Node* AVL_tree<T>::DeleteNode(const T& val, Node* node)
+    {
+        if (node == nullptr)
+        {
+            return nullptr;
+        }
+
+        if (val < node->val)
+        {
+            node->left = DeleteNode(val, node->left);
+        }
+        else if (val > node->val)
+        {
+            node->right = DeleteNode(val, node->right);
+        }
+        else
+        {
+            // Node to be deleted is found
+
+            if (node->left == nullptr || node->right == nullptr)
+            {
+                // Node has one or zero children
+                Node* temp = node->left ? node->left : node->right;
+
+                if (temp == nullptr)
+                {
+                    // Node has zero children
+                    temp = node;
+                    node = nullptr;
+                }
+                else
+                {
+                    // Node has one child
+                    *node = *temp; // Copy the contents of the non-empty child
+                }
+
+                delete temp;
+            }
+            else
+            {
+                // Node has two children
+                // Find the inorder successor (smallest node in the right subtree)
+                Node* temp = findMin(node->right);
+
+                // Copy the inorder successor's data to this node
+                node->val = temp->val;
+
+                // Delete the inorder successor
+                node->right = DeleteNode(temp->val, node->right);
+            }
+        }
+
+        // If the tree had only one node then return
+        if (node == nullptr)
+        {
+            return nullptr;
+        }
+
+        // Update height and balance factor of the current node
+        int balanceFactor = getBalancingFactor(node);
+
+        // Balancing the tree
         // Left Left Case
-        if (balanceFactor > 1 && val < node->left->val)
+        if (balanceFactor > 1 && getBalancingFactor(node->left) >= 0)
         {
             return rr_rotation(node);
         }
         // Right Right Case
-        if (balanceFactor < -1 && val > node->right->val)
+        if (balanceFactor < -1 && getBalancingFactor(node->right) <= 0)
         {
             return ll_rotation(node);
         }
         // Left Right Case
-        if (balanceFactor > 1 && val > node->left->val)
+        if (balanceFactor > 1 && getBalancingFactor(node->left) < 0)
         {
             node->left = ll_rotation(node->left);
             return rr_rotation(node);
         }
         // Right Left Case
-        if (balanceFactor < -1 && val < node->right->val)
+        if (balanceFactor < -1 && getBalancingFactor(node->right) > 0)
         {
             node->right = rr_rotation(node->right);
             return ll_rotation(node);
@@ -237,6 +336,34 @@ namespace my {
         }
         std::cout << std::endl;
         return res;
+    }
+
+    //-------------------------_findMin_-----------------------------//
+    template <typename T>
+    const T& AVL_tree<T>::findMin() const
+    {
+        if (m_root == nullptr)
+        {
+            throw std::logic_error("Tree is empty");
+        }
+
+        return find_min(m_root)->val;
+    }
+
+    template <typename T>
+    typename AVL_tree<T>::Node* AVL_tree<T>::findMin(typename AVL_tree<T>::Node* root) const
+    {
+        if (root == nullptr)
+        {
+            return nullptr;
+        }
+
+        while (root->left != nullptr)
+        {
+            root = root->left;
+        }
+
+        return root;
     }
 
 } // namespace my

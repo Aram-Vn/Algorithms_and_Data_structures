@@ -10,6 +10,8 @@ int main()
     {
         avl.insert(i);
     }
+
+    avl.DeleteNode(10);
     avl.levelOrderTraversal();
     avl.inorder();
 
