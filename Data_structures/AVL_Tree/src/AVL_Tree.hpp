@@ -1,6 +1,4 @@
 // #include "../headers/AVL_Tree.h"
-
-#include <functional>
 namespace my {
     template <typename T>
     AVL_tree<T>::AVL_tree()
@@ -25,29 +23,29 @@ namespace my {
     }
 
     template <typename T>
-    void AVL_tree<T>::print()
+    void AVL_tree<T>::inorder()
     {
         if (m_root == nullptr)
         {
             return;
         }
 
-        std::function<void(Node*)> recv = [&recv](Node* root)
+        std::function<void(Node*)> inorderLambda = [&inorderLambda](Node* root)
         {
             if (root->left)
             {
-                recv(root->left);
+                inorderLambda(root->left);
             }
 
             std::cout << root->val << " ";
 
             if (root->right)
             {
-                recv(root->right);
+                inorderLambda(root->right);
             }
         };
 
-        recv(m_root);
+        inorderLambda(m_root);
         std::cout << std::endl;
     }
 
@@ -124,7 +122,7 @@ namespace my {
             std::cout << "Tree is empty\n";
         }
 
-        return getHeightm_root;
+        return getHeight(m_root);
     }
 
     template <typename T>
@@ -189,7 +187,45 @@ namespace my {
     std::vector<std::vector<T>> AVL_tree<T>::levelOrderTraversal()
     {
         std::vector<std::vector<T>> res;
-        res = levelOrderTraversal(m_root);
+
+        auto levelOrderLambda = [&res](Node* root) -> void
+        {
+            if (root == nullptr)
+            {
+                return;
+            }
+
+            std::queue<Node*> nodes;
+            nodes.push(root);
+
+            while (!nodes.empty())
+            {
+                int            Qsize = nodes.size();
+                std::vector<T> vec;
+
+                for (int i = 0; i < Qsize; ++i)
+                {
+                    Node* node = nodes.front();
+                    nodes.pop();
+
+                    if (node->left != nullptr)
+                    {
+                        nodes.push(node->left);
+                    }
+
+                    if (node->right != nullptr)
+                    {
+                        nodes.push(node->right);
+                    }
+
+                    vec.push_back(node->val);
+                }
+
+                res.push_back(vec);
+            }
+        };
+
+        levelOrderLambda(m_root);
 
         for (auto& elem : res)
         {
@@ -200,47 +236,6 @@ namespace my {
             std::cout << std::endl;
         }
         std::cout << std::endl;
-        return res;
-    }
-
-    template <typename T>
-    std::vector<std::vector<T>> AVL_tree<T>::levelOrderTraversal(typename AVL_tree<T>::Node* root)
-    {
-        std::vector<std::vector<T>> res;
-
-        if (root == nullptr)
-        {
-            return res;
-        }
-
-        std::queue<Node*> nodes;
-        nodes.push(root);
-
-        while (!nodes.empty())
-        {
-            int            Qsize = nodes.size();
-            std::vector<T> vec; // Use T instead of int
-
-            for (int i = 0; i < Qsize; ++i)
-            {
-                Node* node = nodes.front();
-                nodes.pop();
-
-                if (node->left != nullptr)
-                {
-                    nodes.push(node->left);
-                }
-
-                if (node->right != nullptr)
-                {
-                    nodes.push(node->right);
-                }
-
-                vec.push_back(node->val); // Access val directly
-            }
-
-            res.push_back(vec);
-        }
         return res;
     }
 

@@ -11,8 +11,8 @@ int main()
         avl.insert(i);
     }
     avl.levelOrderTraversal();
+    avl.inorder();
 
     avl.clear();
     std::cout << avl.getHeight() << std::endl;
-    avl.print();
 }

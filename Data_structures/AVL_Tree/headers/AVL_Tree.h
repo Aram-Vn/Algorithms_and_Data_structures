@@ -1,6 +1,7 @@
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
 
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <queue>
@@ -35,7 +36,7 @@ namespace my {
         void                        insert(const T& val);
         std::size_t                 getHeight() const;
         void                        clear();
-        void                        print();
+        void                        inorder();
         std::vector<std::vector<T>> levelOrderTraversal();
 
     private:
@@ -45,7 +46,6 @@ namespace my {
         int                         getBalancingFactor(Node* root);
         Node*                       ll_rotation(Node* node);
         Node*                       rr_rotation(Node* node);
-        std::vector<std::vector<T>> levelOrderTraversal(Node* root);
 
     private:
         Node* m_root;
