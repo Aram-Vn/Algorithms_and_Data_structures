@@ -4,15 +4,16 @@
 
 int main()
 {
-    std::vector<int>        vec = { 3, 2, 4, 1, 5, 9 };
+    std::vector<int>        vec = { 3, 2, 4, 1, 5, 9, 10, 55, 88, 77, 12 };
     my::priority_queue<int> min(vec);
-    min.print();
+    min.print_level();
 
     my::priority_queue<int, std::greater<int>> max(vec);
     max.print();
 
     my::priority_queue<int> h(vec.begin() + 3, vec.end());
     h.print();
+
 
     my::priority_queue<int> a;
 

@@ -25,19 +25,20 @@ namespace my {
         priority_queue(RandomAccessIterator first, RandomAccessIterator last); // gets std::vector iterators
 
     public:
-        void            push(const_reference val); // Insert a value into the priority queue
-        void            pop();                     // Remove the top element from the priority queue
-        const_reference top();                     // Get the top element of the priority queue
-        bool            empty();                   // Check if the priority queue is empty
-        size_type       size();                    // Get the number of elements in the priority queue
-        void            print();                   // Print the elements of the priority queue
+        void                      push(const_reference val);    // Insert a value into the priority queue
+        void                      pop();                        // Remove the top element from the priority queue
+        constexpr const_reference top() const;                  // Get the top element of the priority queue
+        constexpr bool            empty() const noexcept;       // Check if the priority queue is empty
+        constexpr size_type       size() const noexcept;        // Get the number of elements in the priority queue
+        void                      print() const noexcept;       // Print the elements of the priority queue
+        void                      print_level() const noexcept; // Print the elements of the priority queue by level
 
     private:
-        size_t parent(size_t ind);       // returns parent index
-        size_t left(size_t ind);         // returns ind-s left node index
-        size_t right(size_t ind);        // returns ind-s right node index
-        void   make_heap();              // Build a heap from the elements
-        void   heapify_down(size_t ind); // Heapify down the element at given index
+        constexpr size_t parent(size_t ind) const noexcept; // returns parent index
+        constexpr size_t left(size_t ind) const noexcept;   // returns ind-s left node index
+        constexpr size_t right(size_t ind) const noexcept;  // returns ind-s right node index
+        void             make_heap();                       // Build a heap from the elements
+        void             heapify_down(size_t ind);          // Heapify down the element at given index
 
     private:
         container_type m_heap; // The vector representing the heap
