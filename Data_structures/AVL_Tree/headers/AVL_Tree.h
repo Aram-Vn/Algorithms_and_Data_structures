@@ -32,6 +32,12 @@ namespace my {
         AVL_tree(std::initializer_list<T> init_list);
         ~AVL_tree();
 
+        AVL_tree(const AVL_tree<T>& other);
+        AVL_tree<T>& operator=(const AVL_tree<T>& other);
+
+        AVL_tree(AVL_tree<T>&& other);
+        AVL_tree<T>& operator=(AVL_tree<T>&& other);
+
     public:
         void                        insert(const T& val);
         std::size_t                 getHeight() const;
@@ -52,6 +58,7 @@ namespace my {
         Node*       rr_rotation(Node* node);
         Node*       DeleteNode(const T& val, Node* node);
         Node*       findMin(Node* root) const;
+        Node*       deepCopy(Node* node);
 
     private:
         Node* m_root;

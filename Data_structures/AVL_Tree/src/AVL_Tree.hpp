@@ -24,6 +24,61 @@ namespace my {
         clear(m_root);
     }
 
+    //-------------------------_move_-----------------------------//
+    template <typename T>
+    AVL_tree<T>::AVL_tree(AVL_tree<T>&& other)
+        : m_root(other.m_root)
+    {
+        other.m_root = nullptr;
+    }
+
+    template <typename T>
+    AVL_tree<T>& AVL_tree<T>::operator=(AVL_tree<T>&& other)
+    {
+        if (this != &other) // Check for self-assignment
+        {
+            this->clear();
+            m_root       = other.m_root;
+            other.m_root = nullptr;
+        }
+        return *this;
+    }
+
+    //-------------------------_copy_-----------------------------//
+    template <typename T>
+    AVL_tree<T>::AVL_tree(const AVL_tree<T>& other)
+        : m_root(nullptr)
+    {
+        m_root = deepCopy(other.m_root);
+    }
+
+    template <typename T>
+    AVL_tree<T>& AVL_tree<T>::operator=(const AVL_tree<T>& other)
+    {
+        if (this != &other) // Check for self-assignment
+        {
+            this->clear();
+            m_root = deepCopy(other.m_root);
+        }
+        return *this;
+    }
+
+    template <typename T>
+    typename AVL_tree<T>::Node* AVL_tree<T>::deepCopy(typename AVL_tree<T>::Node* node)
+    {
+        if (node == nullptr)
+        {
+            return nullptr;
+        }
+
+        Node* newNode = new Node(node->val);
+
+        newNode->left  = deepCopy(node->left);
+        newNode->right = deepCopy(node->right);
+
+        return newNode;
+    }
+
     //-------------------------_preOrder_-----------------------------//
     template <typename T>
     void AVL_tree<T>::preOrder() const
