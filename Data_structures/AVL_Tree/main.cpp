@@ -24,7 +24,6 @@ int main()
     std::cout << "Source tree (after move):" << std::endl;
     avl.levelOrderTraversal(); // Should print an empty tree
 
-
     std::cout << "Target tree (move assignment):" << std::endl;
     targetTreeMoveAssignment.levelOrderTraversal();
 

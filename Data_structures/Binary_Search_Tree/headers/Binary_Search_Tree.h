@@ -1,9 +1,12 @@
+#ifndef BINARY_SEARCH_TREE_H
+#define BINARY_SEARCH_TREE_H
+
 #include <iostream>
 #include <memory>
 #include <queue>
 #include <vector>
 
-template <class T>
+template <typename  T>
 class BST
 {
 private:
@@ -70,3 +73,5 @@ private:
 };
 
 #include "Binary_Search_Tree.hpp"
+
+#endif // BINARY_SEARCH_TREE_H
