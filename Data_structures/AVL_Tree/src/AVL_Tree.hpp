@@ -23,14 +23,14 @@ namespace my {
 
     //-------------------------_move_-----------------------------//
     template <typename T>
-    AVL_tree<T>::AVL_tree(AVL_tree<T>&& other)
+    AVL_tree<T>::AVL_tree(AVL_tree<T>&& other) noexcept
         : m_root(other.m_root)
     {
         other.m_root = nullptr;
     }
 
     template <typename T>
-    AVL_tree<T>& AVL_tree<T>::operator=(AVL_tree<T>&& other)
+    AVL_tree<T>& AVL_tree<T>::operator=(AVL_tree<T>&& other) noexcept
     {
         if (this != &other) // Check for self-assignment
         {
@@ -273,9 +273,9 @@ namespace my {
         return node;
     }
 
-    //-------------------------_get_balancing_factor_-----------------------------//
+    //-------------------------_-getBalancingFactor-_-----------------------------//
     template <typename T>
-    int AVL_tree<T>::getBalancingFactor(typename AVL_tree<T>::Node* root)
+    int AVL_tree<T>::getBalancingFactor(typename AVL_tree<T>::Node* root) const
     {
         if (root == nullptr)
         {
@@ -356,7 +356,7 @@ namespace my {
 
     //-------------------------_levelOrderTraversal_-----------------------------//
     template <typename T>
-    std::vector<std::vector<T>> AVL_tree<T>::levelOrderTraversal()
+    std::vector<std::vector<T>> AVL_tree<T>::levelOrderTraversal() const
     {
         std::vector<std::vector<T>> res;
 
@@ -437,6 +437,27 @@ namespace my {
         }
 
         return root;
+    }
+    //-------------------------_findMax_-----------------------------//
+    template <typename T>
+    const T& AVL_tree<T>::findMax() const
+    {
+        if (m_root == nullptr)
+        {
+            throw std::logic_error("Tree is empty");
+        }
+
+        return findMax(m_root)->val;
+    }
+
+    template <typename T>
+    typename AVL_tree<T>::Node* AVL_tree<T>::findMax(typename AVL_tree<T>::Node* root) const
+    {
+        if (root == nullptr || root->right == nullptr)
+        {
+            return root;
+        }
+        return findMax(root->right);
     }
 
 } // namespace my
