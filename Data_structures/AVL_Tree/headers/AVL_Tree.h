@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <queue>
+#include <stdexcept>
 #include <vector>
 
 namespace my {

@@ -1,6 +1,3 @@
-#include "../headers/AVL_Tree.h"
-#include <functional>
-#include <stdexcept>
 namespace my {
     template <typename T>
     AVL_tree<T>::AVL_tree()
@@ -223,7 +220,6 @@ namespace my {
             node->left = DeleteNode(val, node->left);
         }
         else if (val > node->val)
-
         {
             node->right = DeleteNode(val, node->right);
         }
