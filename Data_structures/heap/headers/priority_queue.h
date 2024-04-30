@@ -53,8 +53,8 @@ namespace my {
         value_compare  m_cmp;  // The comparison function for comparing elements
     };
 
-#include "../src/priority_queue.hpp"
-
 } // namespace my
+
+#include "../src/priority_queue.hpp"
 
 #endif // THEAP_H
