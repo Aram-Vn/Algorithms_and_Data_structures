@@ -1,5 +1,5 @@
-template <typename T, typename Cmp>
-my::priority_queue<T, Cmp>::priority_queue(container_type& input)
+template <typename T, typename Cmp,  typename Container>
+my::priority_queue<T, Cmp, Container>::priority_queue(const container_type& input)
     : m_heap(input),
       m_size(input.size()),
       m_cmp(Cmp{})
@@ -7,17 +7,17 @@ my::priority_queue<T, Cmp>::priority_queue(container_type& input)
     make_heap();
 }
 
-template <typename T, typename Cmp>
-my::priority_queue<T, Cmp>::priority_queue()
+template <typename T, typename Cmp,  typename Container>
+my::priority_queue<T, Cmp, Container>::priority_queue()
     : m_heap{},
       m_size(0),
       m_cmp(Cmp{})
 {
 }
 
-template <typename T, typename Cmp>
+template <typename T, typename Cmp,  typename Container>
 template <typename RandomAccessIterator>
-my::priority_queue<T, Cmp>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
+my::priority_queue<T, Cmp, Container>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
     : m_heap(first, last),
       m_size(last - first),
       m_cmp()
@@ -26,8 +26,8 @@ my::priority_queue<T, Cmp>::priority_queue(RandomAccessIterator first, RandomAcc
 }
 
 //-----------------------------_-make_heap-_-------------------------------//
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::make_heap()
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::make_heap()
 {
     for (int i = (m_size / 2) - 1; i >= 0; --i)
     {
@@ -37,29 +37,29 @@ void my::priority_queue<T, Cmp>::make_heap()
 
 //-----------------------------_-parent-_-------------------------------//
 
-template <typename T, typename Cmp>
-constexpr size_t priority_queue<T, Cmp>::parent(size_t ind) const noexcept
+template <typename T, typename Cmp, typename Container>
+constexpr size_t priority_queue<T, Cmp, Container>::parent(const size_t ind) const noexcept
 {
     return (ind - 1) / 2;
 }
 
 //-----------------------------_-left-_-------------------------------//
-template <typename T, typename Cmp>
-constexpr size_t my::priority_queue<T, Cmp>::left(size_t ind) const noexcept
+template <typename T, typename Cmp,  typename Container>
+constexpr size_t my::priority_queue<T, Cmp, Container>::left(const size_t ind) const noexcept
 {
     return 2 * ind + 1;
 }
 
 //-----------------------------_-right-_-------------------------------//
-template <typename T, typename Cmp>
-constexpr size_t my::priority_queue<T, Cmp>::right(size_t ind) const noexcept
+template <typename T, typename Cmp,  typename Container>
+constexpr size_t my::priority_queue<T, Cmp, Container>::right(const size_t ind) const noexcept
 {
     return 2 * ind + 2;
 }
 
 //-----------------------------_-heapify_down-_-------------------------------//
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::heapify_down(size_t ind)
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::heapify_down(const size_t ind)
 {
     size_t largest   = ind;
     size_t leftNode  = left(ind);
@@ -79,8 +79,8 @@ void my::priority_queue<T, Cmp>::heapify_down(size_t ind)
 }
 
 //-----------------------------_-push-_-------------------------------//
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::push(const_reference val)
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::push(const_reference val)
 {
     m_heap.push_back(val);
     ++m_size;
@@ -94,8 +94,8 @@ void my::priority_queue<T, Cmp>::push(const_reference val)
 }
 
 //-----------------------------_-pop-_-------------------------------//
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::pop()
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::pop()
 {
     if (m_size == 0)
     {
@@ -106,12 +106,32 @@ void my::priority_queue<T, Cmp>::pop()
     m_heap.pop_back();
     --m_size;
 
-    heapify_down(0);
+    heapify_down(0); // Restore the heap property
+}
+
+//-----------------------------_-extract_top-_-------------------------------//
+template <typename T, typename Cmp,  typename Container>
+typename my::priority_queue<T, Cmp, Container>::value_type my::priority_queue<T, Cmp, Container>::extract_top()
+{
+    if (m_size == 0)
+    {
+        throw std::out_of_range("priority_queue is empty");
+    }
+
+    value_type top_value = m_heap[0];
+
+    std::swap(m_heap[0], m_heap[m_size - 1]);
+    m_heap.pop_back();
+    --m_size;
+
+    heapify_down(0); // Restore the heap property
+
+    return top_value;
 }
 
 //-----------------------------_-top-_-------------------------------//
-template <typename T, typename Cmp>
-constexpr typename my::priority_queue<T, Cmp>::const_reference my::priority_queue<T, Cmp>::top() const
+template <typename T, typename Cmp,  typename Container>
+constexpr typename my::priority_queue<T, Cmp, Container>::const_reference my::priority_queue<T, Cmp, Container>::top() const
 {
     if (m_size == 0)
     {
@@ -122,23 +142,29 @@ constexpr typename my::priority_queue<T, Cmp>::const_reference my::priority_queu
 }
 
 //-----------------------------_-empty-_-------------------------------//
-template <typename T, typename Cmp>
-constexpr bool my::priority_queue<T, Cmp>::empty() const noexcept
+template <typename T, typename Cmp,  typename Container>
+constexpr bool my::priority_queue<T, Cmp, Container>::empty() const noexcept
 {
     return m_size == 0;
 }
 
 //-----------------------------_-size-_-------------------------------//
-template <typename T, typename Cmp>
-constexpr typename my::priority_queue<T, Cmp>::size_type my::priority_queue<T, Cmp>::size() const noexcept
+template <typename T, typename Cmp,  typename Container>
+constexpr typename my::priority_queue<T, Cmp, Container>::size_type my::priority_queue<T, Cmp, Container>::size() const noexcept
 {
     return m_size;
 }
 
 //-----------------------------_-print-_-------------------------------//
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::print() const noexcept
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::print() const noexcept
 {
+    if (m_heap.empty())
+    {
+        std::cout << "Priority queue is empty." << std::endl;
+        return;
+    }
+
     for (int i = 0; i < m_size; ++i)
     {
         std::cout << m_heap[i] << " ";
@@ -146,8 +172,8 @@ void my::priority_queue<T, Cmp>::print() const noexcept
     std::cout << std::endl;
 }
 
-template <typename T, typename Cmp>
-void my::priority_queue<T, Cmp>::print_level() const noexcept
+template <typename T, typename Cmp,  typename Container>
+void my::priority_queue<T, Cmp, Container>::print_level() const noexcept
 {
     if (m_heap.empty())
     {
@@ -168,4 +194,31 @@ void my::priority_queue<T, Cmp>::print_level() const noexcept
         level_size *= 2;
     }
     std::cout << std::endl;
+}
+
+template <typename T, typename Cmp,  typename Container>
+constexpr bool my::priority_queue<T, Cmp, Container>::is_valid_heap() const noexcept
+{
+    if (m_heap.empty())
+    {
+        return true;
+    }
+
+    for (size_t i = 0; i < m_size; ++i)
+    {
+        size_t leftNode  = left(i);
+        size_t rightNode = right(i);
+
+        if (leftNode < m_size && m_cmp(m_heap[leftNode], m_heap[i]))
+        {
+            return false;
+        }
+
+        if (rightNode < m_size && m_cmp(m_heap[rightNode], m_heap[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

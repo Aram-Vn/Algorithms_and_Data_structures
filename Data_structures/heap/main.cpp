@@ -14,7 +14,6 @@ int main()
     my::priority_queue<int> h(vec.begin() + 3, vec.end());
     h.print();
 
-
     my::priority_queue<int> a;
 
     if (!h.empty())
@@ -29,5 +28,6 @@ int main()
         a.print();
     }
 
-    std::cout << a.size();
+    std::cout << a.extract_top() << std::endl;
+    std::cout << a.extract_top() << std::endl;
 }
