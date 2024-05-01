@@ -7,7 +7,7 @@ namespace my {
           m_size(input.size()),
           m_cmp(Compare{})
     {
-        make_heap();
+        this->make_heap();
     }
 
     template <typename T, typename Compare, typename Container>
@@ -124,20 +124,20 @@ namespace my {
     template <typename T, typename Compare, typename Container>
     void priority_queue<T, Compare, Container>::heapify_down(const size_t ind)
     {
-        size_t largest   = ind;
-        size_t leftNode  = left(ind);
-        size_t rightNode = right(ind);
+        size_t largest  = ind;
+        size_t leftInd  = left(ind);
+        size_t rightInd = right(ind);
 
-        if (leftNode < m_size && m_cmp(m_heap[leftNode], m_heap[largest]))
-            largest = leftNode;
+        if (leftInd < m_size && m_cmp(m_heap[leftInd], m_heap[largest]))
+            largest = leftInd;
 
-        if (rightNode < m_size && m_cmp(m_heap[rightNode], m_heap[largest]))
-            largest = rightNode;
+        if (rightInd < m_size && m_cmp(m_heap[rightInd], m_heap[largest]))
+            largest = rightInd;
 
         if (largest != ind)
         {
             std::swap(m_heap[ind], m_heap[largest]);
-            heapify_down(largest);
+            this->heapify_down(largest);
         }
     }
 
@@ -181,7 +181,7 @@ namespace my {
             throw std::out_of_range("priority_queue is empty");
         }
 
-        value_type top_value = m_heap[0];
+        value_type top_value = m_heap.front();
 
         std::swap(m_heap[0], m_heap[m_size - 1]);
         m_heap.pop_back();
@@ -202,7 +202,7 @@ namespace my {
             throw std::out_of_range("priority_queue is empty");
         }
 
-        return m_heap[0];
+        return m_heap.front();
     }
 
     //-----------------------------_-empty-_-------------------------------//
@@ -271,15 +271,15 @@ namespace my {
 
         for (size_t i = 0; i < m_size; ++i)
         {
-            size_t leftNode  = left(i);
-            size_t rightNode = right(i);
+            size_t leftInd  = left(i);
+            size_t rightInd = right(i);
 
-            if (leftNode < m_size && m_cmp(m_heap[leftNode], m_heap[i]))
+            if (leftInd < m_size && m_cmp(m_heap[leftInd], m_heap[i]))
             {
                 return false;
             }
 
-            if (rightNode < m_size && m_cmp(m_heap[rightNode], m_heap[i]))
+            if (rightInd < m_size && m_cmp(m_heap[rightInd], m_heap[i]))
             {
                 return false;
             }
