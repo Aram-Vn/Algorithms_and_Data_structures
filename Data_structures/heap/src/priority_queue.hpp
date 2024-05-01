@@ -1,68 +1,128 @@
 
 namespace my {
 
-    template <typename T, typename Cmp, typename Container>
-    priority_queue<T, Cmp, Container>::priority_queue(const container_type& input)
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue(const container_type& input)
         : m_heap(input),
           m_size(input.size()),
-          m_cmp(Cmp{})
+          m_cmp(Compare{})
     {
         make_heap();
     }
 
-    template <typename T, typename Cmp, typename Container>
-    priority_queue<T, Cmp, Container>::priority_queue()
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue()
         : m_heap{},
           m_size(0),
-          m_cmp(Cmp{})
+          m_cmp(Compare{})
     {
     }
 
-    template <typename T, typename Cmp, typename Container>
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue(std::initializer_list<value_type> init_list)
+        : m_heap(Container{}),
+          m_size(init_list.size()),
+          m_cmp(Compare{})
+
+    {
+        for (const_reference elem : init_list)
+        {
+            m_heap.push_back(elem);
+        }
+
+        this->make_heap();
+    }
+
+    template <typename T, typename Compare, typename Container>
     template <typename RandomAccessIterator>
-    priority_queue<T, Cmp, Container>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
+    priority_queue<T, Compare, Container>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
         : m_heap(first, last),
           m_size(last - first),
           m_cmp()
     {
-        make_heap();
+        this->make_heap();
+    }
+
+    //-------------------------_copy_-----------------------------//
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue(const priority_queue& other)
+        : m_heap(other.m_heap),
+          m_size(other.m_size),
+          m_cmp(other.m_cmp)
+    {
+    }
+
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>& priority_queue<T, Compare, Container>::operator=(const priority_queue& other)
+    {
+        if (this != &other)
+        {
+            m_heap = other.m_heap;
+            m_size = other.m_size;
+            m_cmp  = other.m_cmp;
+        }
+        return *this;
+    }
+
+    //-------------------------_move_-----------------------------//
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue(priority_queue&& other) noexcept
+        : m_heap(std::move(other.m_heap)),
+          m_size(other.m_size),
+          m_cmp(std::move(other.m_cmp))
+    {
+        other.m_size = 0;
+    }
+
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>& priority_queue<T, Compare, Container>::operator=(
+        priority_queue&& other) noexcept
+    {
+        if (this != &other)
+        {
+            m_heap       = std::move(other.m_heap);
+            m_size       = other.m_size;
+            m_cmp        = std::move(other.m_cmp);
+            other.m_size = 0;
+        }
+        return *this;
     }
 
     //-----------------------------_-make_heap-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::make_heap()
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::make_heap()
     {
         for (int i = (m_size / 2) - 1; i >= 0; --i)
         {
-            heapify_down(i);
+            this->heapify_down(i);
         }
     }
 
     //-----------------------------_-parent-_-------------------------------//
 
-    template <typename T, typename Cmp, typename Container>
-    constexpr size_t priority_queue<T, Cmp, Container>::parent(const size_t ind) const noexcept
+    template <typename T, typename Compare, typename Container>
+    inline size_t priority_queue<T, Compare, Container>::parent(const size_t ind) const noexcept
     {
         return (ind - 1) / 2;
     }
 
     //-----------------------------_-left-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    constexpr size_t priority_queue<T, Cmp, Container>::left(const size_t ind) const noexcept
+    template <typename T, typename Compare, typename Container>
+    inline size_t priority_queue<T, Compare, Container>::left(const size_t ind) const noexcept
     {
         return 2 * ind + 1;
     }
 
     //-----------------------------_-right-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    constexpr size_t priority_queue<T, Cmp, Container>::right(const size_t ind) const noexcept
+    template <typename T, typename Compare, typename Container>
+    inline size_t priority_queue<T, Compare, Container>::right(const size_t ind) const noexcept
     {
         return 2 * ind + 2;
     }
 
     //-----------------------------_-heapify_down-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::heapify_down(const size_t ind)
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::heapify_down(const size_t ind)
     {
         size_t largest   = ind;
         size_t leftNode  = left(ind);
@@ -82,8 +142,8 @@ namespace my {
     }
 
     //-----------------------------_-push-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::push(const_reference val)
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::push(const_reference val)
     {
         m_heap.push_back(val);
         ++m_size;
@@ -97,8 +157,8 @@ namespace my {
     }
 
     //-----------------------------_-pop-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::pop()
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::pop()
     {
         if (m_size == 0)
         {
@@ -109,12 +169,12 @@ namespace my {
         m_heap.pop_back();
         --m_size;
 
-        heapify_down(0); // Restore the heap property
+        this->heapify_down(0); // Restore the heap property
     }
 
     //-----------------------------_-extract_top-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    typename priority_queue<T, Cmp, Container>::value_type priority_queue<T, Cmp, Container>::extract_top()
+    template <typename T, typename Compare, typename Container>
+    typename priority_queue<T, Compare, Container>::value_type priority_queue<T, Compare, Container>::extract_top()
     {
         if (m_size == 0)
         {
@@ -127,14 +187,15 @@ namespace my {
         m_heap.pop_back();
         --m_size;
 
-        heapify_down(0); // Restore the heap property
+        this->heapify_down(0); // Restore the heap property
 
         return top_value;
     }
 
     //-----------------------------_-top-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    constexpr typename priority_queue<T, Cmp, Container>::const_reference priority_queue<T, Cmp, Container>::top() const
+    template <typename T, typename Compare, typename Container>
+    inline typename priority_queue<T, Compare, Container>::const_reference priority_queue<T, Compare, Container>::top()
+        const
     {
         if (m_size == 0)
         {
@@ -145,23 +206,23 @@ namespace my {
     }
 
     //-----------------------------_-empty-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    constexpr bool priority_queue<T, Cmp, Container>::empty() const noexcept
+    template <typename T, typename Compare, typename Container>
+    inline bool priority_queue<T, Compare, Container>::empty() const noexcept
     {
         return m_size == 0;
     }
 
     //-----------------------------_-size-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    constexpr typename priority_queue<T, Cmp, Container>::size_type priority_queue<T, Cmp, Container>::size()
+    template <typename T, typename Compare, typename Container>
+    inline typename priority_queue<T, Compare, Container>::size_type priority_queue<T, Compare, Container>::size()
         const noexcept
     {
         return m_size;
     }
 
     //-----------------------------_-print-_-------------------------------//
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::print() const noexcept
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::print() const noexcept
     {
         if (m_heap.empty())
         {
@@ -176,8 +237,8 @@ namespace my {
         std::cout << std::endl;
     }
 
-    template <typename T, typename Cmp, typename Container>
-    void priority_queue<T, Cmp, Container>::print_level() const noexcept
+    template <typename T, typename Compare, typename Container>
+    void priority_queue<T, Compare, Container>::print_level() const noexcept
     {
         if (m_heap.empty())
         {
@@ -200,8 +261,8 @@ namespace my {
         std::cout << std::endl;
     }
 
-    template <typename T, typename Cmp, typename Container>
-    constexpr bool priority_queue<T, Cmp, Container>::is_valid_heap() const noexcept
+    template <typename T, typename Compare, typename Container>
+    bool priority_queue<T, Compare, Container>::is_valid_heap() const noexcept
     {
         if (m_heap.empty())
         {

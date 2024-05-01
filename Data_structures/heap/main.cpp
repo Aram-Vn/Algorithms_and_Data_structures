@@ -1,3 +1,5 @@
+#include <deque>
+#include <functional>
 #include <iostream>
 #include <priority_queue.h>
 #include <vector>
@@ -7,6 +9,9 @@ int main()
     std::vector<int>        vec = { 3, 2, 4, 1, 5, 9, 10, 55, 88, 77, 12 };
     my::priority_queue<int> min(vec);
     min.print_level();
+
+    my::priority_queue<int, std::less<int>, std::deque<int>> re = { 3, 2, 4, 1, 5, 9, 10, 55, 88, 77, 12 };
+    re.print_level();
 
     my::priority_queue<int, std::greater<int>> max(vec);
     max.print();
