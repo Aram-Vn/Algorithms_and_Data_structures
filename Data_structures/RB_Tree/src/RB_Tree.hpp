@@ -84,6 +84,8 @@ namespace my {
     typename RB_Tree<T>::Node* RB_Tree<T>::right_rotate(Node* x_node)
     {
         Node* y_node = x_node->right; // Set y_node
+
+        
     }
 
 } // namespace my
