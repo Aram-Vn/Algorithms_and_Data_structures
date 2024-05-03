@@ -1,46 +1,45 @@
 #include <Binary_Search_Tree.h>
 
+#include "Binary_Search_Tree.h"
+
 int main()
 {
+    // Create an instance of BST
+    my::BST<int> original;
 
-    BST<int> bst = { 60, 50, 70, 40, 55, 65, 80, 30, 45, 53, 58, 63, 68, 75, 90, 20, 35, 42 };
+    // Insert some values into the original BST
+    original.insert(50);
+    original.insert(30);
+    original.insert(70);
+    original.insert(20);
+    original.insert(40);
+    original.insert(60);
+    original.insert(80);
 
-    std::cout << "Inorder Traversal: \n";
-    bst.inorderTraversal();
-    bst.postTraversal();
-    bst.preTraversal();
-    bst.levelOrderTraversal();
+    // Create a new BST by moving from the original BST (move constructor)
+    my::BST<int> moved(std::move(original));
 
-    std::cout << bst.getSuccessor(40) << std::endl;
-    std::cout << bst.getPredecessor(40) << std::endl;
-    int searchValue = 6;
-    if (bst.search(searchValue))
-    {
-        std::cout << searchValue << " found in the BST.\n";
-    }
-    else
-    {
-        std::cout << searchValue << " not found in the BST.\n";
-    }
+    // Print the elements of the moved BST
+    std::cout << "Moved BST:" << std::endl;
+    moved.inorderTraversal();
+    std::cout << std::endl;
 
-    std::cout << bst.find_min() << std::endl;
-    std::cout << bst.find_max() << std::endl;
-    bst.Delete(70);
-    bst.Delete(50);
+    // Attempt to access elements of the original BST (should produce undefined behavior)
+    std::cout << "Original BST after moving:" << std::endl;
+    original.inorderTraversal(); // This should produce undefined behavior
 
-    std::cout << "\nBST after deletion: 50 70" << std::endl;
-    bst.inorderTraversal();
+    // Create another instance and use the move assignment operator
+    my::BST<int> assigned;
+    assigned = std::move(moved);
 
-    searchValue = 10;
-    if (bst.search(searchValue))
-    {
-        std::cout << searchValue << " found in the BST.\n";
-    }
-    else
-    {
-        std::cout << searchValue << " not found in the BST.\n";
-    }
+    // Print the elements of the assigned BST
+    std::cout << "Assigned BST:" << std::endl;
+    assigned.inorderTraversal();
+    std::cout << std::endl;
 
-    std::cout << bst.getHeight() << std::endl;
+    // Print the elements of the moved BST (should be in a valid but unspecified state)
+    std::cout << "Moved BST after moving:" << std::endl;
+    moved.inorderTraversal(); // This should produce an empty traversal
+
     return 0;
 }
