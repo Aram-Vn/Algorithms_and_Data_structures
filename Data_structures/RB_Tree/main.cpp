@@ -4,4 +4,5 @@
 int main()
 {
     my::RB_Tree<int> aa(5);
+    my::RB_Tree<int> a;
 }
