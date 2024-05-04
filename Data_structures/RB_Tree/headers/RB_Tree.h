@@ -24,14 +24,14 @@ namespace my {
 
         struct Node
         {
-            value_type data;
+            value_type val;
             Node*      parent;
             Node*      left;
             Node*      right;
             Color      color = Color::RED;
 
-            Node(const_reference val, Node* node = nullptr, Color node_color = Color::RED)
-                : data(val),
+            Node(const_reference new_val, Node* node = nullptr, Color node_color = Color::RED)
+                : val(new_val),
                   parent(node),
                   left(node),
                   right(node),
@@ -47,11 +47,16 @@ namespace my {
         ~RB_Tree();
         // functions...
 
+        void clearTree(); //
+        void insert(const T& val); //
+
     private:
         // modifiers
-        void  destroyTree(Node* node);
-        Node* left_rotate(Node* node); // ?
-        Node* right_rotate(Node* node);
+        void  destroy_tree(Node* node); //
+        void  insert(Node* z_node);     //
+        void  insert_fixup(Node* z_node);
+        Node* left_rotate(Node* x_node);  //
+        Node* right_rotate(Node* y_node); //
 
     private:
         Node* m_root;
