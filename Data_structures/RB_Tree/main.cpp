@@ -3,6 +3,12 @@
 
 int main()
 {
-    my::RB_Tree<int> aa(5);
+    // my::RB_Tree<int> a;
     my::RB_Tree<int> a;
+
+    for (int i = 0; i < 18; ++i)
+    {
+        a.insert(i);
+    }
+    a.level_order_traversal();
 }

@@ -1,7 +1,12 @@
 #ifndef DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 #define DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 
+#include <cstddef>
+#include <cstdlib>
+#include <functional>
 #include <initializer_list>
+#include <iostream>
+#include <queue>
 
 namespace my {
 
@@ -47,8 +52,11 @@ namespace my {
         ~RB_Tree();
         // functions...
 
-        void clearTree(); //
-        void insert(const T& val); //
+        void                                                clearTree();          //
+        void                                                insert(const T& val); //
+        void                                                inorder_traversal();
+        std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal();
+        void                                                color();
 
     private:
         // modifiers

@@ -1,5 +1,3 @@
-#include "../headers/RB_Tree.h"
-
 namespace my {
     template <typename T>
     RB_Tree<T>::RB_Tree()
@@ -12,7 +10,7 @@ namespace my {
     {
         if (m_root == nullptr)
         {
-            m_root = new Node(val, m_nil);
+            m_root = new Node(val, m_nil, Color::BLACK);
         }
     }
 
@@ -56,6 +54,12 @@ namespace my {
     template <typename T>
     void RB_Tree<T>::insert(const T& val)
     {
+        if (m_root == nullptr)
+        {
+            m_root = new Node(val, m_nil, Color::BLACK);
+            return;
+        }
+
         Node* z_node = new Node(val, m_nil);
         insert(z_node);
     }
@@ -89,7 +93,7 @@ namespace my {
         {
             m_root = z_node;
         }
-        else if (z_node->val < y_node->left)
+        else if (z_node->val < y_node->val)
         {
             y_node->left = z_node;
         }
@@ -160,6 +164,8 @@ namespace my {
                 }
             }
         }
+
+        m_root->color = Color::BLACK;
     }
 
     //-------------------------_-left_rotate-_-----------------------------//
@@ -196,7 +202,7 @@ namespace my {
         return y_node;
     }
 
-    //-------------------------_-left_rotate-_-----------------------------//
+    //-------------------------_-right_rotate-_-----------------------------//
     template <typename T>
     typename RB_Tree<T>::Node* RB_Tree<T>::right_rotate(Node* y_node)
     {
@@ -229,6 +235,101 @@ namespace my {
         y_node->parent = x_node;
 
         return x_node;
+    }
+
+    //-------------------------_-inorder_traversal-_-----------------------------//
+    template <typename T>
+
+    void RB_Tree<T>::inorder_traversal()
+    {
+        if (m_root == nullptr)
+        {
+            std::cout << "tree is empty" << std::endl;
+            return;
+        }
+
+        std::function<void(Node*)> inorder_lambda = [this, &inorder_lambda](Node* node)
+        {
+            if (node != m_nil)
+            {
+                inorder_lambda(node->left);
+                std::cout << (node->color == Color::RED ? "RED" : "BLACK") << ": " << node->val << " ,";
+                inorder_lambda(node->right);
+            }
+        };
+
+        inorder_lambda(m_root);
+        std::cout << std::endl;
+    }
+
+    //-------------------------_levelOrderTraversal_-----------------------------//
+    template <typename T>
+    std::vector<std::vector<std::pair<std::string, T>>> RB_Tree<T>::level_order_traversal()
+    {
+        std::vector<std::vector<std::pair<std::string, T>>> res;
+
+        auto levelOrderLambda = [&res](Node* root) -> void
+        {
+            if (root == nullptr)
+            {
+                return;
+            }
+
+            std::queue<Node*> nodes;
+            nodes.push(root);
+
+            while (!nodes.empty())
+            {
+                size_t                                 Qsize = nodes.size();
+                std::vector<std::pair<std::string, T>> vec;
+
+                for (size_t i = 0; i < Qsize; ++i)
+                {
+                    Node* node = nodes.front();
+                    nodes.pop();
+
+                    if (node->left != nullptr)
+                    {
+                        nodes.push(node->left);
+                    }
+
+                    if (node->right != nullptr)
+                    {
+                        nodes.push(node->right);
+                    }
+
+                    if (node->right == nullptr && node->right == nullptr)
+                    {
+                        vec.push_back({ "Nil", node->val });
+                    }
+                    else
+                    {
+                        vec.push_back({ (node->color == Color::RED ? "RED" : "BLACK"), node->val });
+                    }
+                }
+
+                res.push_back(vec);
+            }
+        };
+
+        levelOrderLambda(m_root);
+
+        for (const auto& level : res)
+        {
+            for (const auto& node : level)
+            {
+                std::cout << node.first << ": " << node.second << ", ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        return res;
+    }
+
+    template <typename T>
+    void RB_Tree<T>::color()
+    {
+        std::cout << (m_root->color == Color::RED ? "RED" : "BLACK") << m_root->val << std::endl;
     }
 
 } // namespace my
