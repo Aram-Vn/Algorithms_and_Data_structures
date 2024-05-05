@@ -1,3 +1,4 @@
+#include "RB_Tree.h"
 namespace my {
     template <typename T>
     RB_Tree<T>::RB_Tree()
@@ -15,13 +16,17 @@ namespace my {
     }
 
     template <typename T>
-    RB_Tree<T>::RB_Tree(std::initializer_list<RB_Tree<T>::value_type>)
+    RB_Tree<T>::RB_Tree(std::initializer_list<RB_Tree<T>::value_type> init_list)
         : m_root(nullptr)
     {
+        for (const auto& elem : init_list)
+        {
+            this->insert(elem);
+        }
     }
 
     template <typename T>
-    RB_Tree<T>::~RB_Tree<T>()
+    RB_Tree<T>::~RB_Tree<T>() noexcept
     {
         if (m_root != nullptr)
         {
@@ -52,7 +57,7 @@ namespace my {
 
     //-------------------------_-insert-_-----------------------------//
     template <typename T>
-    void RB_Tree<T>::insert(const T& val)
+    void RB_Tree<T>::insert(RB_Tree<T>::const_reference val)
     {
         if (m_root == nullptr)
         {
@@ -266,7 +271,7 @@ namespace my {
     template <typename T>
     std::vector<std::vector<std::pair<std::string, T>>> RB_Tree<T>::level_order_traversal()
     {
-        std::vector<std::vector<std::pair<std::string, T>>> res;
+        std::vector<std::vector<std::pair<std::string, RB_Tree<T>::value_type>>> res;
 
         auto levelOrderLambda = [&res](Node* root) -> void
         {
@@ -280,8 +285,8 @@ namespace my {
 
             while (!nodes.empty())
             {
-                size_t                                 Qsize = nodes.size();
-                std::vector<std::pair<std::string, T>> vec;
+                size_t                                                      Qsize = nodes.size();
+                std::vector<std::pair<std::string, RB_Tree<T>::value_type>> vec;
 
                 for (size_t i = 0; i < Qsize; ++i)
                 {
@@ -324,12 +329,6 @@ namespace my {
         }
         std::cout << std::endl;
         return res;
-    }
-
-    template <typename T>
-    void RB_Tree<T>::color()
-    {
-        std::cout << (m_root->color == Color::RED ? "RED" : "BLACK") << m_root->val << std::endl;
     }
 
 } // namespace my

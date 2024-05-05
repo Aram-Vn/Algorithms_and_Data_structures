@@ -48,15 +48,14 @@ namespace my {
     public:
         RB_Tree();                    //
         RB_Tree(const_reference val); //
-        RB_Tree(std::initializer_list<value_type>);
-        ~RB_Tree();
+        RB_Tree(std::initializer_list<value_type> init_list);
+        ~RB_Tree() noexcept; //
         // functions...
 
-        void                                                clearTree();          //
-        void                                                insert(const T& val); //
-        void                                                inorder_traversal();
-        std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal();
-        void                                                color();
+        void                                                clearTree();                 //
+        void                                                insert(const_reference val); //
+        void                                                inorder_traversal();         //
+        std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal();     //
 
     private:
         // modifiers
