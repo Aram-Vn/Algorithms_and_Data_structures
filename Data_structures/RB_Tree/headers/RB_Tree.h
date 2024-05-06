@@ -1,8 +1,8 @@
 #ifndef DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 #define DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 
-#include <cstddef>
-#include <cstdlib>
+// #include <cstddef>
+// #include <cstdlib>
 #include <functional>
 #include <initializer_list>
 #include <iostream>
@@ -52,10 +52,13 @@ namespace my {
         ~RB_Tree() noexcept; //
         // functions...
 
-        void                                                clearTree();                 //
-        void                                                insert(const_reference val); //
-        void                                                inorder_traversal();         //
-        std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal();     //
+        void                                                inorder_traversal();     //
+        std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal(); //
+
+        void            clearTree();                 //
+        void            insert(const_reference val); //
+        void            delete_val(const_reference val);
+        const_reference get_minVal() const;
 
     private:
         // modifiers
@@ -64,6 +67,12 @@ namespace my {
         void  insert_fixup(Node* z_node);
         Node* left_rotate(Node* x_node);  //
         Node* right_rotate(Node* y_node); //
+
+        void  delete_node(Node* z_node);
+        void  delete_fixup(Node* x_node);
+        void  transplant(Node* u_node, Node* v_node); //
+        Node* get_minNode(Node* node) const;
+        Node* find_node(const_reference val);
 
     private:
         Node* m_root;

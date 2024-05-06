@@ -1,4 +1,5 @@
 #include "RB_Tree.h"
+#include <csignal>
 namespace my {
     template <typename T>
     RB_Tree<T>::RB_Tree()
@@ -242,9 +243,158 @@ namespace my {
         return x_node;
     }
 
+    //-------------------------_-delete_node-_-----------------------------//
+    template <typename T>
+    void RB_Tree<T>::delete_val(RB_Tree<T>::const_reference val)
+    {
+        Node* node_to_delete = find_node(val);
+
+        if (node_to_delete == nullptr)
+        {
+            throw std::out_of_range("Value to be deleted does not exist in the tree.");
+        }
+
+        this->delete_node(node_to_delete);
+    }
+
+    template <typename T>
+    void RB_Tree<T>::delete_node(Node* z_node)
+    {
+        Node* y_node      = z_node;
+        Node* x_node      = nullptr;
+        Color y_origColor = y_node->color;
+
+        if (z_node->left == m_nil)
+        {
+            x_node = z_node->right;
+            this->tranplant(z_node, z_node->right);
+        }
+        else if (z_node->right == m_nil)
+        {
+            x_node = z_node->left;
+            this->tranplant(z_node, z_node->left);
+        }
+        else
+        {
+            y_node      = get_minNode(z_node->right); // z_node's successor
+            y_origColor = y_node->color;
+            x_node      = y_node->right;
+
+            if (y_node->parent == z_node)
+            {
+                x_node->parent = z_node;
+            }
+            else
+            {
+                this->transplant(y_node, y_node->right);
+                y_node->right         = z_node->right;
+                y_node->right->parent = y_node;
+            }
+
+            this->transplant(z_node, x_node);
+            y_node->left         = z_node->left;
+            y_node->left->parent = y_node;
+            y_node->color        = z_node->color;
+        }
+
+        if (y_origColor == Color::BLACK)
+        {
+            this->delete_fixup(x_node);
+        }
+    }
+
+    //-------------------------_-delete_fixup-_-----------------------------//
+    template <typename T>
+    void RB_Tree<T>::delete_fixup(Node* x_node)
+    {
+        while (x_node != m_root && x_node->color == Color::BLACK) // BB case
+        {
+            if (x_node == x_node->parent->left)
+            {
+                Node* w_node = x_node->parent->right; // sibling
+
+                if (w_node->color == Color::RED)
+                {
+                    w_node->color         = Color::BLACK;
+                    x_node->parent->color = Color::RED;
+                    this->left_rotate(x_node->parent);
+                    w_node = x_node->parent->right;
+                }
+            }
+        }
+    }
+
+    //-------------------------_-transplant-_-----------------------------//
+    template <typename T>
+    void RB_Tree<T>::transplant(Node* U_node, Node* V_node)
+    {
+        if (U_node->parent == m_nil)
+        {
+            m_root = V_node;
+        }
+
+        if (U_node == U_node->parent->left)
+        {
+            U_node->parent->left = V_node;
+        }
+        else
+        {
+            U_node->parent->right = V_node;
+        }
+
+        V_node->parent = U_node->parent;
+    }
+
+    //-------------------------_-get_min-_-----------------------------//
+    template <typename T>
+    typename RB_Tree<T>::const_reference RB_Tree<T>::get_minVal() const
+    {
+        return get_minNode(m_root)->val;
+    }
+
+    template <typename T>
+    typename RB_Tree<T>::Node* RB_Tree<T>::get_minNode(Node* node) const
+    {
+        if (node == m_nil)
+        {
+            return nullptr;
+        }
+
+        while (node->left != m_nil)
+        {
+            node = node->left;
+        }
+
+        return node;
+    }
+
+    //-------------------------_-find_node-_-----------------------------//
+    template <typename T>
+    typename RB_Tree<T>::Node* RB_Tree<T>::find_node(RB_Tree<T>::const_reference val)
+    {
+        Node* node = m_root;
+
+        while (node != m_nil)
+        {
+            if (node->val > val)
+            {
+                node = node->left;
+            }
+            else if (node->val < val)
+            {
+                node = node->right;
+            }
+            else
+            {
+                return node;
+            }
+        }
+
+        return nullptr;
+    }
+
     //-------------------------_-inorder_traversal-_-----------------------------//
     template <typename T>
-
     void RB_Tree<T>::inorder_traversal()
     {
         if (m_root == nullptr)
@@ -267,7 +417,7 @@ namespace my {
         std::cout << std::endl;
     }
 
-    //-------------------------_levelOrderTraversal_-----------------------------//
+    //-------------------------level_order_traversal-----------------------------//
     template <typename T>
     std::vector<std::vector<std::pair<std::string, T>>> RB_Tree<T>::level_order_traversal()
     {
