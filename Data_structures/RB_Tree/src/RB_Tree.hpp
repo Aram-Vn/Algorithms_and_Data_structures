@@ -31,7 +31,7 @@ namespace my {
     {
         if (m_root != nullptr)
         {
-            destroy_tree(m_root);
+            this->destroy_tree(m_root);
         }
 
         delete m_nil;
@@ -311,15 +311,35 @@ namespace my {
         {
             if (x_node == x_node->parent->left)
             {
-                Node* w_node = x_node->parent->right; // sibling
+                Node* w_sibling = x_node->parent->right; // sibling
 
-                if (w_node->color == Color::RED)
+                if (w_sibling->color == Color::RED) // case: 1
                 {
-                    w_node->color         = Color::BLACK;
+                    w_sibling->color      = Color::BLACK;
                     x_node->parent->color = Color::RED;
                     this->left_rotate(x_node->parent);
-                    w_node = x_node->parent->right;
+                    w_sibling = x_node->parent->right;
                 }
+
+                if (w_sibling->left->color == Color::BLACK && w_sibling->right->color == Color::BLACk) // case: 2
+                {
+                    w_sibling->color = Color::RED;
+                    x_node           = x_node->parent;
+                }
+                else
+                {
+                    if (w_sibling->right->color == Color::BLACK) // case: 3
+                    {
+                        w_sibling->left->color = Color::BLACK;
+                        w_sibling->color       = Color::RED;
+                        this->right_rotate(w_sibling);
+                        w_sibling = x_node->parent->right;
+                    }
+                }
+            }
+            else // miror
+            {
+                // to do...
             }
         }
     }
