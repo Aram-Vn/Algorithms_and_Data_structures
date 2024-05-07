@@ -1,3 +1,0 @@
-/home/aram/dev/Algorithms_and_Data_structures/Data_structures/build/CMakeFiles/Binary_Search_Tree.dir
-/home/aram/dev/Algorithms_and_Data_structures/Data_structures/build/CMakeFiles/edit_cache.dir
-/home/aram/dev/Algorithms_and_Data_structures/Data_structures/build/CMakeFiles/rebuild_cache.dir
