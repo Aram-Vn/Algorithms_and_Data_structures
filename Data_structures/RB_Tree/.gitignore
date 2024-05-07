@@ -1,5 +1,5 @@
-.cache
 build/
-.clang-format
 compile_commands.json
+.clang-format
 .vscode
+.cache

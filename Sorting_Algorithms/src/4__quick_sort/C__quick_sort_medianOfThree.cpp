@@ -7,11 +7,17 @@ int medianOfThree(std::vector<int>& arr, int start, int end)
     int mid = start + (end - start) / 2;
 
     if (arr[start] > arr[mid])
+    {
         std::swap(arr[start], arr[mid]);
+    }
     if (arr[start] > arr[end])
+    {
         std::swap(arr[start], arr[end]);
+    }
     if (arr[mid] > arr[end])
+    {
         std::swap(arr[mid], arr[end]);
+    }
 
     return mid;
 }

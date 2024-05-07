@@ -89,7 +89,7 @@ namespace my {
             {
                 insert(node->left, value);
             }
-            else
+            else if (value > node->val)
             {
                 insert(node->right, value);
             }

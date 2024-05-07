@@ -1,5 +1,4 @@
 #include "RB_Tree.h"
-#include <csignal>
 namespace my {
     template <typename T>
     RB_Tree<T>::RB_Tree()
@@ -50,8 +49,8 @@ namespace my {
     {
         if (node != m_nil)
         {
-            destroy_tree(node->left);
-            destroy_tree(node->right);
+            this->destroy_tree(node->left);
+            this->destroy_tree(node->right);
             delete node;
         }
     }
@@ -67,7 +66,7 @@ namespace my {
         }
 
         Node* z_node = new Node(val, m_nil);
-        insert(z_node);
+        this->insert(z_node);
     }
 
     template <typename T>
@@ -108,7 +107,7 @@ namespace my {
             y_node->right = z_node;
         }
 
-        insert_fixup(z_node);
+        this->insert_fixup(z_node);
     }
 
     //-------------------------_-insert_fixup-_-----------------------------//
@@ -133,13 +132,13 @@ namespace my {
                     if (z_node == z_node->parent->right) // Case 2a: z_node is a right child
                     {
                         z_node = z_node->parent;
-                        left_rotate(z_node);
+                        this->left_rotate(z_node);
                     }
                     else // Case 2b: z_node is a left child
                     {
                         z_node->parent->color         = Color::BLACK;
                         z_node->parent->parent->color = Color::RED;
-                        right_rotate(z_node->parent->parent);
+                        this->right_rotate(z_node->parent->parent);
                     }
                 }
             }
@@ -159,13 +158,13 @@ namespace my {
                     if (z_node == z_node->parent->left) // Case 2a: z_node is a left child
                     {
                         z_node = z_node->parent;
-                        right_rotate(z_node);
+                        this->right_rotate(z_node);
                     }
                     else // Case 2b: z_node is a right child
                     {
                         z_node->parent->color         = Color::BLACK;
                         z_node->parent->parent->color = Color::RED;
-                        left_rotate(z_node->parent->parent);
+                        this->left_rotate(z_node->parent->parent);
                     }
                 }
             }
@@ -260,46 +259,51 @@ namespace my {
     template <typename T>
     void RB_Tree<T>::delete_node(Node* z_node)
     {
-        Node* y_node      = z_node;
-        Node* x_node      = nullptr;
-        Color y_origColor = y_node->color;
+        if (z_node == nullptr || z_node == m_nil)
+        {
+            return;
+        }
+
+        Node* y_node           = z_node;
+        Node* x_node           = nullptr;
+        Color y_original_color = y_node->color;
 
         if (z_node->left == m_nil)
         {
             x_node = z_node->right;
-            this->tranplant(z_node, z_node->right);
+            transplant(z_node, z_node->right);
         }
         else if (z_node->right == m_nil)
         {
             x_node = z_node->left;
-            this->tranplant(z_node, z_node->left);
+            transplant(z_node, z_node->left);
         }
         else
         {
-            y_node      = get_minNode(z_node->right); // z_node's successor
-            y_origColor = y_node->color;
-            x_node      = y_node->right;
-
+            y_node           = get_minNode(z_node->right);
+            y_original_color = y_node->color;
+            x_node           = y_node->right;
             if (y_node->parent == z_node)
             {
-                x_node->parent = z_node;
+                x_node->parent = y_node;
             }
             else
             {
-                this->transplant(y_node, y_node->right);
+                transplant(y_node, y_node->right);
                 y_node->right         = z_node->right;
                 y_node->right->parent = y_node;
             }
-
-            this->transplant(z_node, x_node);
+            transplant(z_node, y_node);
             y_node->left         = z_node->left;
             y_node->left->parent = y_node;
             y_node->color        = z_node->color;
         }
 
-        if (y_origColor == Color::BLACK)
+        delete z_node;
+
+        if (y_original_color == Color::BLACK)
         {
-            this->delete_fixup(x_node);
+            delete_fixup(x_node);
         }
     }
 
@@ -307,41 +311,82 @@ namespace my {
     template <typename T>
     void RB_Tree<T>::delete_fixup(Node* x_node)
     {
-        while (x_node != m_root && x_node->color == Color::BLACK) // BB case
+        while (x_node != m_root && x_node->color == Color::BLACK)
         {
             if (x_node == x_node->parent->left)
             {
-                Node* w_sibling = x_node->parent->right; // sibling
+                Node* w_sibling = x_node->parent->right;
 
-                if (w_sibling->color == Color::RED) // case: 1
+                if (w_sibling->color == Color::RED) // Case 1: x_node's sibling is red
                 {
                     w_sibling->color      = Color::BLACK;
                     x_node->parent->color = Color::RED;
-                    this->left_rotate(x_node->parent);
+                    left_rotate(x_node->parent);
                     w_sibling = x_node->parent->right;
                 }
 
-                if (w_sibling->left->color == Color::BLACK && w_sibling->right->color == Color::BLACk) // case: 2
+                // Case 2: x_node's sibling is black and both of w_node's children are black
+                if (w_sibling->left->color == Color::BLACK && w_sibling->right->color == Color::BLACK)
                 {
                     w_sibling->color = Color::RED;
                     x_node           = x_node->parent;
                 }
                 else
                 {
-                    if (w_sibling->right->color == Color::BLACK) // case: 3
+                    // Case 3: x_node's sibling is black, w_node's left child is red, and right child is black
+                    if (w_sibling->right->color == Color::BLACK)
                     {
                         w_sibling->left->color = Color::BLACK;
                         w_sibling->color       = Color::RED;
-                        this->right_rotate(w_sibling);
+                        right_rotate(w_sibling);
                         w_sibling = x_node->parent->right;
                     }
+
+                    // Case 4: x_node's sibling is black, and w_node's right child is red
+                    w_sibling->color        = x_node->parent->color;
+                    x_node->parent->color   = Color::BLACK;
+                    w_sibling->right->color = Color::BLACK;
+                    left_rotate(x_node->parent);
+                    x_node = m_root;
                 }
             }
-            else // miror
+            else // miror case
             {
-                // to do...
+                Node* w_sibling = x_node->parent->left;
+
+                if (w_sibling->color == Color::RED)
+                {
+                    w_sibling->color      = Color::BLACK;
+                    x_node->parent->color = Color::RED;
+                    right_rotate(x_node->parent);
+                    w_sibling = x_node->parent->left;
+                }
+
+                if (w_sibling->right->color == Color::BLACK && w_sibling->left->color == Color::BLACK)
+                {
+                    w_sibling->color = Color::RED;
+                    x_node           = x_node->parent;
+                }
+                else
+                {
+                    if (w_sibling->left->color == Color::BLACK)
+                    {
+                        w_sibling->right->color = Color::BLACK;
+                        w_sibling->color        = Color::RED;
+                        left_rotate(w_sibling);
+                        w_sibling = x_node->parent->left;
+                    }
+
+                    w_sibling->color       = x_node->parent->color;
+                    x_node->parent->color  = Color::BLACK;
+                    w_sibling->left->color = Color::BLACK;
+                    right_rotate(x_node->parent);
+                    x_node = m_root;
+                }
             }
         }
+
+        x_node->color = Color::BLACK;
     }
 
     //-------------------------_-transplant-_-----------------------------//
@@ -499,6 +544,83 @@ namespace my {
         }
         std::cout << std::endl;
         return res;
+    }
+
+    template <typename T>
+    bool RB_Tree<T>::check_black_height(Node* node) const
+    {
+        int left_black_height = 0, right_black_height = 0;
+
+        if (node == m_nil)
+        {
+            return true;
+        }
+
+        left_black_height  = check_black_height(node->left);
+        right_black_height = check_black_height(node->right);
+
+        if (left_black_height != right_black_height)
+        {
+            return false;
+        }
+
+        return (node->color == Color::BLACK) ? left_black_height + 1 : left_black_height;
+    }
+
+    template <typename T>
+    bool RB_Tree<T>::check_black_height() const
+    {
+        return check_black_height(m_root);
+    }
+
+    template <typename T>
+    bool RB_Tree<T>::root_color() const
+    {
+        std::cout << (m_root->color == Color::BLACK ? "BLACK" : "RED") << std::endl;
+        return m_root->color == Color::BLACK;
+    }
+
+    template <typename T>
+    bool RB_Tree<T>::check_no_adjacent_red_nodes(Node* node) const
+    {
+        if (node == m_nil)
+            return true;
+
+        if (!check_no_adjacent_red_nodes(node->left))
+            return false;
+
+        if (node->color == Color::RED && node->left->color == Color::RED)
+            return false;
+
+        return check_no_adjacent_red_nodes(node->right);
+    }
+
+    template <typename T>
+    bool RB_Tree<T>::check_no_adjacent_red_nodes() const
+    {
+        return check_no_adjacent_red_nodes(m_root);
+    }
+
+    template <typename T>
+    void RB_Tree<T>::display()
+    {
+        disp_helper(m_root, 0);
+        std::cout << std::endl;
+    }
+
+    template <typename T>
+    void RB_Tree<T>::disp_helper(Node* root, int dept)
+    {
+        if (root == m_nil || root == nullptr)
+        {
+            return;
+        }
+
+        disp_helper(root->right, dept + 4);
+
+        std::cout << std::setw(dept) << (root->color == Color::BLACK ? "B " : "R ") << root->val << std::endl;
+
+        disp_helper(root->left, dept + 4);
     }
 
 } // namespace my

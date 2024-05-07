@@ -3,10 +3,13 @@
 
 // #include <cstddef>
 // #include <cstdlib>
+#include <csignal>
 #include <functional>
 #include <initializer_list>
+#include <iomanip>
 #include <iostream>
 #include <queue>
+#include <sys/types.h>
 
 namespace my {
 
@@ -21,10 +24,10 @@ namespace my {
         using const_pointer   = const pointer;
 
     private:
-        enum class Color
+        enum class Color : u_char
         {
-            RED,
-            BLACK
+            RED   = 'R',
+            BLACK = 'B'
         }; // enum class Color
 
         struct Node
@@ -59,6 +62,10 @@ namespace my {
         void            insert(const_reference val); //
         void            delete_val(const_reference val);
         const_reference get_minVal() const;
+        bool            check_black_height() const;
+        bool            root_color() const;
+        bool            check_no_adjacent_red_nodes() const;
+        void            display();
 
     private:
         // modifiers
@@ -73,6 +80,9 @@ namespace my {
         void  transplant(Node* u_node, Node* v_node); //
         Node* get_minNode(Node* node) const;
         Node* find_node(const_reference val);
+        bool  check_black_height(Node* node) const;
+        bool  check_no_adjacent_red_nodes(Node* node) const;
+        void  disp_helper(Node* root, int dept);
 
     private:
         Node* m_root;

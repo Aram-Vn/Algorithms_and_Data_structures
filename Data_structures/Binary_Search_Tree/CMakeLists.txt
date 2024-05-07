@@ -12,12 +12,12 @@ target_include_directories(Binary_Search_Tree PRIVATE
 target_compile_options(Binary_Search_Tree PRIVATE 
     -Wall 
     -Werror 
-    -fsanitize=address 
+    # -fsanitize=address 
     -fsanitize=undefined
 )
 
 target_link_options(Binary_Search_Tree PRIVATE 
-    -fsanitize=address 
+    # -fsanitize=address 
     -fsanitize=undefined
 )
 
