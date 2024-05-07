@@ -1,15 +1,18 @@
 #ifndef DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 #define DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H
 
-// #include <cstddef>
-// #include <cstdlib>
-#include <csignal>
+#include <cstdint>
 #include <functional>
 #include <initializer_list>
 #include <iomanip>
 #include <iostream>
 #include <queue>
-#include <sys/types.h>
+
+#ifdef TESTING_ENABLED
+    #define VISIBILITY(cond) public:
+#else
+    #define VISIBILITY(cond) private:
+#endif
 
 namespace my {
 
@@ -24,10 +27,10 @@ namespace my {
         using const_pointer   = const pointer;
 
     private:
-        enum class Color : u_char
+        enum class Color : std::uint8_t
         {
-            RED   = 'R',
-            BLACK = 'B'
+            RED,
+            BLACK
         }; // enum class Color
 
         struct Node
@@ -53,7 +56,6 @@ namespace my {
         RB_Tree(const_reference val); //
         RB_Tree(std::initializer_list<value_type> init_list);
         ~RB_Tree() noexcept; //
-        // functions...
 
         void                                                inorder_traversal();     //
         std::vector<std::vector<std::pair<std::string, T>>> level_order_traversal(); //
@@ -67,14 +69,12 @@ namespace my {
         bool            check_no_adjacent_red_nodes() const;
         void            display();
 
-    private:
-        // modifiers
+    VISIBILITY(TESTING_ENABLED)
         void  destroy_tree(Node* node); //
         void  insert(Node* z_node);     //
         void  insert_fixup(Node* z_node);
         Node* left_rotate(Node* x_node);  //
         Node* right_rotate(Node* y_node); //
-
         void  delete_node(Node* z_node);
         void  delete_fixup(Node* x_node);
         void  transplant(Node* u_node, Node* v_node); //
@@ -82,15 +82,15 @@ namespace my {
         Node* find_node(const_reference val);
         bool  check_black_height(Node* node) const;
         bool  check_no_adjacent_red_nodes(Node* node) const;
-        void  disp_helper(Node* root, int dept);
+        Node* get_root() const;
 
-    private:
+    VISIBILITY(TESTING_ENABLED)
         Node* m_root;
         Node* m_nil = new Node(value_type{}, nullptr, Color::BLACK);
     }; // class RB_Tree
 
 } // namespace my
 
-#include "RB_Tree.hpp"
+#include "../src/RB_Tree.hpp"
 
 #endif // DATA_STRUCTURES_RB_TREE_HEADERS_RB_TREE_H

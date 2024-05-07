@@ -1,4 +1,5 @@
 #include "RB_Tree.h"
+#include <functional>
 namespace my {
     template <typename T>
     RB_Tree<T>::RB_Tree()
@@ -26,7 +27,7 @@ namespace my {
     }
 
     template <typename T>
-    RB_Tree<T>::~RB_Tree<T>() noexcept
+    RB_Tree<T>::~RB_Tree() noexcept
     {
         if (m_root != nullptr)
         {
@@ -604,23 +605,28 @@ namespace my {
     template <typename T>
     void RB_Tree<T>::display()
     {
-        disp_helper(m_root, 0);
+        std::function<void(Node*, int)> displayLambda = [&displayLambda, this](Node* node, int dept)
+        {
+            if (node == m_nil || node == nullptr)
+            {
+                return;
+            }
+
+            displayLambda(node->right, dept + 4);
+
+            std::cout << std::setw(dept) << (node->color == Color::BLACK ? "B:" : "R:") << node->val << std::endl;
+
+            displayLambda(node->left, dept + 4);
+        };
+
+        displayLambda(m_root, 0);
         std::cout << std::endl;
     }
 
     template <typename T>
-    void RB_Tree<T>::disp_helper(Node* root, int dept)
+    typename RB_Tree<T>::Node* RB_Tree<T>::get_root() const
     {
-        if (root == m_nil || root == nullptr)
-        {
-            return;
-        }
-
-        disp_helper(root->right, dept + 4);
-
-        std::cout << std::setw(dept) << (root->color == Color::BLACK ? "B " : "R ") << root->val << std::endl;
-
-        disp_helper(root->left, dept + 4);
+        return m_root;
     }
 
 } // namespace my

@@ -22,6 +22,8 @@ int main()
     }
 
     a.delete_val(2);
+    a.delete_val(1);
+    
 
     if (a.check_black_height() && a.root_color() && a.check_no_adjacent_red_nodes())
     {
