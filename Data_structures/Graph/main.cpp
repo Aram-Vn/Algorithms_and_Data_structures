@@ -3,5 +3,5 @@
 
 int main()
 {
-    my::Graph g(6);
+    my::Graph g{ 6 };
 }
