@@ -65,7 +65,6 @@ namespace my {
         void            delete_val(const_reference val);
         const_reference get_minVal() const;
         bool            check_black_height() const;
-        bool            root_color() const;
         bool            check_no_adjacent_red_nodes() const;
         void            display();
 
@@ -80,9 +79,11 @@ namespace my {
         void  transplant(Node* u_node, Node* v_node); //
         Node* get_minNode(Node* node) const;
         Node* find_node(const_reference val);
+        bool  root_color() const;
+
+        // for testing
         bool  check_black_height(Node* node) const;
         bool  check_no_adjacent_red_nodes(Node* node) const;
-        Node* get_root() const;
 
     VISIBILITY(TESTING_ENABLED)
         Node* m_root;

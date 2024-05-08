@@ -10,31 +10,31 @@ int main()
     // a.level_order_traversal();
     a.display();
 
-    if (a.check_black_height() && a.root_color() && a.check_no_adjacent_red_nodes())
-    {
-        std::cout << "yes" << std::endl;
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cout << "NO!!!!!" << std::endl;
-        std::cout << std::endl;
-    }
+    // if (a.check_black_height() && a.root_color() && a.check_no_adjacent_red_nodes())
+    // {
+    //     std::cout << "yes" << std::endl;
+    //     std::cout << std::endl;
+    // }
+    // else
+    // {
+    //     std::cout << "NO!!!!!" << std::endl;
+    //     std::cout << std::endl;
+    // }
 
-    a.delete_val(2);
-    a.delete_val(1);
+    // a.delete_val(2);
+    // a.delete_val(1);
     
 
-    if (a.check_black_height() && a.root_color() && a.check_no_adjacent_red_nodes())
-    {
-        std::cout << "yes" << std::endl;
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cout << "NO!!!!!" << std::endl;
-        std::cout << std::endl;
-    }
+    // if (a.check_black_height() && a.root_color() && a.check_no_adjacent_red_nodes())
+    // {
+    //     std::cout << "yes" << std::endl;
+    //     std::cout << std::endl;
+    // }
+    // else
+    // {
+    //     std::cout << "NO!!!!!" << std::endl;
+    //     std::cout << std::endl;
+    // }
 
     a.display();
     // a.level_order_traversal();

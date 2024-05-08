@@ -577,7 +577,6 @@ namespace my {
     template <typename T>
     bool RB_Tree<T>::root_color() const
     {
-        std::cout << (m_root->color == Color::BLACK ? "BLACK" : "RED") << std::endl;
         return m_root->color == Color::BLACK;
     }
 
@@ -621,12 +620,6 @@ namespace my {
 
         displayLambda(m_root, 0);
         std::cout << std::endl;
-    }
-
-    template <typename T>
-    typename RB_Tree<T>::Node* RB_Tree<T>::get_root() const
-    {
-        return m_root;
     }
 
 } // namespace my

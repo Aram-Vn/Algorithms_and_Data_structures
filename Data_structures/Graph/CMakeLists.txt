@@ -1,20 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(Graph)
+project(Graph_app)
 
-add_executable(Graph main.cpp)
+
+file(GLOB_RECURSE SRC_FILES "src/*.cpp")
+file(GLOB_RECURSE HDR_FILES "src/*.h")
+
+add_executable(Graph_app main.cpp  ${SRC_FILES} ${HDR_FILES})
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-target_include_directories(Graph PRIVATE 
+target_include_directories(Graph_app PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 # add_subdirectory(tests)
 
-target_compile_options(Graph PRIVATE 
+target_compile_options(Graph_app PRIVATE 
     -Wall
     -Wextra
     -Wshadow
@@ -39,9 +42,9 @@ target_compile_options(Graph PRIVATE
     -fno-omit-frame-pointer
 )
 
-target_link_options(Graph PRIVATE 
+target_link_options(Graph_app PRIVATE 
     -fsanitize=address
     -fsanitize=undefined
 )
 
-target_compile_features(Graph PRIVATE cxx_std_20)
+target_compile_features(Graph_app PRIVATE cxx_std_20)

@@ -5,8 +5,36 @@
 
 TEST(HeapTest, RB_TreeTest)
 {
-    my::RB_Tree<int> a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-    EXPECT_TRUE(a.check_black_height(a.get_root()));
+    my::RB_Tree<int> a;
+
+    for (int i = 3; i < 100; ++i)
+    {
+        a.insert(i);
+    }
+
+    EXPECT_TRUE(a.check_black_height(a.m_root));
+    EXPECT_TRUE(a.root_color());
+    EXPECT_TRUE(a.check_no_adjacent_red_nodes());
+
+    for (int i = 0; i < 100; ++i)
+    {
+        try
+        {
+            a.delete_val(i);
+        }
+        catch (const std::out_of_range& ex)
+        {
+            continue;
+        }
+
+        EXPECT_TRUE(a.check_black_height(a.m_root));
+        EXPECT_TRUE(a.root_color());
+        EXPECT_TRUE(a.check_no_adjacent_red_nodes());
+    }
+
+    EXPECT_TRUE(a.check_black_height(a.m_root));
+    EXPECT_TRUE(a.root_color());
+    EXPECT_TRUE(a.check_no_adjacent_red_nodes());
 }
 
 int main(int argc, char** argv)
