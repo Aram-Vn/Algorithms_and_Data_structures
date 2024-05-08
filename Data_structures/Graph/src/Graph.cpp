@@ -1,5 +1,6 @@
 #include "../headers/Graph.h"
-#include <cstddef>
+#include <queue>
+#include <vector>
 
 namespace my {
 
@@ -57,8 +58,65 @@ namespace my {
         }
 
         auto newEnd = std::remove(m_AdjacencyList[vertex1].begin(), m_AdjacencyList[vertex1].end(), vertex2);
-        
         m_AdjacencyList[vertex1].erase(newEnd, m_AdjacencyList[vertex1].end());
+    }
+
+    //-----------------------------_-dfs_rec-_----------------------//
+    void Graph::dfs_rec(std::size_t vert, bool flag)
+    {
+        std::vector<bool> visited(m_AdjacencyList.size(), false);
+
+        std::function<void(std::size_t vert)> dfs_lambda = [this, &dfs_lambda, &visited, flag](std::size_t vert) -> void
+        {
+            visited[vert] = true;
+            if (flag)
+            {
+                std::cout << vert << " "; // preorder
+            }
+
+            for (const auto u_vert : m_AdjacencyList[vert])
+            {
+                if (!visited[u_vert])
+                {
+                    dfs_lambda(u_vert);
+                }
+            }
+            if (!flag)
+            {
+                std::cout << vert << " "; // postorder
+            }
+        };
+
+        dfs_lambda(vert);
+        std::cout << std::endl;
+    }
+    // void dfs_iter(std::size_t vert);
+
+    //-----------------------------_-dfs_rec-_----------------------//
+    void Graph::bfs(std::size_t start_vertex)
+    {
+        std::vector<bool>       visited(m_AdjacencyList.size(), false);
+        std::queue<std::size_t> qu;
+
+        qu.push(start_vertex);
+        visited[start_vertex] = true;
+
+        while (!qu.empty())
+        {
+            std::size_t current_vertex = qu.front();
+            std::cout << current_vertex << " ";
+            qu.pop();
+
+            for (const auto neighbor : m_AdjacencyList[current_vertex])
+            {
+                if (!visited[neighbor])
+                {
+                    qu.push(neighbor);
+                    visited[neighbor] = true;
+                }
+            }
+        }
+        std::cout << std::endl;
     }
 
     //---------------------------_print_--------------------------//
