@@ -1,23 +1,19 @@
 #include "../headers/Graph.h"
-#include <queue>
+#include <cstddef>
+#include <limits>
 #include <vector>
 
 namespace my {
 
-    Graph::Graph(std::size_t x)
-        : m_AdjacencyList(x, std::vector<std::size_t>())
+    Graph::Graph(std::size_t x, bool is_directed)
+        : m_AdjacencyList(x, std::vector<std::size_t>()),
+          m_is_directed(is_directed)
     {
     }
 
     //-------------------------_add_vertex_---------------------//
-    void Graph::add_vertex(std::size_t vertex)
+    void Graph::add_vertex()
     {
-        if (vertex > m_AdjacencyList.size() + 1)
-        {
-            std::cout << "can't add vertex " << vertex << std::endl;
-            throw std::out_of_range("in add_vertex\ncan't add vertex");
-        }
-
         m_AdjacencyList.emplace_back(std::vector<std::size_t>());
     }
 
@@ -30,6 +26,33 @@ namespace my {
         }
 
         auto it_v1 = std::find(m_AdjacencyList[vertex1].begin(), m_AdjacencyList[vertex1].end(), vertex2);
+
+        //*******____graph is directed____*******//
+        if (m_is_directed)
+        {
+            if (it_v1 == m_AdjacencyList[vertex1].end())
+            {
+                if (vertex1 == vertex2)
+                {
+                    m_AdjacencyList[vertex1].push_back(vertex2);
+                    return;
+                }
+
+                m_AdjacencyList[vertex1].push_back(vertex2);
+                if (m_is_directed == false)
+                {
+                    m_AdjacencyList[vertex2].push_back(vertex1);
+                }
+
+                return;
+            }
+            else
+            {
+                throw std::logic_error("Edge already exists!");
+            }
+        }
+
+        //*******____graph is undirected____*******//
         auto it_v2 = std::find(m_AdjacencyList[vertex2].begin(), m_AdjacencyList[vertex2].end(), vertex1);
 
         if (it_v1 == m_AdjacencyList[vertex1].end() && it_v2 == m_AdjacencyList[vertex2].end())
@@ -41,7 +64,10 @@ namespace my {
             }
 
             m_AdjacencyList[vertex1].push_back(vertex2);
-            m_AdjacencyList[vertex2].push_back(vertex1);
+            if (m_is_directed == false)
+            {
+                m_AdjacencyList[vertex2].push_back(vertex1);
+            }
         }
         else
         {
@@ -59,6 +85,12 @@ namespace my {
 
         auto newEnd = std::remove(m_AdjacencyList[vertex1].begin(), m_AdjacencyList[vertex1].end(), vertex2);
         m_AdjacencyList[vertex1].erase(newEnd, m_AdjacencyList[vertex1].end());
+
+        if (m_is_directed == false)
+        {
+            auto newEnd_2 = std::remove(m_AdjacencyList[vertex2].begin(), m_AdjacencyList[vertex2].end(), vertex1);
+            m_AdjacencyList[vertex2].erase(newEnd_2, m_AdjacencyList[vertex2].end());
+        }
     }
 
     //-----------------------------_-dfs_rec-_----------------------//
@@ -90,9 +122,36 @@ namespace my {
         dfs_lambda(vert);
         std::cout << std::endl;
     }
-    // void dfs_iter(std::size_t vert);
 
-    //-----------------------------_-dfs_rec-_----------------------//
+    //-----------------------------_-dfs_iter-_----------------------//
+    void Graph::dfs_iter(std::size_t vert)
+    {
+        std::vector<bool>       visited(m_AdjacencyList.size(), false);
+        std::stack<std::size_t> stack;
+
+        stack.push(vert);
+        visited[vert] = true;
+
+        while (!stack.empty())
+        {
+            std::size_t current_vertex = stack.top();
+            std::cout << current_vertex << " ";
+            stack.pop();
+
+            for (const auto neighbor : m_AdjacencyList[current_vertex])
+            {
+                if (!visited[neighbor])
+                {
+                    stack.push(neighbor);
+                    visited[neighbor] = true;
+                }
+            }
+        }
+
+        std::cout << std::endl;
+    }
+
+    //-----------------------------_-bfs-_----------------------//
     void Graph::bfs(std::size_t start_vertex)
     {
         std::vector<bool>       visited(m_AdjacencyList.size(), false);
@@ -117,6 +176,93 @@ namespace my {
             }
         }
         std::cout << std::endl;
+    }
+
+    //---------------------------_-has_cicle-_--------------------------//
+    bool Graph::has_cicle()
+    {
+        std::unordered_set<std::size_t> visited;
+        std::unordered_set<std::size_t> current_path;
+        bool                            hasCycle = false;
+
+        //*******____graph is directed____*******//
+        if (m_is_directed)
+        {
+            for (std::size_t i = 0; i < m_AdjacencyList.size(); ++i)
+            {
+                if (visited.find(i) == visited.end())
+                {
+                    this->has_cicle_directed(i, visited, current_path, hasCycle);
+                    if (hasCycle)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        //*******____graph is undirected____*******//
+        else
+        {
+            for (std::size_t i = 0; i < m_AdjacencyList.size(); ++i)
+            {
+                if (visited.find(i) == visited.end())
+                {
+                    this->has_cicle_undirected(i, std::numeric_limits<std::size_t>::max(), visited, hasCycle);
+                    {
+                        if (hasCycle)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //---------------------------has_cicle_undirected--------------------------//
+    void Graph::has_cicle_undirected(std::size_t vert, std::size_t parent, std::unordered_set<std::size_t> visited,
+                                     bool& has_sycle)
+    {
+        visited.insert(vert);
+
+        for (const auto neighbor : m_AdjacencyList[vert])
+        {
+            if (visited.find(neighbor) == visited.end())
+            {
+                has_cicle_undirected(neighbor, vert, visited, has_sycle);
+            }
+            else if (neighbor != parent)
+            {
+                has_sycle = true;
+                return;
+            }
+        }
+    }
+
+    //---------------------------has_cicle_directed--------------------------//
+    void Graph::has_cicle_directed(std::size_t vert, std::unordered_set<std::size_t>& visited,
+                                   std::unordered_set<std::size_t>& current_path, bool& hasCycle)
+    {
+        visited.insert(vert);
+        current_path.insert(vert);
+
+        for (auto neighbor : m_AdjacencyList[vert])
+        {
+            if (current_path.find(neighbor) != current_path.end())
+            {
+                hasCycle = true;
+                return;
+            }
+
+            if (visited.find(neighbor) == visited.end())
+            {
+                has_cicle_directed(neighbor, visited, current_path, hasCycle);
+            }
+        }
+
+        current_path.erase(vert);
     }
 
     //---------------------------_print_--------------------------//

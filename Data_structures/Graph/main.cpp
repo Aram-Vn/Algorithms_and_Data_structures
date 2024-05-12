@@ -2,7 +2,8 @@
 
 int main()
 {
-    my::Graph g{ 11 };
+    my::Graph g{ 11, true };
+
     try
     {
         g.add_edge(0, 1);
@@ -18,6 +19,8 @@ int main()
         g.add_edge(6, 7);
         g.add_edge(6, 8);
         g.add_edge(7, 9);
+        g.add_edge(9, 8);
+        g.add_edge(8, 9);
     }
     catch (const std::exception& e)
     {
@@ -29,9 +32,25 @@ int main()
     }
 
     g.print();
+
+    std::cout << "dfs_iter" << std::endl;
+    g.dfs_iter(0);
+
+    std::cout << "bfs" << std::endl;
     g.bfs(0);
+
+    std::cout << "dfs_rec" << std::endl;
     g.dfs_rec(0);
     g.dfs_rec(0, false);
+
+    if (g.has_cicle())
+    {
+        std::cout << "yes" << std::endl;
+    }
+    else
+    {
+        std::cout << "NO" << std::endl;
+    }
 
     return 0;
 }
