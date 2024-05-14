@@ -1,7 +1,4 @@
 #include "../headers/Graph.h"
-#include <cstddef>
-#include <limits>
-#include <vector>
 
 namespace my {
 
@@ -219,6 +216,65 @@ namespace my {
         }
 
         return false;
+    }
+
+    //---------------------------has_cicle_undirected--------------------------//
+    std::vector<std::size_t> Graph::Topological_sort()
+    {
+        if (!m_is_directed)
+        {
+            throw std::logic_error("undirected graph cannot have a topological sort");
+        }
+
+        std::vector<int>         inDegree(m_AdjacencyList.size(), 0);
+        std::vector<std::size_t> res;
+        res.reserve(m_AdjacencyList.size());
+
+        for (std::size_t U = 0; U < m_AdjacencyList.size(); ++U)
+        {
+            for (const auto Vert : m_AdjacencyList[U])
+            {
+                ++inDegree[Vert];
+            }
+        }
+
+        std::queue<std::size_t> queu;
+
+        for (std::size_t i = 0; i < m_AdjacencyList.size(); ++i)
+        {
+            if (inDegree[i] == 0)
+            {
+                queu.push(i);
+            }
+        }
+
+        while (!queu.empty())
+        {
+            std::size_t node = queu.front();
+            queu.pop();
+            res.push_back(node);
+            for (const auto elem : m_AdjacencyList[node])
+            {
+                --inDegree[elem];
+                if (inDegree[elem] == 0)
+                {
+                    queu.push(elem);
+                }
+            }
+        }
+
+        if (res.size() == m_AdjacencyList.size())
+        {
+            for (const auto elem : res)
+            {
+                std::cout << elem << " ";
+            }
+
+            std::cout << std::endl;
+            return res;
+        }
+
+        throw std::logic_error("the graph hes loop can't do Topological_sort\n");
     }
 
     //---------------------------has_cicle_undirected--------------------------//

@@ -1,4 +1,5 @@
 #include <Graph.h>
+#include <stdexcept>
 
 int main()
 {
@@ -50,6 +51,15 @@ int main()
     else
     {
         std::cout << "NO" << std::endl;
+    }
+
+    try
+    {
+        g.Topological_sort();
+    }
+    catch (const std::logic_error& e)
+    {
+        std::cout << e.what();
     }
 
     return 0;

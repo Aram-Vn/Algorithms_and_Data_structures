@@ -8,7 +8,7 @@
 #include <limits>
 #include <queue>
 #include <stack>
-#include <unordered_map>
+#include <stdexcept>
 #include <unordered_set>
 #include <vector>
 
@@ -29,7 +29,8 @@ namespace my {
         void dfs_rec(std::size_t vert, bool flag = true); //
         void dfs_iter(std::size_t vert);                  //
 
-        void bfs(std::size_t start_vertex); //
+        void                     bfs(std::size_t start_vertex); //
+        std::vector<std::size_t> Topological_sort();
 
         void print() const; //
 
