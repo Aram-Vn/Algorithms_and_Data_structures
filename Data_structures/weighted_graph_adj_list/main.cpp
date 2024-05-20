@@ -14,4 +14,5 @@ int main()
     a.print();
     a.dfs(0);
     a.dfs(0, false);
+    a.bfs(2);
 }

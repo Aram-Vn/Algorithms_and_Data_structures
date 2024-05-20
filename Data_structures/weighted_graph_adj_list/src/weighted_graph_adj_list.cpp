@@ -1,8 +1,5 @@
 
 #include "../include/weighted_graph_adj_list.h"
-#include <algorithm>
-#include <stdexcept>
-#include <vector>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
@@ -17,7 +14,7 @@ namespace my {
     }
 
     //--------------------------_add_edge_-----------------------//
-    void weighted_graph::add_edge(vertex_type vertex1, vertex_type vertex2, weight_type weight)
+    void weighted_graph::add_edge(const vertex_type vertex1, const vertex_type vertex2, const weight_type weight)
     {
         if (vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
         {
@@ -42,10 +39,19 @@ namespace my {
     }
 
     //-----------------------------_-dfs_rec-_----------------------//
-    void weighted_graph::dfs(vertex_type src, bool print_preorder) const
+    void weighted_graph::dfs(const vertex_type start_vert, bool print_preorder) const
     {
         std::vector<bool> visited(m_graph.size(), false);
-        dfs(src, visited, print_preorder);
+        dfs(start_vert, visited, print_preorder);
+
+        for (vertex_type i = 0; i < m_graph.size(); ++i)
+        {
+            if (visited[i] == false)
+            {
+                dfs(i, visited, print_preorder);
+            }
+        }
+
         std::cout << std::endl;
     }
 
@@ -69,6 +75,46 @@ namespace my {
         if (!print_preorder)
         {
             std::cout << src << " ";
+        }
+    }
+
+    //-----------------------------_-bfs-_----------------------//
+    void weighted_graph::bfs(const vertex_type start_vert) const
+    {
+        std::vector<bool> visited(m_graph.size(), false);
+        bfs(start_vert, visited);
+
+        for (vertex_type vertex = 0; vertex < m_graph.size(); ++vertex)
+        {
+            if (!visited[vertex])
+            {
+                bfs(vertex, visited);
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    void weighted_graph::bfs(vertex_type start_vertex, std::vector<bool>& visited) const
+    {
+        std::queue<vertex_type> qu;
+
+        qu.push(start_vertex);
+        visited[start_vertex] = true;
+
+        while (!qu.empty())
+        {
+            vertex_type current_vert = qu.front();
+            std::cout << current_vert << " ";
+            qu.pop();
+
+            for (const auto& neighbor : m_graph[current_vert])
+            {
+                if (!visited[neighbor.first])
+                {
+                    qu.push(neighbor.first);
+                    visited[neighbor.first] = true;
+                }
+            }
         }
     }
 
