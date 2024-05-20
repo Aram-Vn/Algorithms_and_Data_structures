@@ -6,6 +6,7 @@ int main()
     a.add_vertex();
     a.add_vertex();
     a.add_edge(0, 1, 15);
+    a.add_edge(1, 0, 55);
     a.add_edge(0, 1, 25);
     a.add_edge(1, 2, 215);
     a.add_edge(0, 4, 33);
@@ -15,4 +16,5 @@ int main()
     a.dfs(0);
     a.dfs(0, false);
     a.bfs(2);
+    a.tarjan_scc();
 }

@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -28,11 +29,17 @@ namespace my {
         void dfs(const vertex_type start_vert, bool print_preorder = true) const; //
         void bfs(const vertex_type start_vert) const;
 
-        void print() const;
+        void tarjan_scc() const;
+
+        void print() const; //
 
     private:
         void dfs(vertex_type src, std::vector<bool>& visited, bool print_preorder) const; //
-        void bfs(vertex_type start_vertex, std::vector<bool>& visited) const;
+        void bfs(vertex_type start_vertex, std::vector<bool>& visited) const;             //
+
+        void tarjan_scc_util(vertex_type vertex, std::vector<long>& ids, std::vector<long>& low,
+                             std::vector<bool>& on_stack, std::stack<vertex_type>& stack,
+                             std::vector<std::vector<vertex_type>>& sccs, vertex_type& id) const;
 
     private:
         AdjacencyList m_graph;

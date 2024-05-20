@@ -1,5 +1,6 @@
 
 #include "../include/weighted_graph_adj_list.h"
+#include <vector>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
@@ -115,6 +116,70 @@ namespace my {
                     visited[neighbor.first] = true;
                 }
             }
+        }
+    }
+
+    //---------------------------_tarjan_scc_--------------------------//
+    void weighted_graph::tarjan_scc() const
+    {
+        std::vector<long>                     ids(m_graph.size(), -1);
+        std::vector<long>                     low(m_graph.size(), -1);
+        std::vector<bool>                     on_stack(m_graph.size(), false);
+        std::stack<vertex_type>               stack;
+        std::vector<std::vector<vertex_type>> sccs;
+        vertex_type                           id = 0;
+
+        for (vertex_type vertex = 0; vertex < m_graph.size(); ++vertex)
+        {
+            if (ids[vertex] == -1)
+            {
+                tarjan_scc_util(vertex, ids, low, on_stack, stack, sccs, id);
+            }
+        }
+
+        for (const auto& scc : sccs)
+        {
+            for (vertex_type vertex : scc)
+            {
+                std::cout << vertex << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void weighted_graph::tarjan_scc_util(vertex_type vertex, std::vector<long>& ids, std::vector<long>& low,
+                                         std::vector<bool>& on_stack, std::stack<vertex_type>& stack,
+                                         std::vector<std::vector<vertex_type>>& sccs, vertex_type& id) const
+    {
+        ids[vertex] = low[vertex] = static_cast<long>(id++);
+        stack.push(vertex);
+        on_stack[vertex] = true;
+
+        for (const auto& neighbor : m_graph[vertex])
+        {
+            vertex_type next_vertex = neighbor.first;
+            if (ids[next_vertex] == -1)
+            {
+                tarjan_scc_util(next_vertex, ids, low, on_stack, stack, sccs, id);
+            }
+            if (on_stack[next_vertex])
+            {
+                low[vertex] = std::min(low[vertex], low[next_vertex]);
+            }
+        }
+
+        if (ids[vertex] == low[vertex])
+        {
+            std::vector<vertex_type> scc;
+            vertex_type              top_vertex;
+            do
+            {
+                top_vertex = stack.top();
+                stack.pop();
+                on_stack[top_vertex] = false;
+                scc.push_back(top_vertex);
+            } while (top_vertex != vertex);
+            sccs.push_back(scc);
         }
     }
 
