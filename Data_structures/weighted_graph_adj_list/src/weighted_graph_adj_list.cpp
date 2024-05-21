@@ -1,6 +1,5 @@
 
 #include "../include/weighted_graph_adj_list.h"
-#include <vector>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
