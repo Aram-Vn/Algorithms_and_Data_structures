@@ -19,7 +19,9 @@ namespace my {
     {
         if (vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
         {
-            throw std::out_of_range("\nfor add_edge\ncan't add edge");
+            std::string errorMessage =
+                "Cannot add edge (" + std::to_string(vertex1) + ", " + std::to_string(vertex2) + "): out of range";
+            throw std::out_of_range(errorMessage);
         }
 
         std::vector<std::pair<vertex_type, weight_type>>& edges = m_graph[vertex1];
@@ -119,6 +121,98 @@ namespace my {
         }
     }
 
+    //---------------------------_kosaraju_scc_--------------------------//
+    void weighted_graph::kosaraju_scc() const
+    {
+        std::cout << "kosaraju_scc: " << std::endl;
+
+        std::stack<vertex_type> finish_stack;
+        std::vector<bool>       visited(m_graph.size(), false);
+
+        // Step 1: Perform DFS and push vertices to finish_stack
+        for (vertex_type i = 0; i < m_graph.size(); ++i)
+        {
+            if (!visited[i])
+            {
+                dfs_kosaraju(i, visited, finish_stack);
+            }
+        }
+
+        // Step 2: Transpose the graph
+        AdjacencyList transposed_graph = transpose();
+
+        std::fill(visited.begin(), visited.end(), false);
+
+        // Step 3: Perform DFS on the transposed graph
+        while (!finish_stack.empty())
+        {
+            vertex_type v = finish_stack.top();
+            finish_stack.pop();
+
+            if (!visited[v])
+            {
+                std::vector<vertex_type> component;
+                dfs_transposed(v, transposed_graph, visited, component);
+
+                // Output the current SCC
+                std::cout << "SCC: ";
+                for (vertex_type vert : component)
+                {
+                    std::cout << vert << " ";
+                }
+                std::cout << "\n";
+            }
+        }
+    }
+
+    //---------------------------_transpose_--------------------------//
+    weighted_graph::AdjacencyList weighted_graph::transpose() const
+    {
+        AdjacencyList transposed(m_graph.size());
+
+        for (vertex_type v = 0; v < m_graph.size(); ++v)
+        {
+            for (const auto& neighbor : m_graph[v])
+            {
+                transposed[neighbor.first].emplace_back(v, neighbor.second);
+            }
+        }
+
+        return transposed;
+    }
+
+    //---------------------------_dfs_kosaraju_--------------------------//
+    void weighted_graph::dfs_kosaraju(vertex_type vertex, std::vector<bool>& visited,
+                                      std::stack<vertex_type>& finish_stack) const
+    {
+        visited[vertex] = true;
+
+        for (const auto& neighbor : m_graph[vertex])
+        {
+            if (!visited[neighbor.first])
+            {
+                dfs_kosaraju(neighbor.first, visited, finish_stack);
+            }
+        }
+
+        finish_stack.push(vertex);
+    }
+
+    //---------------------------_dfs_transposed_--------------------------//
+    void weighted_graph::dfs_transposed(vertex_type vertex, const AdjacencyList& transposed_graph,
+                                        std::vector<bool>& visited, std::vector<vertex_type>& component) const
+    {
+        visited[vertex] = true;
+        component.push_back(vertex);
+        for (const auto& neighbor : transposed_graph[vertex])
+        {
+            if (!visited[neighbor.first])
+            {
+                dfs_transposed(neighbor.first, transposed_graph, visited, component);
+            }
+        }
+    }
+
     //---------------------------_tarjan_scc_--------------------------//
     void weighted_graph::tarjan_scc() const
     {
@@ -137,8 +231,11 @@ namespace my {
             }
         }
 
+        std::cout << "tarjan_scc: " << std::endl;
+
         for (const auto& scc : sccs)
         {
+            std::cout << "SCC: ";
             for (vertex_type vertex : scc)
             {
                 std::cout << vertex << " ";

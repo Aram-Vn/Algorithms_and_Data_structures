@@ -2,19 +2,33 @@
 
 int main()
 {
-    my::weighted_graph a{ 5 };
-    a.add_vertex();
-    a.add_vertex();
-    a.add_edge(0, 1, 15);
-    a.add_edge(1, 0, 55);
-    a.add_edge(0, 1, 25);
-    a.add_edge(1, 2, 215);
-    a.add_edge(0, 4, 33);
-    a.add_edge(3, 1, 25);
+    my::weighted_graph a{ 7 };
 
-    a.print();
+    try
+    {
+        a.add_edge(0, 1);
+        a.add_edge(1, 6);
+        a.add_edge(1, 2);
+        a.add_edge(1, 4);
+        a.add_edge(2, 3);
+        a.add_edge(3, 2);
+        a.add_edge(3, 4);
+        a.add_edge(3, 5);
+        a.add_edge(4, 5);
+        a.add_edge(5, 4);
+        a.add_edge(6, 0);
+        a.add_edge(6, 2);
+        a.add_edge(7, 2);
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+
+        a.print();
     a.dfs(0);
     a.dfs(0, false);
     a.bfs(2);
     a.tarjan_scc();
+    a.kosaraju_scc();
 }
