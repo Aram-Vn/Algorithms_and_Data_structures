@@ -14,16 +14,16 @@ namespace my {
     }
 
     //--------------------------_add_edge_-----------------------//
-    void weighted_graph::add_edge(const vertex_type vertex1, const vertex_type vertex2, const weight_type weight)
+    void weighted_graph::add_edge(const vertex_type src_vertex1, const vertex_type vertex2, const weight_type weight)
     {
-        if (vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
+        if (src_vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
         {
             std::string errorMessage =
-                "Cannot add edge (" + std::to_string(vertex1) + ", " + std::to_string(vertex2) + "): out of range";
+                "Cannot add edge (" + std::to_string(src_vertex1) + ", " + std::to_string(vertex2) + "): out of range";
             throw std::out_of_range(errorMessage);
         }
 
-        std::vector<std::pair<vertex_type, weight_type>>& edges = m_graph[vertex1];
+        std::vector<std::pair<vertex_type, weight_type>>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
         std::vector<std::pair<vertex_type, weight_type>>::iterator it =
@@ -32,7 +32,7 @@ namespace my {
 
         if (it == edges.end()) // if no edge add
         {
-            m_graph[vertex1].emplace_back(vertex2, weight);
+            m_graph[src_vertex1].emplace_back(vertex2, weight);
         }
         else // if exists change weight
         {
@@ -286,9 +286,9 @@ namespace my {
         {
             std::cout << i << " -> ";
 
-            for (std::size_t j = 0; j < m_graph[i].size(); ++j)
+            for (const auto& elem : m_graph[i])
             {
-                std::cout << "e:" << m_graph[i][j].first << " w:" << m_graph[i][j].second << " | ";
+                std::cout << "e:" << elem.first << " w:" << elem.second << " | ";
             }
             std::cout << std::endl;
         }
