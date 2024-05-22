@@ -14,7 +14,7 @@ namespace my {
     }
 
     //--------------------------_add_edge_-----------------------//
-    void weighted_graph::add_edge(const vertex_type src_vertex1, const vertex_type vertex2, const weight_type weight)
+    void weighted_graph::add_edge(const vertex_t src_vertex1, const vertex_t vertex2, const weight_t weight)
     {
         if (src_vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
         {
@@ -37,12 +37,12 @@ namespace my {
             throw std::out_of_range(errorMessage.str());
         }
 
-        std::vector<std::pair<vertex_type, weight_type>>& edges = m_graph[src_vertex1];
+        std::vector<std::pair<vertex_t, weight_t>>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
         auto it =
             std::find_if(edges.begin(), edges.end(),
-                         [vertex2](const std::pair<vertex_type, weight_type>& edge) { return edge.first == vertex2; });
+                         [vertex2](const std::pair<vertex_t, weight_t>& edge) { return edge.first == vertex2; });
 
         if (it == edges.end()) // if no edge add it
         {
@@ -55,13 +55,13 @@ namespace my {
     }
 
     //-----------------------------_-dfs_rec-_----------------------//
-    void weighted_graph::dfs(const vertex_type start_vert, bool print_preorder) const
+    void weighted_graph::dfs(const vertex_t start_vert, bool print_preorder) const
     {
         std::vector<bool> visited(m_graph.size(), false);
 
         dfs(start_vert, visited, print_preorder);
 
-        for (vertex_type i = 0; i < m_graph.size(); ++i)
+        for (vertex_t i = 0; i < m_graph.size(); ++i)
         {
             if (visited[i] == false)
             {
@@ -72,7 +72,7 @@ namespace my {
         std::cout << std::endl;
     }
 
-    void weighted_graph::dfs(vertex_type src, std::vector<bool>& visited, bool print_preorder) const
+    void weighted_graph::dfs(vertex_t src, std::vector<bool>& visited, bool print_preorder) const
     {
         visited[src] = true;
 
@@ -96,13 +96,13 @@ namespace my {
     }
 
     //-----------------------------_-bfs-_----------------------//
-    void weighted_graph::bfs(const vertex_type start_vert) const
+    void weighted_graph::bfs(const vertex_t start_vert) const
     {
         std::vector<bool> visited(m_graph.size(), false);
 
         bfs(start_vert, visited);
 
-        for (vertex_type vertex = 0; vertex < m_graph.size(); ++vertex)
+        for (vertex_t vertex = 0; vertex < m_graph.size(); ++vertex)
         {
             if (!visited[vertex])
             {
@@ -112,16 +112,16 @@ namespace my {
         std::cout << std::endl;
     }
 
-    void weighted_graph::bfs(vertex_type start_vertex, std::vector<bool>& visited) const
+    void weighted_graph::bfs(vertex_t start_vertex, std::vector<bool>& visited) const
     {
-        std::queue<vertex_type> qu;
+        std::queue<vertex_t> qu;
 
         qu.push(start_vertex);
         visited[start_vertex] = true;
 
         while (!qu.empty())
         {
-            vertex_type current_vert = qu.front();
+            vertex_t current_vert = qu.front();
             std::cout << current_vert << " ";
             qu.pop();
 
@@ -141,11 +141,11 @@ namespace my {
     {
         std::cout << "kosaraju_scc: " << std::endl;
 
-        std::stack<vertex_type> finish_stack;
+        std::stack<vertex_t> finish_stack;
         std::vector<bool>       visited(m_graph.size(), false);
 
         // Step 1: Perform DFS and push vertices to finish_stack
-        for (vertex_type i = 0; i < m_graph.size(); ++i)
+        for (vertex_t i = 0; i < m_graph.size(); ++i)
         {
             if (!visited[i])
             {
@@ -161,17 +161,17 @@ namespace my {
         // Step 3: Perform DFS on the transposed graph
         while (!finish_stack.empty())
         {
-            vertex_type v = finish_stack.top();
+            vertex_t v = finish_stack.top();
             finish_stack.pop();
 
             if (!visited[v])
             {
-                std::vector<vertex_type> component;
+                std::vector<vertex_t> component;
                 dfs_transposed(v, transposed_graph, visited, component);
 
                 // Output the current SCC
                 std::cout << "SCC: ";
-                for (vertex_type vert : component)
+                for (vertex_t vert : component)
                 {
                     std::cout << vert << " ";
                 }
@@ -185,7 +185,7 @@ namespace my {
     {
         AdjacencyList transposed(m_graph.size());
 
-        for (vertex_type v = 0; v < m_graph.size(); ++v)
+        for (vertex_t v = 0; v < m_graph.size(); ++v)
         {
             for (const auto& neighbor : m_graph[v])
             {
@@ -197,8 +197,8 @@ namespace my {
     }
 
     //---------------------------_dfs_kosaraju_--------------------------//
-    void weighted_graph::dfs_kosaraju(vertex_type vertex, std::vector<bool>& visited,
-                                      std::stack<vertex_type>& finish_stack) const
+    void weighted_graph::dfs_kosaraju(vertex_t vertex, std::vector<bool>& visited,
+                                      std::stack<vertex_t>& finish_stack) const
     {
         visited[vertex] = true;
 
@@ -214,8 +214,8 @@ namespace my {
     }
 
     //---------------------------_dfs_transposed_--------------------------//
-    void weighted_graph::dfs_transposed(vertex_type vertex, const AdjacencyList& transposed_graph,
-                                        std::vector<bool>& visited, std::vector<vertex_type>& component) const
+    void weighted_graph::dfs_transposed(vertex_t vertex, const AdjacencyList& transposed_graph,
+                                        std::vector<bool>& visited, std::vector<vertex_t>& component) const
     {
         visited[vertex] = true;
         component.push_back(vertex);
@@ -234,11 +234,11 @@ namespace my {
         std::vector<long>                     ids(m_graph.size(), -1);
         std::vector<long>                     low(m_graph.size(), -1);
         std::vector<bool>                     on_stack(m_graph.size(), false);
-        std::stack<vertex_type>               stack;
-        std::vector<std::vector<vertex_type>> sccs;
-        vertex_type                           id = 0;
+        std::stack<vertex_t>               stack;
+        std::vector<std::vector<vertex_t>> sccs;
+        vertex_t                           id = 0;
 
-        for (vertex_type vertex = 0; vertex < m_graph.size(); ++vertex)
+        for (vertex_t vertex = 0; vertex < m_graph.size(); ++vertex)
         {
             if (ids[vertex] == -1)
             {
@@ -251,7 +251,7 @@ namespace my {
         for (const auto& scc : sccs)
         {
             std::cout << "SCC: ";
-            for (vertex_type vertex : scc)
+            for (vertex_t vertex : scc)
             {
                 std::cout << vertex << " ";
             }
@@ -259,9 +259,9 @@ namespace my {
         }
     }
 
-    void weighted_graph::tarjan_scc_util(vertex_type vertex, std::vector<long>& ids, std::vector<long>& low,
-                                         std::vector<bool>& on_stack, std::stack<vertex_type>& stack,
-                                         std::vector<std::vector<vertex_type>>& sccs, vertex_type& id) const
+    void weighted_graph::tarjan_scc_util(vertex_t vertex, std::vector<long>& ids, std::vector<long>& low,
+                                         std::vector<bool>& on_stack, std::stack<vertex_t>& stack,
+                                         std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const
     {
         ids[vertex] = low[vertex] = static_cast<long>(id++);
         stack.push(vertex);
@@ -269,7 +269,7 @@ namespace my {
 
         for (const auto& neighbor : m_graph[vertex])
         {
-            vertex_type next_vertex = neighbor.first;
+            vertex_t next_vertex = neighbor.first;
 
             if (ids[next_vertex] == -1)
             {
@@ -284,8 +284,8 @@ namespace my {
 
         if (ids[vertex] == low[vertex])
         {
-            std::vector<vertex_type> scc;
-            vertex_type              top_vertex;
+            std::vector<vertex_t> scc;
+            vertex_t              top_vertex;
 
             do
             {
