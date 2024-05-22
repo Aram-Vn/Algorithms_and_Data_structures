@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <iostream>
 #include <queue>
+#include <sstream>
 #include <stack>
 #include <stdexcept>
 #include <utility>
@@ -16,23 +17,23 @@ namespace my {
     {
     public:
         using vertex_type   = std::size_t;
-        using weight_type   = int;
+        using weight_type   = long;
         using AdjacencyList = std::vector<std::vector<std::pair<vertex_type, weight_type>>>;
 
     public:
         weighted_graph(std::size_t size); //
 
     public:
-        void add_vertex();                                                                                 //
-        void add_edge(const vertex_type vertex1, const vertex_type vertex2, const weight_type weight = 0); //
+        void add_vertex();                                                                                     //
+        void add_edge(const vertex_type src_vertex1, const vertex_type vertex2, const weight_type weight = 0); //
 
         void dfs(const vertex_type start_vert, bool print_preorder = true) const; //
-        void bfs(const vertex_type start_vert) const;
+        void bfs(const vertex_type start_vert) const;                             //
 
-        AdjacencyList transpose() const;
+        AdjacencyList transpose() const; //
 
-        void kosaraju_scc() const;
-        void tarjan_scc() const; //
+        void kosaraju_scc() const; //
+        void tarjan_scc() const;   //
 
         void print() const; //
 
@@ -42,6 +43,7 @@ namespace my {
 
         void dfs_kosaraju(vertex_type vertex, std::vector<bool>& visited,
                           std::stack<vertex_type>& finish_stack) const; //
+
         void dfs_transposed(vertex_type vertex, const AdjacencyList& transposed_graph, std::vector<bool>& visited,
                             std::vector<vertex_type>& component) const; //
 

@@ -18,23 +18,37 @@ namespace my {
     {
         if (src_vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
         {
-            std::string errorMessage =
-                "Cannot add edge (" + std::to_string(src_vertex1) + ", " + std::to_string(vertex2) + "): out of range";
-            throw std::out_of_range(errorMessage);
+            std::ostringstream errorMessage;
+
+            if (src_vertex1 >= m_graph.size() && vertex2 >= m_graph.size())
+            {
+                errorMessage << "Cannot add edge:\nvertex: " << src_vertex1 << " and vertex: " << vertex2
+                             << " are out of range";
+            }
+            else if (src_vertex1 >= m_graph.size())
+            {
+                errorMessage << "Cannot add edge:\n vertex " << src_vertex1 << " is out of range";
+            }
+            else
+            {
+                errorMessage << "Cannot add edge:\n vertex " << vertex2 << " is out of range";
+            }
+
+            throw std::out_of_range(errorMessage.str());
         }
 
         std::vector<std::pair<vertex_type, weight_type>>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
-        std::vector<std::pair<vertex_type, weight_type>>::iterator it =
+        auto it =
             std::find_if(edges.begin(), edges.end(),
                          [vertex2](const std::pair<vertex_type, weight_type>& edge) { return edge.first == vertex2; });
 
-        if (it == edges.end()) // if no edge add
+        if (it == edges.end()) // if no edge add it
         {
             m_graph[src_vertex1].emplace_back(vertex2, weight);
         }
-        else // if exists change weight
+        else // if edge exists change weight
         {
             it->second = weight;
         }
@@ -44,6 +58,7 @@ namespace my {
     void weighted_graph::dfs(const vertex_type start_vert, bool print_preorder) const
     {
         std::vector<bool> visited(m_graph.size(), false);
+
         dfs(start_vert, visited, print_preorder);
 
         for (vertex_type i = 0; i < m_graph.size(); ++i)
@@ -84,6 +99,7 @@ namespace my {
     void weighted_graph::bfs(const vertex_type start_vert) const
     {
         std::vector<bool> visited(m_graph.size(), false);
+
         bfs(start_vert, visited);
 
         for (vertex_type vertex = 0; vertex < m_graph.size(); ++vertex)
@@ -138,7 +154,7 @@ namespace my {
         }
 
         // Step 2: Transpose the graph
-        AdjacencyList transposed_graph = transpose();
+        AdjacencyList transposed_graph = this->transpose();
 
         std::fill(visited.begin(), visited.end(), false);
 
@@ -212,7 +228,7 @@ namespace my {
         }
     }
 
-    //---------------------------_tarjan_scc_--------------------------//
+    /*---------------------------_tarjan_scc_--------------------------*/
     void weighted_graph::tarjan_scc() const
     {
         std::vector<long>                     ids(m_graph.size(), -1);
@@ -254,10 +270,12 @@ namespace my {
         for (const auto& neighbor : m_graph[vertex])
         {
             vertex_type next_vertex = neighbor.first;
+
             if (ids[next_vertex] == -1)
             {
                 tarjan_scc_util(next_vertex, ids, low, on_stack, stack, sccs, id);
             }
+
             if (on_stack[next_vertex])
             {
                 low[vertex] = std::min(low[vertex], low[next_vertex]);
@@ -268,13 +286,16 @@ namespace my {
         {
             std::vector<vertex_type> scc;
             vertex_type              top_vertex;
+
             do
             {
                 top_vertex = stack.top();
                 stack.pop();
                 on_stack[top_vertex] = false;
                 scc.push_back(top_vertex);
+
             } while (top_vertex != vertex);
+
             sccs.push_back(scc);
         }
     }

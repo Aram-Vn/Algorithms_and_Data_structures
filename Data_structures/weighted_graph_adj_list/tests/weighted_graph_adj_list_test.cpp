@@ -1,17 +1,5 @@
-#include <functional>
 #include <gtest/gtest.h>
-#include <sstream>
 #include <weighted_graph_adj_list.h>
-
-// Utility function to capture the output of a function that prints to std::cout
-std::string capture_stdout(const std::function<void()>& func)
-{
-    std::ostringstream buffer;
-    std::streambuf*    old = std::cout.rdbuf(buffer.rdbuf());
-    func();
-    std::cout.rdbuf(old);
-    return buffer.str();
-}
 
 TEST(weighted_graph_adj_listTest, AddVertexTest)
 {
@@ -36,12 +24,15 @@ TEST(weighted_graph_adj_listTest, AddEdgeTest)
 TEST(weighted_graph_adj_listTest, DFSTest)
 {
     my::weighted_graph g(5);
+
     g.add_edge(0, 1);
     g.add_edge(1, 2);
     g.add_edge(2, 3);
     g.add_edge(3, 4);
 
-    std::string output = capture_stdout([&g] { g.dfs(0); });
+    testing::internal::CaptureStdout();
+    g.dfs(0);
+    std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_EQ(output, "0 1 2 3 4 \n");
 }
@@ -54,7 +45,9 @@ TEST(weighted_graph_adj_listTest, BFSTest)
     g.add_edge(1, 3);
     g.add_edge(2, 4);
 
-    std::string output = capture_stdout([&g] { g.bfs(0); });
+    testing::internal::CaptureStdout();
+    g.bfs(0);
+    std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_EQ(output, "0 1 2 3 4 \n");
 }
@@ -85,7 +78,9 @@ TEST(weighted_graph_adj_listTest, KosarajuSCCTest)
     g.add_edge(0, 3);
     g.add_edge(3, 4);
 
-    std::string output = capture_stdout([&g] { g.kosaraju_scc(); });
+    testing::internal::CaptureStdout();
+    g.kosaraju_scc();
+    std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_NE(output.find("SCC: 3 "), std::string::npos);
     EXPECT_NE(output.find("SCC: 4 "), std::string::npos);
@@ -103,7 +98,9 @@ TEST(weighted_graph_adj_listTest, TarjanSCCTest)
     g.add_edge(0, 3);
     g.add_edge(3, 4);
 
-    std::string output = capture_stdout([&g] { g.tarjan_scc(); });
+    testing::internal::CaptureStdout();
+    g.tarjan_scc();
+    std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_NE(output.find("SCC: 4 "), std::string::npos);
     EXPECT_NE(output.find("SCC: 3 "), std::string::npos);
@@ -117,7 +114,9 @@ TEST(weighted_graph_adj_listTest, PrintTest)
     g.add_edge(0, 1, 5);
     g.add_edge(1, 2, 10);
 
-    std::string output = capture_stdout([&g] { g.print(); });
+    testing::internal::CaptureStdout();
+    g.print();
+    std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_NE(output.find("0 -> e:1 w:5"), std::string::npos);
     EXPECT_NE(output.find("1 -> e:2 w:10"), std::string::npos);
