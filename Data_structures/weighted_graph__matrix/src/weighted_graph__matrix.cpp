@@ -1,7 +1,5 @@
 
 #include "../include/weighted_graph__matrix.h"
-#include <limits>
-#include <vector>
 
 namespace my {
     weighted_graph_matrix::weighted_graph_matrix(std::size_t size)
@@ -50,13 +48,16 @@ namespace my {
     /*------------------------------_-transpose-_-------------------------------*/
     weighted_graph_matrix::matrix_gr weighted_graph_matrix::transpose() const
     {
-        matrix_gr transposed(m_graph[0].size(), std::vector<weight_t>(m_graph.size(), no_connection));
+        matrix_gr transposed = m_graph;
 
-        for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
+        std::size_t size = transposed.size();
+
+        #pragma omp parallel for
+        for (std::size_t i = 0; i < size; ++i)
         {
-            for (vertex_t U_vert = 0; U_vert < m_graph[V_vert].size(); ++U_vert)
+            for (std::size_t j = 0; j < i; ++j)
             {
-                transposed[U_vert][V_vert] = m_graph[V_vert][U_vert];
+                std::swap(transposed[i][j], transposed[j][i]);
             }
         }
 
@@ -68,20 +69,20 @@ namespace my {
     {
         std::vector<bool> visited(m_graph.size(), false);
 
-        dfs(start_vert, visited, print_preorder);
+        dfs_util(start_vert, visited, print_preorder);
 
         for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
         {
-            if (visited[V_vert] == false)
+            if (!visited[V_vert])
             {
-                dfs(V_vert, visited, print_preorder);
+                this->dfs_util(V_vert, visited, print_preorder);
             }
         }
 
         std::cout << std::endl;
     }
 
-    void weighted_graph_matrix ::dfs(vertex_t src, std::vector<bool>& visited, bool print_preorder) const
+    void weighted_graph_matrix::dfs_util(vertex_t src, std::vector<bool>& visited, bool print_preorder) const
     {
         visited[src] = true;
 
@@ -94,13 +95,55 @@ namespace my {
         {
             if (m_graph[src][neighbor] != no_connection && !visited[neighbor])
             {
-                dfs(neighbor, visited, print_preorder);
+                dfs_util(neighbor, visited, print_preorder);
             }
         }
 
         if (!print_preorder)
         {
             std::cout << src << " ";
+        }
+    }
+
+    /*------------------------------_-bfs-_-------------------------------*/
+    void weighted_graph_matrix::bfs(vertex_t start_vertex) const
+    {
+        std::vector<bool> visited(m_graph.size(), false);
+
+        this->bfs_util(start_vertex, visited);
+
+        for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
+        {
+            if (!visited[V_vert])
+            {
+                bfs_util(V_vert, visited);
+            }
+        }
+
+        std::cout << std::endl;
+    }
+
+    void weighted_graph_matrix::bfs_util(vertex_t start_vert, std::vector<bool>& visited) const
+    {
+        std::queue<vertex_t> qu;
+
+        qu.push(start_vert);
+        visited[start_vert] = true;
+
+        while (!qu.empty())
+        {
+            vertex_t current_vert = qu.front();
+            std::cout << current_vert << " ";
+            qu.pop();
+
+            for (vertex_t neighbor = 0; neighbor < m_graph.size(); ++neighbor)
+            {
+                if (m_graph[current_vert][neighbor] != no_connection && !visited[neighbor])
+                {
+                    qu.push(neighbor);
+                    visited[neighbor] = true;
+                }
+            }
         }
     }
 
@@ -112,10 +155,27 @@ namespace my {
             std::cout << i << " -> ";
             for (std::size_t j = 0; j < m_graph[i].size(); ++j)
             {
-                if (m_graph[i][j] != no_connection) // <long>::max() means no connection
+                if (m_graph[i][j] != no_connection)
                 {
-                    std::cout << j << " (w: " << m_graph[i][j] << ")"
-                              << " | ";
+                    std::cout << m_graph[i][j] << " ";
+                }
+                else {
+                    std::cout << " NO ";
+                }
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << " OO \n";
+
+        for (std::size_t i = 0; i < m_graph.size(); ++i)
+        {
+            std::cout << i << " -> ";
+            for (std::size_t j = 0; j < m_graph[i].size(); ++j)
+            {
+                if (m_graph[i][j] != no_connection)
+                {
+                    std::cout << "e:" << j << " w:" << m_graph[i][j] << " | ";
                 }
             }
             std::cout << std::endl;

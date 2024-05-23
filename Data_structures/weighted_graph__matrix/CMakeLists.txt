@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.10)
 
 project("weighted_graph__matrix")
@@ -17,6 +16,17 @@ target_include_directories("weighted_graph__matrix" PRIVATE ${CMAKE_CURRENT_SOUR
 include(CTest)
 enable_testing()
 add_subdirectory(tests)
+
+# Find and include OpenMP
+find_package(OpenMP)
+
+if(OpenMP_CXX_FOUND)
+    target_compile_options("weighted_graph__matrix" PRIVATE ${OpenMP_CXX_FLAGS})
+    target_link_libraries("weighted_graph__matrix" PRIVATE OpenMP::OpenMP_CXX)
+    message(STATUS "OpenMP found, enabling parallelization support.")
+else()
+    message(WARNING "OpenMP not found, compiling without parallelization support.")
+endif()
 
 target_compile_options("weighted_graph__matrix" PRIVATE 
     -Wall
@@ -63,4 +73,3 @@ if(NOT CMAKE_GENERATOR MATCHES "Visual Studio")
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
     )
 endif()
-        
