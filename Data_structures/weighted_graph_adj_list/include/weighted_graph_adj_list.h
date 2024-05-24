@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <queue>
@@ -20,8 +21,9 @@ namespace my {
     public:
         using vertex_t      = std::size_t;
         using weight_t      = std::int32_t;
-        using AdjacencyList = std::vector<std::vector<std::pair<vertex_t, weight_t>>>;
         using inf_t         = std::int64_t;
+        using Edge          = std::pair<vertex_t, weight_t>;
+        using AdjacencyList = std::vector<std::vector<Edge>>;
 
         static constexpr int64_t INF = std::numeric_limits<int64_t>::max();
 
@@ -40,8 +42,8 @@ namespace my {
         void kosaraju_scc() const; //
         void tarjan_scc() const;   //
 
-        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;      //
-        void print_dijkstra(vertex_t start_vert, const std::vector<inf_t> vec) const; //
+        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;       //
+        void print_dijkstra(vertex_t start_vert, const std::vector<inf_t>& vec) const; //
 
         void print() const; //
 

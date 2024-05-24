@@ -1,8 +1,5 @@
 
 #include "../include/weighted_graph_adj_list.h"
-#include <functional>
-#include <queue>
-#include <stdexcept>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
@@ -40,11 +37,11 @@ namespace my {
             throw std::out_of_range(errorMessage.str());
         }
 
-        std::vector<std::pair<vertex_t, weight_t>>& edges = m_graph[src_vertex1];
+        std::vector<Edge>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
-        auto it = std::find_if(edges.begin(), edges.end(),
-                               [vertex2](const std::pair<vertex_t, weight_t>& edge) { return edge.first == vertex2; });
+        auto it =
+            std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) { return edge.first == vertex2; });
 
         if (it == edges.end()) // if no edge add it
         {
@@ -306,6 +303,7 @@ namespace my {
         }
     }
 
+    //---------------------------_dijkstra_--------------------------//
     void weighted_graph::dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const
     {
         std::vector<inf_t> distances(m_graph.size(), INF);
@@ -333,8 +331,8 @@ namespace my {
                     throw std::runtime_error("Graph contains a negative weight edge.");
                 }
 
-                inf_t new_dist = current_dist + weight;
-                if (new_dist < 0)
+                inf_t new_dist;
+                if (__builtin_add_overflow(current_dist, weight, &new_dist))
                 {
                     new_dist = INF;
                 }
@@ -347,6 +345,7 @@ namespace my {
             }
         }
 
+        res.clear();
         res.resize(distances.size());
         for (size_t i = 0; i < distances.size(); ++i)
         {
@@ -359,25 +358,26 @@ namespace my {
                 res[i] = distances[i];
             }
         }
+
+        this->print_dijkstra(start_vert, res);
     }
 
-    void weighted_graph::print_dijkstra(vertex_t start_vert, const std::vector<inf_t> vec) const
+    //---------------------------_print_dijkstra_--------------------------//
+    void weighted_graph::print_dijkstra(vertex_t start_vert, const std::vector<inf_t>& vec) const
     {
-        inf_t j = 0;
+        vertex_t dest_vert = 0;
 
         for (inf_t weight : vec)
         {
             if (weight == INF)
             {
-                ++j;
+                ++dest_vert;
                 continue;
             }
-            std::cout << "shortest path from  " << start_vert << "  to  " << j << "  is  " << weight;
-            ++j;
+            std::cout << "shortest path from  " << start_vert << "  to  " << dest_vert << "  is  " << weight;
+            ++dest_vert;
             std::cout << std::endl;
         }
-
-        std::cout << std::endl;
     }
 
     //---------------------------_print_--------------------------//

@@ -1,3 +1,4 @@
+#include <exception>
 #include <vector>
 #include <weighted_graph_adj_list.h>
 
@@ -49,11 +50,18 @@ int main()
     // }
 
     std::vector<my::weighted_graph::inf_t> vec;
-
-    a.dijkstra(0, vec);
-
-    for (auto elem : vec)
+    try
     {
-        std::cout << elem << " ";
+        a.dijkstra(5, vec);
+
+        for (auto elem : vec)
+        {
+            std::cout << elem << " ";
+        }
+        std::cout << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
     }
 }
