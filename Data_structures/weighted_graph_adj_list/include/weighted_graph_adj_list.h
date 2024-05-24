@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
+#include <limits>
 #include <queue>
 #include <sstream>
 #include <stack>
@@ -17,8 +19,11 @@ namespace my {
     {
     public:
         using vertex_t      = std::size_t;
-        using weight_t      = long;
+        using weight_t      = std::int32_t;
         using AdjacencyList = std::vector<std::vector<std::pair<vertex_t, weight_t>>>;
+        using inf_t         = std::int64_t;
+
+        static constexpr int64_t INF = std::numeric_limits<int64_t>::max();
 
     public:
         weighted_graph(std::size_t size); //
@@ -34,6 +39,9 @@ namespace my {
 
         void kosaraju_scc() const; //
         void tarjan_scc() const;   //
+
+        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;      //
+        void print_dijkstra(vertex_t start_vert, const std::vector<inf_t> vec) const; //
 
         void print() const; //
 
@@ -54,6 +62,7 @@ namespace my {
     private:
         AdjacencyList m_graph;
     };
+
 } // namespace my
 
 #endif // WEIGHTED_GRAPH_ADJ_LIST_INCLUDE_WEIGHTED_GRAPH_ADJ_LIST_H

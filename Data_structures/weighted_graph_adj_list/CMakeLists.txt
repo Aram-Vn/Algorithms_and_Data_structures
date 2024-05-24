@@ -9,11 +9,15 @@ file(GLOB_RECURSE HDR_FILES "src/*.h")
 
 add_executable("weighted_graph_adj_list" main.cpp  ${SRC_FILES} ${HDR_FILES})
 
+set_property(TARGET weighted_graph_adj_list PROPERTY CXX_STANDARD 20)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 target_include_directories("weighted_graph_adj_list" PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+enable_testing()
+include(CTest)
 add_subdirectory(tests)
 
 target_compile_options("weighted_graph_adj_list" PRIVATE 

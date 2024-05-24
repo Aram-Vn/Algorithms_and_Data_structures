@@ -1,5 +1,8 @@
 
 #include "../include/weighted_graph_adj_list.h"
+#include <functional>
+#include <queue>
+#include <stdexcept>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
@@ -40,9 +43,8 @@ namespace my {
         std::vector<std::pair<vertex_t, weight_t>>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
-        auto it =
-            std::find_if(edges.begin(), edges.end(),
-                         [vertex2](const std::pair<vertex_t, weight_t>& edge) { return edge.first == vertex2; });
+        auto it = std::find_if(edges.begin(), edges.end(),
+                               [vertex2](const std::pair<vertex_t, weight_t>& edge) { return edge.first == vertex2; });
 
         if (it == edges.end()) // if no edge add it
         {
@@ -136,13 +138,15 @@ namespace my {
         }
     }
 
-    //---------------------------_kosaraju_scc_--------------------------//
+    /*---------------------------------------------------------------------*/
+    /*---------------------------*_kosaraju_scc_*--------------------------*/
+    /*---------------------------------------------------------------------*/
     void weighted_graph::kosaraju_scc() const
     {
         std::cout << "kosaraju_scc: " << std::endl;
 
         std::stack<vertex_t> finish_stack;
-        std::vector<bool>       visited(m_graph.size(), false);
+        std::vector<bool>    visited(m_graph.size(), false);
 
         // Step 1: Perform DFS and push vertices to finish_stack
         for (vertex_t i = 0; i < m_graph.size(); ++i)
@@ -228,12 +232,14 @@ namespace my {
         }
     }
 
-    /*---------------------------_tarjan_scc_--------------------------*/
+    /*---------------------------------------------------------------------*/
+    /*----------------------------*_TARJAN_SCC_-*--------------------------*/
+    /*---------------------------------------------------------------------*/
     void weighted_graph::tarjan_scc() const
     {
-        std::vector<long>                     ids(m_graph.size(), -1);
-        std::vector<long>                     low(m_graph.size(), -1);
-        std::vector<bool>                     on_stack(m_graph.size(), false);
+        std::vector<long>                  ids(m_graph.size(), -1);
+        std::vector<long>                  low(m_graph.size(), -1);
+        std::vector<bool>                  on_stack(m_graph.size(), false);
         std::stack<vertex_t>               stack;
         std::vector<std::vector<vertex_t>> sccs;
         vertex_t                           id = 0;
@@ -298,6 +304,80 @@ namespace my {
 
             sccs.push_back(scc);
         }
+    }
+
+    void weighted_graph::dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const
+    {
+        std::vector<inf_t> distances(m_graph.size(), INF);
+        distances[start_vert] = 0;
+
+        using dist_vert_Pair = std::pair<inf_t, vertex_t>;
+        std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, std::greater<>> pq;
+
+        pq.emplace(0, start_vert);
+
+        while (!pq.empty())
+        {
+            auto [current_dist, U_vert] = pq.top();
+            pq.pop();
+
+            if (current_dist > distances[U_vert])
+            {
+                continue;
+            }
+
+            for (const auto& [V_vert, weight] : m_graph[U_vert])
+            {
+                if (weight < 0)
+                {
+                    throw std::runtime_error("Graph contains a negative weight edge.");
+                }
+
+                inf_t new_dist = current_dist + weight;
+                if (new_dist < 0)
+                {
+                    new_dist = INF;
+                }
+
+                if (new_dist < distances[V_vert])
+                {
+                    distances[V_vert] = new_dist;
+                    pq.emplace(new_dist, V_vert);
+                }
+            }
+        }
+
+        res.resize(distances.size());
+        for (size_t i = 0; i < distances.size(); ++i)
+        {
+            if (distances[i] >= INF)
+            {
+                res[i] = INF;
+            }
+            else
+            {
+                res[i] = distances[i];
+            }
+        }
+    }
+
+    void weighted_graph::print_dijkstra(vertex_t start_vert, const std::vector<inf_t> vec) const
+    {
+        inf_t j = 0;
+
+        for (inf_t weight : vec)
+        {
+            if (weight == INF)
+            {
+                ++j;
+                continue;
+            }
+            std::cout << "shortest path from  " << start_vert << "  to  " << j << "  is  " << weight;
+            ++j;
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl;
     }
 
     //---------------------------_print_--------------------------//
