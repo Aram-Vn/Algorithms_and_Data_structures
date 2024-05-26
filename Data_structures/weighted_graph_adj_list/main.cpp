@@ -49,6 +49,16 @@ int main()
     //     std::cout << std::endl;
     // }
 
+    std::vector<my::weighted_graph::inf_t> distances;
+    if (a.bellman_ford(5, distances))
+    {
+        std::cout << "YES!!!.\n";
+    }
+    else
+    {
+        std::cout << "Graph contains a negative-weight cycle.\n";
+    }
+
     std::vector<my::weighted_graph::inf_t> vec;
     try
     {

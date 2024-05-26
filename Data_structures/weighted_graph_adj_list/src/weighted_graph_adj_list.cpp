@@ -359,11 +359,11 @@ namespace my {
             }
         }
 
-        this->print_dijkstra(start_vert, res);
+        this->print_paths(start_vert, res);
     }
 
     //---------------------------_print_dijkstra_--------------------------//
-    void weighted_graph::print_dijkstra(vertex_t start_vert, const std::vector<inf_t>& vec) const
+    void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& vec) const
     {
         vertex_t dest_vert = 0;
 
@@ -378,6 +378,42 @@ namespace my {
             ++dest_vert;
             std::cout << std::endl;
         }
+    }
+
+    //---------------------------_bellman_ford_--------------------------//
+    bool weighted_graph::bellman_ford(vertex_t start_vert, std::vector<inf_t>& res) const
+    {
+        res.assign(m_graph.size(), INF);
+        res[start_vert] = 0;
+
+        for (std::size_t i = 1; i < m_graph.size(); ++i)
+        {
+            for (vertex_t U_vert = 0; U_vert < m_graph.size(); ++U_vert)
+            {
+                for (const auto& [V_vert, weight] : m_graph[U_vert])
+                {
+                    if (res[U_vert] != INF && res[U_vert] + weight < res[V_vert])
+                    {
+                        res[V_vert] = res[U_vert] + weight;
+                    }
+                }
+            }
+        }
+
+        for (std::size_t U_vert = 0; U_vert < m_graph.size(); ++U_vert)
+        {
+            for (const auto& [V_vert, weight] : m_graph[U_vert])
+            {
+                if (res[U_vert] != INF && res[U_vert] + weight < res[V_vert]) // Negative cycle detected
+                {
+                    return false; 
+                }
+            }
+        }
+
+        this->print_paths(start_vert, res);
+
+        return true;
     }
 
     //---------------------------_print_--------------------------//

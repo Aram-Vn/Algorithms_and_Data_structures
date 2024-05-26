@@ -43,7 +43,9 @@ namespace my {
         void tarjan_scc() const;   //
 
         void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;       //
-        void print_dijkstra(vertex_t start_vert, const std::vector<inf_t>& vec) const; //
+        bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& res) const;
+
+        void print_paths(vertex_t start_vert, const std::vector<inf_t>& vec) const; //
 
         void print() const; //
 
