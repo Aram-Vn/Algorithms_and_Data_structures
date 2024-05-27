@@ -312,48 +312,47 @@ namespace my {
         using dist_vert_Pair = std::pair<inf_t, vertex_t>;
         std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, std::greater<>> pq;
 
-        pq.emplace(0, start_vert);
+        pq.emplace(0, start_vert); // Distance to the start vertex itself is 0
 
         while (!pq.empty())
         {
-            auto [current_dist, U_vert] = pq.top();
+            // Get the vertex with the smallest distance
+            auto [current_dist, current_vertex] = pq.top();
             pq.pop();
 
-            if (current_dist > distances[U_vert])
+            if (current_dist > distances[current_vertex])
             {
-                continue;
+                continue; // If the current distance is greater than the recorded distance, skip processing
             }
 
-            for (const auto& [V_vert, weight] : m_graph[U_vert])
+            // Iterate through all neighbors of the current vertex
+            for (const auto& [neighbor, neighbor_weight] : m_graph[current_vertex])
             {
-                if (weight < 0)
+                if (neighbor_weight < 0)
                 {
                     throw std::runtime_error("Graph contains a negative weight edge.");
                 }
 
+                // Calculate the new distance = neighbor_weight + current_dist
                 inf_t new_dist;
-                if (__builtin_add_overflow(current_dist, weight, &new_dist))
+                if (__builtin_add_overflow(current_dist, neighbor_weight, &new_dist))
                 {
                     new_dist = INF;
                 }
 
-                if (new_dist < distances[V_vert])
+                if (new_dist < distances[neighbor])
                 {
-                    distances[V_vert] = new_dist;
-                    pq.emplace(new_dist, V_vert);
+                    // If the new distance is shorter, update it and push it to the priority queue
+                    distances[neighbor] = new_dist;
+                    pq.emplace(new_dist, neighbor);
                 }
             }
         }
 
-        res.clear();
-        res.resize(distances.size());
+        res.assign(m_graph.size(), INF);
         for (size_t i = 0; i < distances.size(); ++i)
         {
-            if (distances[i] >= INF)
-            {
-                res[i] = INF;
-            }
-            else
+            if (distances[i] != INF)
             {
                 res[i] = distances[i];
             }
@@ -362,7 +361,47 @@ namespace my {
         this->print_paths(start_vert, res);
     }
 
-    //---------------------------_print_dijkstra_--------------------------//
+    //---------------------------_bellman_ford_--------------------------//
+    bool weighted_graph::bellman_ford(vertex_t start_vertex, std::vector<inf_t>& distances) const
+    {
+        distances.assign(m_graph.size(), INF);
+        distances[start_vertex] = 0;
+
+        for (std::size_t i = 1; i < m_graph.size(); ++i) // Relax all edges |V| - 1 times
+        {
+            for (vertex_t current_vert = 0; current_vert < m_graph.size(); ++current_vert)
+            {
+                for (const auto& [neighbor, neighbor_weight] : m_graph[current_vert])
+                {
+                    if (distances[current_vert] != INF &&
+                        distances[neighbor] > distances[current_vert] + neighbor_weight)
+                    {
+                        // If the cur distance is not INF and the new calculated distance is shorter, updating it
+                        distances[neighbor] = distances[current_vert] + neighbor_weight;
+                    }
+                }
+            }
+        }
+
+        // Check for negative weight cycles
+        for (std::size_t current_vert = 0; current_vert < m_graph.size(); ++current_vert)
+        {
+            for (const auto& [neighbor, neighbor_weight] : m_graph[current_vert])
+            {
+                // If we can still relax an edge, then there is a negative weight cycle
+                if (distances[current_vert] != INF && distances[current_vert] + neighbor_weight < distances[neighbor])
+                {
+                    return false; // Negative cycle detected
+                }
+            }
+        }
+
+        this->print_paths(start_vertex, distances);
+
+        return true;
+    }
+
+    //---------------------------_print_paths_--------------------------//
     void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& vec) const
     {
         vertex_t dest_vert = 0;
@@ -378,42 +417,6 @@ namespace my {
             ++dest_vert;
             std::cout << std::endl;
         }
-    }
-
-    //---------------------------_bellman_ford_--------------------------//
-    bool weighted_graph::bellman_ford(vertex_t start_vert, std::vector<inf_t>& res) const
-    {
-        res.assign(m_graph.size(), INF);
-        res[start_vert] = 0;
-
-        for (std::size_t i = 1; i < m_graph.size(); ++i)
-        {
-            for (vertex_t U_vert = 0; U_vert < m_graph.size(); ++U_vert)
-            {
-                for (const auto& [V_vert, weight] : m_graph[U_vert])
-                {
-                    if (res[U_vert] != INF && res[U_vert] + weight < res[V_vert])
-                    {
-                        res[V_vert] = res[U_vert] + weight;
-                    }
-                }
-            }
-        }
-
-        for (std::size_t U_vert = 0; U_vert < m_graph.size(); ++U_vert)
-        {
-            for (const auto& [V_vert, weight] : m_graph[U_vert])
-            {
-                if (res[U_vert] != INF && res[U_vert] + weight < res[V_vert]) // Negative cycle detected
-                {
-                    return false; 
-                }
-            }
-        }
-
-        this->print_paths(start_vert, res);
-
-        return true;
     }
 
     //---------------------------_print_--------------------------//
