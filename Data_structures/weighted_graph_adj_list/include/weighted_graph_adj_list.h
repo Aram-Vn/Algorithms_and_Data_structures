@@ -42,12 +42,13 @@ namespace my {
         void kosaraju_scc() const; //
         void tarjan_scc() const;   //
 
-        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;       //
-        bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& res) const;
+        // to do SSSP
 
-        void print_paths(vertex_t start_vert, const std::vector<inf_t>& vec) const; //
+        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const; // (V + E)log(V)
+        bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const;
 
-        void print() const; //
+        void print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const; //
+        void print() const;                                                               //
 
     private:
         void dfs(vertex_t src, std::vector<bool>& visited, bool print_preorder) const; //

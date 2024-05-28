@@ -40,8 +40,9 @@ namespace my {
         std::vector<Edge>& edges = m_graph[src_vertex1];
 
         // check if the edge already exists
-        auto it =
-            std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) { return edge.first == vertex2; });
+        auto it = std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) {
+            return edge.first == vertex2;
+        });
 
         if (it == edges.end()) // if no edge add it
         {
@@ -310,7 +311,12 @@ namespace my {
         distances[start_vert] = 0;
 
         using dist_vert_Pair = std::pair<inf_t, vertex_t>;
-        std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, std::greater<>> pq;
+
+        auto cmp = [](const auto& pair1, const auto& pair2) -> bool {
+            return pair1.first > pair2.first;
+        };
+
+        std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, decltype(cmp)> pq(cmp);
 
         pq.emplace(0, start_vert); // Distance to the start vertex itself is 0
 
@@ -337,7 +343,7 @@ namespace my {
                 inf_t new_dist;
                 if (__builtin_add_overflow(current_dist, neighbor_weight, &new_dist))
                 {
-                    new_dist = INF;
+                    new_dist = INF; // of there is overflow set new_dist as INF
                 }
 
                 if (new_dist < distances[neighbor])
@@ -383,36 +389,59 @@ namespace my {
             }
         }
 
+        bool no_neg_cycle = true;
+
         // Check for negative weight cycles
-        for (std::size_t current_vert = 0; current_vert < m_graph.size(); ++current_vert)
+        for (std::size_t i = 0; i < m_graph.size(); ++i)
         {
-            for (const auto& [neighbor, neighbor_weight] : m_graph[current_vert])
+            for (vertex_t current_vertex = 0; current_vertex < m_graph.size(); ++current_vertex)
             {
-                // If we can still relax an edge, then there is a negative weight cycle
-                if (distances[current_vert] != INF && distances[current_vert] + neighbor_weight < distances[neighbor])
+                if (distances[current_vertex] == INF)
                 {
-                    return false; // Negative cycle detected
+                    continue;
+                }
+
+                for (const auto& [neighbor, neighbor_weight] : m_graph[current_vertex])
+                {
+                    inf_t new_dist;
+                    if (__builtin_add_overflow(distances[current_vertex], neighbor_weight, &new_dist))
+                    {
+                        new_dist = -INF; // of there is overflow set new_dist as INF
+                    }
+
+                    if (distances[neighbor] > new_dist)
+                    {
+                        no_neg_cycle        = false;
+                        distances[neighbor] = -INF;
+                    }
                 }
             }
         }
 
         this->print_paths(start_vertex, distances);
 
-        return true;
+        return no_neg_cycle;
     }
 
     //---------------------------_print_paths_--------------------------//
-    void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& vec) const
+    void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const
     {
         vertex_t dest_vert = 0;
 
-        for (inf_t weight : vec)
+        for (inf_t weight : distances)
         {
             if (weight == INF)
             {
                 ++dest_vert;
                 continue;
             }
+            else if (weight == -INF)
+            {
+                std::cout << "shortest path from  " << start_vert << "  to  " << dest_vert << " Is affected \n";
+                ++dest_vert;
+                continue;
+            }
+
             std::cout << "shortest path from  " << start_vert << "  to  " << dest_vert << "  is  " << weight;
             ++dest_vert;
             std::cout << std::endl;

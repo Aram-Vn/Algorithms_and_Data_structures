@@ -4,30 +4,45 @@
 
 int main()
 {
-    my::weighted_graph a{ 7 };
+    my::weighted_graph a{ 10 };
 
     try
     {
-        a.add_edge(0, 1, 12);
-        a.add_edge(1, 6, 20);
-        a.add_edge(1, 2, 7);
-        a.add_edge(1, 4, 30);
-        a.add_edge(2, 3, 1);
-        a.add_edge(3, 2, 8);
-        a.add_edge(3, 4, 42);
-        a.add_edge(3, 5, 6);
-        a.add_edge(4, 5, 7);
-        a.add_edge(5, 4, 17);
-        a.add_edge(6, 0, 5);
-        a.add_edge(6, 2, 15);
+        // a.add_edge(0, 1, 12);
+        // a.add_edge(1, 6, 20);
+        // a.add_edge(1, 2, 7);
+        // a.add_edge(1, 4, 30);
+        // a.add_edge(2, 3, 1);
+        // a.add_edge(3, 2, 8);
+        // a.add_edge(3, 4, 42);
+        // a.add_edge(3, 5, 6);
+        // a.add_edge(4, 5, 7);
+        // a.add_edge(5, 4, 17);
+        // a.add_edge(6, 0, 5);
+        // a.add_edge(6, 2, 15);
         // a.add_edge(7, 55);
+
+        /*second  try*/
+        a.add_edge(0, 1, 5);
+        a.add_edge(1, 6, 60);
+        a.add_edge(1, 5, 30);
+        a.add_edge(1, 2, 3);
+        a.add_edge(2, 3, 10);
+        a.add_edge(2, 4, 75);
+        a.add_edge(3, 2, -15);
+        a.add_edge(4, 9, 100);
+        a.add_edge(5, 4, 25);
+        a.add_edge(5, 6, 5);
+        a.add_edge(5, 8, 50);
+        a.add_edge(6, 7, -50);
+        a.add_edge(7, 8, -10);
     }
     catch (const std::exception& e)
     {
         std::cout << e.what() << std::endl;
     }
 
-    // a.print();
+    a.print();
     // a.dfs(0);
     // a.dfs(0, false);
     // a.bfs(2);
@@ -50,13 +65,13 @@ int main()
     // }
 
     std::vector<my::weighted_graph::inf_t> distances;
-    if (a.bellman_ford(5, distances))
+    if (a.bellman_ford(0, distances))
     {
-        std::cout << "YES!!!.\n";
+        std::cout << "NO cycle!!!.\n";
     }
     else
     {
-        std::cout << "Graph contains a negative-weight cycle.\n";
+        std::cout << "negative-weight cycle.\n";
     }
 
     std::vector<my::weighted_graph::inf_t> vec;
