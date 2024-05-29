@@ -1,5 +1,8 @@
 
 #include "../include/weighted_graph_adj_list.h"
+#include <cstdio>
+#include <stack>
+#include <vector>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size)
@@ -304,6 +307,73 @@ namespace my {
         }
     }
 
+    //---------------------------_topological_sort_--------------------------//
+    std::stack<weighted_graph::vertex_t> weighted_graph::topological_sort() const
+    {
+        std::stack<vertex_t> Stack;
+        std::vector<bool>    visited(m_graph.size(), false);
+
+        for (vertex_t i = 0; i < m_graph.size(); ++i)
+        {
+            if (!visited[i])
+            {
+                this->topological_sort_util(i, visited, Stack);
+            }
+        }
+
+        return Stack;
+    }
+
+    void weighted_graph::topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited,
+                                               std::stack<vertex_t>& Stack) const
+    {
+        visited[cur_vert] = true;
+
+        for (const auto& [neighbor, weight] : m_graph[cur_vert])
+        {
+            if (!visited[neighbor])
+            {
+                topological_sort_util(neighbor, visited, Stack);
+            }
+        }
+
+        Stack.push(cur_vert);
+    }
+
+    //---------------------------_dag_SSSP_top_sort_--------------------------//
+    void weighted_graph::dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const
+    {
+        std::stack<vertex_t> Stack = topological_sort();
+
+        distances.assign(m_graph.size(), INF);
+        distances[start_vertex] = 0;
+
+        while (!Stack.empty())
+        {
+            vertex_t cur_vert = Stack.top();
+            Stack.pop();
+
+            if (distances[cur_vert] != INF)
+            {
+                for (const auto& [neighbor, neighbor_weight] : m_graph[cur_vert])
+                {
+                    inf_t new_dist;
+                    if (__builtin_add_overflow(distances[cur_vert], neighbor_weight, &new_dist))
+                    {
+                        new_dist = INF; // of there is overflow set new_dist as INF
+                    }
+
+                    if (distances[neighbor] > new_dist)
+                    {
+                        distances[neighbor] = new_dist;
+                    }
+                }
+            }
+        }
+
+        this->print_paths(start_vertex, distances);
+    }
+
     //---------------------------_dijkstra_--------------------------//
     void weighted_graph::dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const
     {
@@ -339,6 +409,7 @@ namespace my {
                     throw std::runtime_error("Graph contains a negative weight edge.");
                 }
 
+                // overflow guard
                 // Calculate the new distance = neighbor_weight + current_dist
                 inf_t new_dist;
                 if (__builtin_add_overflow(current_dist, neighbor_weight, &new_dist))
@@ -403,10 +474,11 @@ namespace my {
 
                 for (const auto& [neighbor, neighbor_weight] : m_graph[current_vertex])
                 {
+                    // overflow guard
                     inf_t new_dist;
                     if (__builtin_add_overflow(distances[current_vertex], neighbor_weight, &new_dist))
                     {
-                        new_dist = -INF; // of there is overflow set new_dist as INF
+                        new_dist = -INF; // if there is overflow set new_dist as -INF
                     }
 
                     if (distances[neighbor] > new_dist)

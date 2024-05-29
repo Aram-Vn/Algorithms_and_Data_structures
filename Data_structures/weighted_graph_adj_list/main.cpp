@@ -8,6 +8,19 @@ int main()
 
     try
     {
+        a.add_edge(1, 2, 5);
+        a.add_edge(2, 3, -1);
+        a.add_edge(2, 4, 11);
+        a.add_edge(3, 4, 15);
+        a.add_edge(3, 6, 3);
+        a.add_edge(3, 8, 5);
+        a.add_edge(3, 5, 5);
+        a.add_edge(4, 5, 20);
+        a.add_edge(5, 9, 1);
+        a.add_edge(5, 7, 11);
+        a.add_edge(6, 7, 0);
+        a.add_edge(6, 8, 1);
+
         // a.add_edge(0, 1, 12);
         // a.add_edge(1, 6, 20);
         // a.add_edge(1, 2, 7);
@@ -23,19 +36,19 @@ int main()
         // a.add_edge(7, 55);
 
         /*second  try*/
-        a.add_edge(0, 1, 5);
-        a.add_edge(1, 6, 60);
-        a.add_edge(1, 5, 30);
-        a.add_edge(1, 2, 3);
-        a.add_edge(2, 3, 10);
-        a.add_edge(2, 4, 75);
-        a.add_edge(3, 2, -15);
-        a.add_edge(4, 9, 100);
-        a.add_edge(5, 4, 25);
-        a.add_edge(5, 6, 5);
-        a.add_edge(5, 8, 50);
-        a.add_edge(6, 7, -50);
-        a.add_edge(7, 8, -10);
+        // a.add_edge(0, 1, 5);
+        // a.add_edge(1, 6, 60);
+        // a.add_edge(1, 5, 30);
+        // a.add_edge(1, 2, 3);
+        // a.add_edge(2, 3, 10);
+        // a.add_edge(2, 4, 75);
+        // a.add_edge(3, 2, -15);
+        // a.add_edge(4, 9, 100);
+        // a.add_edge(5, 4, 25);
+        // a.add_edge(5, 6, 5);
+        // a.add_edge(5, 8, 50);
+        // a.add_edge(6, 7, -50);
+        // a.add_edge(7, 8, -10);
     }
     catch (const std::exception& e)
     {
@@ -64,8 +77,13 @@ int main()
     //     std::cout << std::endl;
     // }
 
+    std::vector<my::weighted_graph::inf_t> distance1;
+    a.dag_SSSP_top_sort(1, distance1);
+
+    std::cout <<" e.what()" << std::endl;
+
     std::vector<my::weighted_graph::inf_t> distances;
-    if (a.bellman_ford(0, distances))
+    if (a.bellman_ford(1, distances))
     {
         std::cout << "NO cycle!!!.\n";
     }
@@ -77,7 +95,7 @@ int main()
     std::vector<my::weighted_graph::inf_t> vec;
     try
     {
-        a.dijkstra(5, vec);
+        a.dijkstra(1, vec);
 
         for (auto elem : vec)
         {

@@ -42,7 +42,8 @@ namespace my {
         void kosaraju_scc() const; //
         void tarjan_scc() const;   //
 
-        // to do SSSP
+        std::stack<vertex_t> topological_sort() const; //
+        void                 dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const;
 
         void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const; // (V + E)log(V)
         bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const;
@@ -63,6 +64,9 @@ namespace my {
         void tarjan_scc_util(vertex_t vertex, std::vector<long>& ids, std::vector<long>& low,
                              std::vector<bool>& on_stack, std::stack<vertex_t>& stack,
                              std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const; //
+
+        void topological_sort_util(vertex_t start_vert, std::vector<bool>& visited,
+                                   std::stack<vertex_t>& Stack) const; //
 
     private:
         AdjacencyList m_graph;
