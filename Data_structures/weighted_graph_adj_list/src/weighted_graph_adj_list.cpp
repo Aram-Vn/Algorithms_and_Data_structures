@@ -312,34 +312,44 @@ namespace my {
     {
         std::stack<vertex_t> Stack;
         std::vector<bool>    visited(m_graph.size(), false);
+        std::vector<bool>    rec_stack(m_graph.size(), false);
 
         for (vertex_t i = 0; i < m_graph.size(); ++i)
         {
             if (!visited[i])
             {
-                this->topological_sort_util(i, visited, Stack);
+                if (topological_sort_util(i, visited, rec_stack, Stack))
+                {
+                    throw std::runtime_error("Graph contains a cycle\ncant do topological_sort");
+                }
             }
         }
 
         return Stack;
     }
 
-    void weighted_graph::topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited,
-                                               std::stack<vertex_t>& Stack) const
+    bool weighted_graph::topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited,
+                                               std::vector<bool>& rec_stack, std::stack<vertex_t>& Stack) const
     {
-        visited[cur_vert] = true;
+        visited[cur_vert]   = true;
+        rec_stack[cur_vert] = true;
 
         for (const auto& [neighbor, weight] : m_graph[cur_vert])
         {
-            if (!visited[neighbor])
+            if (!visited[neighbor] && topological_sort_util(neighbor, visited, rec_stack, Stack))
             {
-                topological_sort_util(neighbor, visited, Stack);
+                return true;
+            }
+            else if (rec_stack[neighbor])
+            {
+                return true;
             }
         }
 
+        rec_stack[cur_vert] = false;
         Stack.push(cur_vert);
+        return false;
     }
-
     //---------------------------_dag_SSSP_top_sort_--------------------------//
     void weighted_graph::dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const
     {

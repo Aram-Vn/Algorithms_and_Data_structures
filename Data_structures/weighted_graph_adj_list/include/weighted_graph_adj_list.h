@@ -65,8 +65,8 @@ namespace my {
                              std::vector<bool>& on_stack, std::stack<vertex_t>& stack,
                              std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const; //
 
-        void topological_sort_util(vertex_t start_vert, std::vector<bool>& visited,
-                                   std::stack<vertex_t>& Stack) const; //
+        bool topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited, std::vector<bool>& rec_stack,
+                                   std::stack<vertex_t>& Stack) const;
 
     private:
         AdjacencyList m_graph;

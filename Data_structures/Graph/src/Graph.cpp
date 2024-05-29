@@ -1,11 +1,69 @@
 #include "../headers/Graph.h"
+#include <cstddef>
+#include <string>
 
 namespace my {
 
-    Graph::Graph(std::size_t x, bool is_directed)
-        : m_AdjacencyList(x, std::vector<std::size_t>()),
+    Graph::Graph(std::size_t vertex_amount, bool is_directed, bool create)
+        : m_AdjacencyList(vertex_amount, std::vector<std::size_t>()),
           m_is_directed(is_directed)
     {
+        if (create)
+        {
+            for (std::size_t i = 0; i < vertex_amount; ++i)
+            {
+                while (true)
+                {
+                    std::cout << i << "-> ";
+
+                    std::vector<std::size_t> vertices = get_vertices_input();
+                    if (vertices.empty())
+                    {
+                        break;
+                    }
+
+                    for (std::size_t to_vertex : vertices)
+                    {
+                        if (to_vertex < m_AdjacencyList.size())
+                        {
+                            add_edge(i, to_vertex);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid vertex " << to_vertex << ". Please enter values between 0 and "
+                                      << m_AdjacencyList.size() - 1 << " or # to stop.\n";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    std::vector<std::size_t> Graph::get_vertices_input() const
+    {
+        std::string input;
+        std::getline(std::cin, input);
+
+        if (input == "#")
+        {
+            return {};
+        }
+
+        std::istringstream       iss(input);
+        std::vector<std::size_t> vertices;
+        std::size_t              vertex;
+        while (iss >> vertex)
+        {
+            vertices.push_back(vertex);
+        }
+
+        if (iss.fail() && !iss.eof())
+        {
+            std::cout << "Invalid input. Please enter valid numbers separated by spaces or # to stop.\n";
+            return get_vertices_input();
+        }
+
+        return vertices;
     }
 
     //-------------------------_add_vertex_---------------------//
@@ -90,29 +148,32 @@ namespace my {
         }
     }
 
+    //-----------------------------_-create_graph-_----------------------//
+
     //-----------------------------_-dfs_rec-_----------------------//
-    void Graph::dfs_rec(std::size_t vert, bool flag)
+    void Graph::dfs_rec(std::size_t vert, bool print_preorder)
     {
         std::vector<bool> visited(m_AdjacencyList.size(), false);
 
-        std::function<void(std::size_t vert)> dfs_lambda = [this, &dfs_lambda, &visited, flag](std::size_t vert) -> void
+        std::function<void(std::size_t vert)> dfs_lambda = [this, &dfs_lambda, &visited, print_preorder](
+                                                               std::size_t vertex) -> void
         {
-            visited[vert] = true;
-            if (flag)
+            visited[vertex] = true;
+            if (print_preorder)
             {
-                std::cout << vert << " "; // preorder
+                std::cout << vertex << " "; // preorder
             }
 
-            for (const auto u_vert : m_AdjacencyList[vert])
+            for (const auto u_vert : m_AdjacencyList[vertex])
             {
                 if (!visited[u_vert])
                 {
                     dfs_lambda(u_vert);
                 }
             }
-            if (!flag)
+            if (!print_preorder)
             {
-                std::cout << vert << " "; // postorder
+                std::cout << vertex << " "; // postorder
             }
         };
 
@@ -218,7 +279,7 @@ namespace my {
         return false;
     }
 
-    //---------------------------has_cicle_undirected--------------------------//
+    //---------------------------Topological_sort--------------------------//
     std::vector<std::size_t> Graph::Topological_sort()
     {
         if (!m_is_directed)
@@ -228,6 +289,7 @@ namespace my {
 
         std::vector<int>         inDegree(m_AdjacencyList.size(), 0);
         std::vector<std::size_t> res;
+
         res.reserve(m_AdjacencyList.size());
 
         for (std::size_t U = 0; U < m_AdjacencyList.size(); ++U)

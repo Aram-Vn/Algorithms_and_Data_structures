@@ -10,16 +10,16 @@ int main()
     {
         a.add_edge(0, 1, 10);
         a.add_edge(1, 6, 25);
-        a.add_edge(1, 2, 10);
-        a.add_edge(1, 4, -7);
+        a.add_edge(1, 2, 54);
+        a.add_edge(1, 4, 17);
         a.add_edge(2, 3, 88);
         a.add_edge(3, 2, 21);
         a.add_edge(3, 4, 14);
-        a.add_edge(3, 5, 8);
-        a.add_edge(4, 5, 0);
+        a.add_edge(3, 5, 81);
+        a.add_edge(4, 5, 70);
         a.add_edge(5, 4, 11);
-        a.add_edge(6, 0, 14);
-        a.add_edge(6, 2, 25);
+        a.add_edge(6, 0, 41);
+        a.add_edge(6, 2, 89);
         a.add_edge(7, 55, 12);
     }
     catch (const std::exception& e)
@@ -40,7 +40,7 @@ int main()
         {
             if (tr[i][j] != my::weighted_graph_matrix::no_connection)
             {
-                std::cout << tr[i][j] << " ";
+                std::cout << " Ye ";
             }
             else
             {

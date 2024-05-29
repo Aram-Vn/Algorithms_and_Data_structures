@@ -8,6 +8,8 @@ target_include_directories(priority_queue PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/headers
         ${CMAKE_CURRENT_SOURCE_DIR}/src )
         
+enable_testing()
+include(CTest)
 add_subdirectory(tests)
 
 target_compile_options(priority_queue PRIVATE 

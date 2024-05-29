@@ -8,6 +8,7 @@
 #include <limits>
 #include <queue>
 #include <sstream>
+#include <stack>
 #include <stdexcept>
 #include <vector>
 
@@ -31,12 +32,24 @@ namespace my {
         void dfs(const vertex_t start_vert, bool print_preorder = true) const; //
         void bfs(vertex_t start_vertex) const;                                 //
 
+        void kosaraju_scc() const;
+        void tarjan_scc() const;
+
         void      print() const;     //
         matrix_gr transpose() const; //
 
     private:
         void dfs_util(vertex_t src, std::vector<bool>& visited, bool print_preorder) const; //
         void bfs_util(vertex_t start_vert, std::vector<bool>& visited) const;               //
+
+        void dfs_kosaraju(vertex_t vertex, std::vector<bool>& visited, std::stack<vertex_t>& finish_stack) const;
+
+        void dfs_transposed(vertex_t vertex, const matrix_gr& transposed_graph, std::vector<bool>& visited,
+                            std::vector<vertex_t>& component) const;
+
+        void tarjan_scc_util(vertex_t vertex, std::vector<long>& ids, std::vector<long>& low,
+                             std::vector<bool>& on_stack, std::stack<vertex_t>& stack,
+                             std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const;
 
     private:
         matrix_gr m_graph;

@@ -547,10 +547,18 @@ namespace my {
         return res;
     }
 
+    //-------------------------check_black_height-----------------------------//
+    template <typename T>
+    bool RB_Tree<T>::check_black_height() const
+    {
+        return check_black_height(m_root);
+    }
+
     template <typename T>
     bool RB_Tree<T>::check_black_height(Node* node) const
     {
-        int left_black_height = 0, right_black_height = 0;
+        int left_black_height  = 0;
+        int right_black_height = 0;
 
         if (node == m_nil)
         {
@@ -568,16 +576,18 @@ namespace my {
         return (node->color == Color::BLACK) ? left_black_height + 1 : left_black_height;
     }
 
-    template <typename T>
-    bool RB_Tree<T>::check_black_height() const
-    {
-        return check_black_height(m_root);
-    }
-
+    //-------------------------root_color-----------------------------//
     template <typename T>
     bool RB_Tree<T>::root_color() const
     {
         return m_root->color == Color::BLACK;
+    }
+
+    //-------------------------check_no_adjacent_red_nodes-----------------------------//
+    template <typename T>
+    bool RB_Tree<T>::check_no_adjacent_red_nodes() const
+    {
+        return check_no_adjacent_red_nodes(m_root);
     }
 
     template <typename T>
@@ -595,12 +605,7 @@ namespace my {
         return check_no_adjacent_red_nodes(node->right);
     }
 
-    template <typename T>
-    bool RB_Tree<T>::check_no_adjacent_red_nodes() const
-    {
-        return check_no_adjacent_red_nodes(m_root);
-    }
-
+    //-------------------------display-----------------------------//
     template <typename T>
     void RB_Tree<T>::display()
     {
@@ -608,6 +613,7 @@ namespace my {
         {
             if (node == m_nil || node == nullptr)
             {
+                std::cout << std::setw(dept) << 'N' << std::endl;
                 return;
             }
 

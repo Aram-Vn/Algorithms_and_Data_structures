@@ -28,7 +28,7 @@ protected:
         return true;
     }
 
-    const size_t size            = 90000;
+    const size_t size            = 9000000;
     const size_t range           = 5000;
     bool         useSpecificSeed = false;
     size_t       specificSeed    = 465489480787;

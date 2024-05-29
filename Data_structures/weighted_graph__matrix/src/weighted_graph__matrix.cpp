@@ -1,4 +1,3 @@
-
 #include "../include/weighted_graph__matrix.h"
 
 namespace my {
@@ -48,16 +47,14 @@ namespace my {
     /*------------------------------_-transpose-_-------------------------------*/
     weighted_graph_matrix::matrix_gr weighted_graph_matrix::transpose() const
     {
-        matrix_gr transposed = m_graph;
-
-        std::size_t size = transposed.size();
+        matrix_gr transposed(m_graph[0].size(), std::vector<weight_t>(m_graph.size(), no_connection));
 
         #pragma omp parallel for
-        for (std::size_t i = 0; i < size; ++i)
+        for (vertex_t row = 0; row < m_graph.size(); ++row)
         {
-            for (std::size_t j = 0; j < i; ++j)
+            for (vertex_t col = 0; col < m_graph[row].size(); ++col)
             {
-                std::swap(transposed[i][j], transposed[j][i]);
+                transposed[col][row] = m_graph[row][col];
             }
         }
 
@@ -159,7 +156,8 @@ namespace my {
                 {
                     std::cout << m_graph[i][j] << " ";
                 }
-                else {
+                else
+                {
                     std::cout << " NO ";
                 }
             }

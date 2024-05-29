@@ -37,6 +37,33 @@ TEST(HeapTest, RB_TreeTest)
     EXPECT_TRUE(a.check_no_adjacent_red_nodes());
 }
 
+TEST(HeapTest, RB_TreeTest__2)
+{
+    my::RB_Tree<int> a;
+
+    for (int i = 0; i < 100; ++i)
+    {
+        a.insert(i);
+    }
+
+    EXPECT_TRUE(a.check_black_height(a.m_root));
+    EXPECT_TRUE(a.root_color());
+    EXPECT_TRUE(a.check_no_adjacent_red_nodes());
+
+    for (int i = 0; i < 100; ++i)
+    {
+        a.delete_val(i);
+
+        EXPECT_TRUE(a.check_black_height(a.m_root));
+        EXPECT_TRUE(a.root_color());
+        EXPECT_TRUE(a.check_no_adjacent_red_nodes());
+    }
+
+    EXPECT_TRUE(a.check_black_height(a.m_root));
+    EXPECT_TRUE(a.root_color());
+    EXPECT_TRUE(a.check_no_adjacent_red_nodes());
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

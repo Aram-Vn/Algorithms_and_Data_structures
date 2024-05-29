@@ -8,34 +8,36 @@ int main()
 
     try
     {
-        a.add_edge(1, 2, 5);
-        a.add_edge(2, 3, -1);
-        a.add_edge(2, 4, 11);
-        a.add_edge(3, 4, 15);
-        a.add_edge(3, 6, 3);
-        a.add_edge(3, 8, 5);
-        a.add_edge(3, 5, 5);
-        a.add_edge(4, 5, 20);
-        a.add_edge(5, 9, 1);
-        a.add_edge(5, 7, 11);
-        a.add_edge(6, 7, 0);
-        a.add_edge(6, 8, 1);
+        /*DAG*/
+        // a.add_edge(1, 2, 5);
+        // a.add_edge(2, 3, -1);
+        // a.add_edge(2, 4, 11);
+        // a.add_edge(3, 4, 15);
+        // a.add_edge(3, 6, 3);
+        // a.add_edge(3, 8, 5);
+        // a.add_edge(3, 5, 5);
+        // a.add_edge(4, 5, 20);
+        // a.add_edge(5, 9, 1);
+        // a.add_edge(5, 7, 11);
+        // a.add_edge(6, 7, 0);
+        // a.add_edge(6, 8, 1);
 
-        // a.add_edge(0, 1, 12);
-        // a.add_edge(1, 6, 20);
-        // a.add_edge(1, 2, 7);
-        // a.add_edge(1, 4, 30);
-        // a.add_edge(2, 3, 1);
-        // a.add_edge(3, 2, 8);
-        // a.add_edge(3, 4, 42);
-        // a.add_edge(3, 5, 6);
-        // a.add_edge(4, 5, 7);
-        // a.add_edge(5, 4, 17);
-        // a.add_edge(6, 0, 5);
-        // a.add_edge(6, 2, 15);
-        // a.add_edge(7, 55);
+        /*no neg edge cycled*/
+        a.add_edge(0, 1, 12);
+        a.add_edge(1, 6, 20);
+        a.add_edge(1, 2, 7);
+        a.add_edge(1, 4, 30);
+        a.add_edge(2, 3, 1);
+        a.add_edge(3, 2, 8);
+        a.add_edge(3, 4, 42);
+        a.add_edge(3, 5, 6);
+        a.add_edge(4, 5, 7);
+        a.add_edge(5, 4, 17);
+        a.add_edge(6, 0, 5);
+        a.add_edge(6, 2, 15);
+        a.add_edge(7, 55);
 
-        /*second  try*/
+        /*second  try negative-weight cycle.*/
         // a.add_edge(0, 1, 5);
         // a.add_edge(1, 6, 60);
         // a.add_edge(1, 5, 30);
@@ -77,11 +79,6 @@ int main()
     //     std::cout << std::endl;
     // }
 
-    std::vector<my::weighted_graph::inf_t> distance1;
-    a.dag_SSSP_top_sort(1, distance1);
-
-    std::cout <<" e.what()" << std::endl;
-
     std::vector<my::weighted_graph::inf_t> distances;
     if (a.bellman_ford(1, distances))
     {
@@ -92,16 +89,17 @@ int main()
         std::cout << "negative-weight cycle.\n";
     }
 
-    std::vector<my::weighted_graph::inf_t> vec;
     try
     {
-        a.dijkstra(1, vec);
+        a.dijkstra(1, distances);
 
-        for (auto elem : vec)
+        for (auto elem : distances)
         {
             std::cout << elem << " ";
         }
         std::cout << std::endl;
+
+        a.dag_SSSP_top_sort(1, distances);
     }
     catch (const std::exception& e)
     {

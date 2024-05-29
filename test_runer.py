@@ -29,7 +29,7 @@ def test_Quick_Sort(chise: str, pivot: str) -> None:
             return
            
         subprocess.run(['g++', Quick_Sort_path, Quick_Sort_test_path, '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
-        console.print(f'\n**********_quick_sort_test_{pivot}**********\n', style='bold cyan')
+        console.print(f'\n--------------quick_sort_test_{pivot}--------------\n', style='bold cyan')
         TEST_FILES.append('quick_sort_test')
         subprocess.run(['./quick_sort_test'], check=True)
         
@@ -53,7 +53,7 @@ def compile_and_run_test(test_file: str, algorithm_source: str, z: str) -> None:
             return
 
         subprocess.run(['g++', test_path, sorthing_algorithm_path, '-o', f'{z}', '-lgtest', '-lgtest_main'])
-        console.print(f'\n**********_{test_file}_**********\n', style='bold cyan')
+        console.print(f'\n{test_file:-^55}\n', style='bold cyan')
         TEST_FILES.append(z)
         subprocess.run([f'./{z}'], check=True)
         
@@ -92,7 +92,8 @@ def main() -> None:
         '6': 'counting_sort',
         '7': 'Linked_List_Merge_Sort',
         '8': 'heap_sort',
-        '9': 'Finish testing', 
+        '9' : 'Thread_MergeSort',
+        '10': 'Finish testing (or ctrl + c)', 
     }
     
     quick_sort_options: dict[str, str] = {
@@ -109,51 +110,59 @@ def main() -> None:
     console.print(ascii_art, style='bold cyan')
     
     while True:
-        console.print('Enter the number corresponding to the sorting algorithm you want to test:\n', style='bold #00AAA6 u')
-        for key, value in options.items():
-            if key == str(len(options)):
-                console.print(f'[green bold]{key}.[/green bold] {value}', style='b red')
-            else:
-                console.print(f'[green bold]{key}.[/green bold] {value}')
-                
-       
-        console.print(f'   Choose from [green bold](1 - {len(options)})[green bold]')
-        console.print('\n' + '-' * 40 + '\n', style='bold cyan')
-
-        choice: str = input()
-
-        if choice == '4':
-            while True:        
-                console.print('Choose the version of Quick Sort:')
-                
-                for key, value in quick_sort_options.items():
-                   console.print(f'[green bold]{key}.[/green bold] {value}', style='')
+        try:
+            console.print('Enter the number corresponding to the sorting algorithm you want to test:\n', style='bold #00AAA6 u')
+            for key, value in options.items():
+                if key == str(len(options)):
+                    console.print(f'[green bold]{key}.[/green bold] {value}', style='b red')
+                else:
+                    console.print(f'[green bold]{key}.[/green bold] {value}')
                     
-                console.print('[green bold]E.[/green bold] end Quick Sort chise\n', style='red')
-                quick_sort_choice: str = input('Enter your choice (a/A/ b/B c/C d/D e/E): ').upper()
-                
-                if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
-                    if(quick_sort_choice == 'E'):
+        
+            console.print(f'   Choose from [green bold](1 - {len(options)})[green bold]')
+            console.print('\n' + '-' * 40 + '\n', style='bold cyan')
+
+            choice: str = input()
+
+            if choice == '4':
+                while True:        
+                    console.print('Choose the version of Quick Sort:')
+                    
+                    for key, value in quick_sort_options.items():
+                        console.print(f'[green bold]{key}.[/green bold] {value}', style='')
+                        
+                    console.print('[green bold]E.[/green bold] end Quick Sort chise\n', style='red')
+                    quick_sort_choice: str = input('Enter your choice (a/A/ b/B c/C d/D e/E): ').upper()
+                    
+                    if quick_sort_choice in ['A', 'B', 'C', 'D', 'E']:
+                        if(quick_sort_choice == 'E'):
+                            break
+                        else:
+                            pivot_name: str = quick_sort_options[quick_sort_choice]
+                            test_Quick_Sort(quick_sort_choice, pivot_name)
+
+                    else:
+                        console.print('Invalid choice. Please enter A, B, C, or D.', style='bold red')
+            else:
+                if choice in options:
+                    if choice == str(len(options)):
+                        console.print('Ending the loop.', style='bold green')  
+                        cleanup_test_files(TEST_FILES)
                         break
                     else:
-                        pivot_name: str = quick_sort_options[quick_sort_choice]
-                        test_Quick_Sort(quick_sort_choice, pivot_name)
-
+                        algorithm_name: str = options[choice]
+                        test_sorting_algorithm(algorithm_name, choice)
                 else:
-                    console.print('Invalid choice. Please enter A, B, C, or D.', style='bold red')
-        else:
-            if choice in options:
-                if choice == str(len(options)):
-                    console.print('Ending the loop.', style='bold green')  
-                    cleanup_test_files(TEST_FILES)
-                    break
-                else:
-                    algorithm_name: str = options[choice]
-                    test_sorting_algorithm(algorithm_name, choice)
-            else:
-                console.print('\n' + '-' * 60 + '\n', style='bold red \n')
-                console.print(f'Invalid choice. Please enter a number between 1 and {len(options)}.', style='bold red \n')
-                console.print('\n' + '-' * 60 + '\n', style='bold red \n')
-
+                    console.print('\n' + '-' * 60 + '\n', style='bold red \n')
+                    console.print(f'Invalid choice. Please enter a number between 1 and {len(options)}.', style='bold red \n')
+                    console.print('\n' + '-' * 60 + '\n', style='bold red \n')
+        except EOFError:
+            cleanup_test_files(TEST_FILES)
+            console.print('\nCleanup complete.', style='bold cyan')
+            console.print('Ending the loop.', style='bold green')
+            
+            console.print('\nExiting due to EOF (Ctrl+D)', style='bold yellow')
+            break
+    
 if __name__ == '__main__':
     main()
