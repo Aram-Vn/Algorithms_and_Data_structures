@@ -2,6 +2,8 @@
 
 # Directory Structure
 ```bash
+.
+│
 ├── Data_structures
 │   │
 │   ├── AVL_Tree
@@ -22,6 +24,7 @@
 │   │   │   └── Binary_Search_Tree.hpp
 │   │   └── tests
 │   │       ├── CMakeLists.txt
+│   │       │
 │   │       └── test_Binary_Search_Tree.cpp
 │   │
 │   ├── Graph
@@ -47,16 +50,41 @@
 │   │       ├── CMakeLists.txt
 │   │       └── test_heap.cpp
 │   │
-│   └── RB_Tree
+│   ├── RB_Tree
+│   │   ├── CMakeLists.txt
+│   │   ├── compile_commands.json
+│   │   ├── headers
+│   │   │   └── RB_Tree.h
+│   │   ├── main.cpp
+│   │   ├── src
+│   │   │   └── RB_Tree.hpp
+│   │   └── tests
+│   │       ├── CMakeLists.txt
+│   │       └── RB_Tree_test.cpp
+│   │
+│   ├── weighted_graph_adj_list
+│   │   ├── CMakeLists.txt
+│   │   ├── compile_commands.json
+│   │   ├── include
+│   │   │   └── weighted_graph_adj_list.h
+│   │   ├── main.cpp
+│   │   ├── src
+│   │   │   └── weighted_graph_adj_list.cpp
+│   │   └── tests
+│   │       ├── CMakeLists.txt
+│   │       └── weighted_graph_adj_list_test.cpp
+│   │
+│   └── weighted_graph__matrix
 │       ├── CMakeLists.txt
-│       ├── headers
-│       │   └── RB_Tree.h
+│       ├── compile_commands.json
+│       ├── include
+│       │   └── weighted_graph__matrix.h
 │       ├── main.cpp
 │       ├── src
-│       │   └── RB_Tree.hpp
+│       │   └── weighted_graph__matrix.cpp
 │       └── tests
 │           ├── CMakeLists.txt
-│           └── RB_Tree_test.cpp
+│           └── weighted_graph__matrix_test.cpp
 │
 ├── Sorting_Algorithms
 │   │
@@ -75,13 +103,11 @@
 │   │   ├── 1__bubble_sort.cpp
 │   │   ├── 2__insertion_sort.cpp
 │   │   ├── 3__selection_sort.cpp
-│   │   │
 │   │   ├── 4__quick_sort
 │   │   │   ├── A__quick_sort_first.cpp
 │   │   │   ├── B__quick_sort_last.cpp
 │   │   │   ├── C__quick_sort_medianOfThree.cpp
 │   │   │   └── D__quick_sort_Random.cpp
-│   │   │
 │   │   ├── 5__merge_sort.cpp
 │   │   ├── 6__counting_sort.cpp
 │   │   ├── 7__Linked_List_Merge_Sort.cpp
@@ -103,6 +129,7 @@
 ├── requirements.txt
 ├── test_runer.py
 └── test_runer.sh
+
 
 ```
 
