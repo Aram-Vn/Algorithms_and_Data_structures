@@ -103,11 +103,13 @@
 │   │   ├── 1__bubble_sort.cpp
 │   │   ├── 2__insertion_sort.cpp
 │   │   ├── 3__selection_sort.cpp
+│   │   │
 │   │   ├── 4__quick_sort
 │   │   │   ├── A__quick_sort_first.cpp
 │   │   │   ├── B__quick_sort_last.cpp
 │   │   │   ├── C__quick_sort_medianOfThree.cpp
 │   │   │   └── D__quick_sort_Random.cpp
+│   │   │
 │   │   ├── 5__merge_sort.cpp
 │   │   ├── 6__counting_sort.cpp
 │   │   ├── 7__Linked_List_Merge_Sort.cpp
