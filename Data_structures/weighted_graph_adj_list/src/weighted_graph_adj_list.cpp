@@ -2,11 +2,13 @@
 #include "../include/weighted_graph_adj_list.h"
 #include <cstdio>
 #include <stack>
+#include <stdexcept>
 #include <vector>
 
 namespace my {
-    weighted_graph::weighted_graph(std::size_t size)
-        : m_graph(size)
+    weighted_graph::weighted_graph(std::size_t size, bool is_directed)
+        : m_graph(size),
+          m_is_directed(is_directed)
     {
     }
 
@@ -40,20 +42,58 @@ namespace my {
             throw std::out_of_range(errorMessage.str());
         }
 
-        std::vector<Edge>& edges = m_graph[src_vertex1];
-
-        // check if the edge already exists
-        auto it = std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) {
-            return edge.first == vertex2;
-        });
-
-        if (it == edges.end()) // if no edge add it
+        if (m_is_directed)
         {
-            m_graph[src_vertex1].emplace_back(vertex2, weight);
+            std::vector<Edge>& edges = m_graph[src_vertex1];
+
+            // check if the edge already exists
+            auto it = std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) {
+                return edge.first == vertex2;
+            });
+
+            if (it == edges.end()) // if no edge add it
+            {
+                m_graph[src_vertex1].emplace_back(vertex2, weight);
+            }
+            else // if edge exists change weight
+            {
+                it->second = weight;
+            }
         }
-        else // if edge exists change weight
+        else
         {
-            it->second = weight;
+            // Add edge from src_vertex1 to vertex2
+            std::vector<Edge>& edges_from_src = m_graph[src_vertex1];
+
+            auto it_src = std::find_if(edges_from_src.begin(), edges_from_src.end(), [vertex2](const Edge& edge) {
+                return edge.first == vertex2;
+            });
+
+            if (it_src == edges_from_src.end()) // if no edge add it
+            {
+                m_graph[src_vertex1].emplace_back(vertex2, weight);
+            }
+            else // if edge exists change weight
+            {
+                it_src->second = weight;
+            }
+
+            // Add edge from vertex2 to src_vertex1
+            std::vector<Edge>& edges_from_vertex2 = m_graph[vertex2];
+
+            auto it_vertex2 =
+                std::find_if(edges_from_vertex2.begin(), edges_from_vertex2.end(), [src_vertex1](const Edge& edge) {
+                    return edge.first == src_vertex1;
+                });
+
+            if (it_vertex2 == edges_from_vertex2.end()) // if no edge add it
+            {
+                m_graph[vertex2].emplace_back(src_vertex1, weight);
+            }
+            else // if edge exists change weight
+            {
+                it_vertex2->second = weight;
+            }
         }
     }
 
@@ -144,6 +184,11 @@ namespace my {
     /*---------------------------------------------------------------------*/
     void weighted_graph::kosaraju_scc() const
     {
+        if (!m_is_directed)
+        {
+            throw std::logic_error("cant find SCCs in underacted graph");
+        }
+
         std::cout << "kosaraju_scc: " << std::endl;
 
         std::stack<vertex_t> finish_stack;
@@ -238,6 +283,11 @@ namespace my {
     /*---------------------------------------------------------------------*/
     void weighted_graph::tarjan_scc() const
     {
+        if (!m_is_directed)
+        {
+            throw std::logic_error("cant find SCCs in underacted graph");
+        }
+
         std::vector<long>                  ids(m_graph.size(), -1);
         std::vector<long>                  low(m_graph.size(), -1);
         std::vector<bool>                  on_stack(m_graph.size(), false);
@@ -353,6 +403,11 @@ namespace my {
     //---------------------------_dag_SSSP_top_sort_--------------------------//
     void weighted_graph::dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const
     {
+        if (!m_is_directed)
+        {
+            throw std::logic_error("cant do SSSP using top_sort in underacted graph");
+        }
+
         std::stack<vertex_t> Stack = topological_sort();
 
         distances.assign(m_graph.size(), INF);
@@ -504,6 +559,67 @@ namespace my {
 
         return no_neg_cycle;
     }
+
+    //---------------------------_print_paths_--------------------------//
+    long weighted_graph::ptims_MST(vertex_t start_vert) const
+    {
+        long                  total_weight = 0;               // Total weight of the minimum spanning tree
+        std::vector<bool>     visited(m_graph.size(), false); // Tracks vertices included in MST
+        std::vector<inf_t>    key(m_graph.size(), INF);       // Tracks the minimum edge
+        // std::vector<vertex_t> MST(m_graph.size());            // Track MST edges
+
+        auto cmp = [](const auto& pair1, const auto& pair2) -> bool {
+            return pair1.first > pair2.first;
+        };
+
+        using dist_vert_Pair = std::pair<inf_t, vertex_t>;
+
+        std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, decltype(cmp)> pq(cmp);
+
+        key[start_vert] = 0;
+        pq.emplace(0, start_vert);
+
+        while (!pq.empty())
+        {
+            vertex_t current_vertex = pq.top().second;
+            pq.pop();
+
+            if (visited[current_vertex]) // If the vertex is already in MST, continue to the next iteration
+            {
+                continue;
+            }
+
+            visited[current_vertex] = true;
+            total_weight += key[current_vertex]; // Add the weight of the edge connecting the
+                                                 // current vertex to the MST
+
+            for (const auto& [neighbor, neighb_weight] : m_graph[current_vertex])
+            {
+                if (!visited[neighbor] && neighb_weight < key[neighbor])
+                {
+                    // Update the minimum edge weight to connect the adjacent vertex to the MST
+                    key[neighbor] = neighb_weight;
+                    pq.emplace(key[neighbor], neighbor);
+
+                    // Add the edge to the MST
+                    // MST[current_vertex] = neighbor;
+                }
+            }
+        }
+
+        // print_MST(MST); // Print MST
+        return total_weight;
+    }
+
+    //---------------------------_print_MST_--------------------------//
+    // void weighted_graph::print_MST(const std::vector<vertex_t>& MST) const
+    // {
+    //     std::cout << "Minimum Spanning Tree:\n";
+    //     for (std::size_t i = 0; i < MST.size(); ++i)
+    //     {
+    //         std::cout << i << " -- " << MST[i] << std::endl;
+    //     }
+    // }
 
     //---------------------------_print_paths_--------------------------//
     void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const

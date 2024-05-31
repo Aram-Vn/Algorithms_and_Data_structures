@@ -28,7 +28,7 @@ namespace my {
         static constexpr int64_t INF = std::numeric_limits<int64_t>::max();
 
     public:
-        weighted_graph(std::size_t size); //
+        weighted_graph(std::size_t size, bool is_directed = true); //
 
     public:
         void add_vertex();                                                                            //
@@ -48,6 +48,9 @@ namespace my {
         void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const; // (V + E)log(V)
         bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const;
 
+        long ptims_MST(vertex_t start_vert) const;
+
+        void print_MST(const std::vector<vertex_t>& MST) const;
         void print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const; //
         void print() const;                                                               //
 
@@ -66,10 +69,11 @@ namespace my {
                              std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const; //
 
         bool topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited, std::vector<bool>& rec_stack,
-                                   std::stack<vertex_t>& Stack) const;
+                                   std::stack<vertex_t>& Stack) const; //
 
     private:
         AdjacencyList m_graph;
+        bool          m_is_directed;
     };
 
 } // namespace my
