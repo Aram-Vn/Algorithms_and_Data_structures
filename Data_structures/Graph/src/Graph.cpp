@@ -148,8 +148,6 @@ namespace my {
         }
     }
 
-    //-----------------------------_-create_graph-_----------------------//
-
     //-----------------------------_-dfs_rec-_----------------------//
     void Graph::dfs_rec(std::size_t vert, bool print_preorder)
     {
@@ -236,8 +234,8 @@ namespace my {
         std::cout << std::endl;
     }
 
-    //---------------------------_-has_cicle-_--------------------------//
-    bool Graph::has_cicle()
+    //---------------------------_-has_cycle-_--------------------------//
+    bool Graph::has_cycle()
     {
         std::unordered_set<std::size_t> visited;
         std::unordered_set<std::size_t> current_path;
@@ -250,7 +248,7 @@ namespace my {
             {
                 if (visited.find(i) == visited.end())
                 {
-                    this->has_cicle_directed(i, visited, current_path, hasCycle);
+                    this->has_cycle_directed(i, visited, current_path, hasCycle);
                     if (hasCycle)
                     {
                         return true;
@@ -265,7 +263,7 @@ namespace my {
             {
                 if (visited.find(i) == visited.end())
                 {
-                    this->has_cicle_undirected(i, std::numeric_limits<std::size_t>::max(), visited, hasCycle);
+                    this->has_cycle_undirected(i, std::numeric_limits<std::size_t>::max(), visited, hasCycle);
                     {
                         if (hasCycle)
                         {
@@ -300,27 +298,27 @@ namespace my {
             }
         }
 
-        std::queue<std::size_t> queu;
+        std::queue<std::size_t> queue;
 
         for (std::size_t i = 0; i < m_AdjacencyList.size(); ++i)
         {
             if (inDegree[i] == 0)
             {
-                queu.push(i);
+                queue.push(i);
             }
         }
 
-        while (!queu.empty())
+        while (!queue.empty())
         {
-            std::size_t node = queu.front();
-            queu.pop();
+            std::size_t node = queue.front();
+            queue.pop();
             res.push_back(node);
             for (const auto elem : m_AdjacencyList[node])
             {
                 --inDegree[elem];
                 if (inDegree[elem] == 0)
                 {
-                    queu.push(elem);
+                    queue.push(elem);
                 }
             }
         }
@@ -339,9 +337,9 @@ namespace my {
         throw std::logic_error("the graph hes loop can't do Topological_sort\n");
     }
 
-    //---------------------------has_cicle_undirected--------------------------//
-    void Graph::has_cicle_undirected(std::size_t vert, std::size_t parent, std::unordered_set<std::size_t> visited,
-                                     bool& has_sycle)
+    //---------------------------has_cycle_undirected--------------------------//
+    void Graph::has_cycle_undirected(std::size_t vert, std::size_t parent, std::unordered_set<std::size_t> visited,
+                                     bool& has_sycl)
     {
         visited.insert(vert);
 
@@ -349,18 +347,18 @@ namespace my {
         {
             if (visited.find(neighbor) == visited.end())
             {
-                has_cicle_undirected(neighbor, vert, visited, has_sycle);
+                has_cycle_undirected(neighbor, vert, visited, has_sycl);
             }
             else if (neighbor != parent)
             {
-                has_sycle = true;
+                has_sycl = true;
                 return;
             }
         }
     }
 
-    //---------------------------has_cicle_directed--------------------------//
-    void Graph::has_cicle_directed(std::size_t vert, std::unordered_set<std::size_t>& visited,
+    //---------------------------has_cycle_directed--------------------------//
+    void Graph::has_cycle_directed(std::size_t vert, std::unordered_set<std::size_t>& visited,
                                    std::unordered_set<std::size_t>& current_path, bool& hasCycle)
     {
         visited.insert(vert);
@@ -376,12 +374,41 @@ namespace my {
 
             if (visited.find(neighbor) == visited.end())
             {
-                has_cicle_directed(neighbor, visited, current_path, hasCycle);
+                has_cycle_directed(neighbor, visited, current_path, hasCycle);
             }
         }
 
         current_path.erase(vert);
     }
+
+    // //---------------------------_ptims_MST_--------------------------//
+    // long Graph::ptims_MST(vertex_t start_vert) const
+    // {
+    //     std::vector<bool> visited(m_AdjacencyList.size(), false);
+    //     long              res = 0;
+
+    //     using dist_vert_Pair = std::pair<inf_t, vertex_t>;
+
+    //     auto cmp = [](const auto& pair1, const auto& pair2) -> bool { return pair1.first > pair2.first; };
+
+    //     std::priority_queue<dist_vert_Pair, std::vector<dist_vert_Pair>, decltype(cmp)> pq(cmp);
+    //     pq.emplace(0, start_vert);
+
+    //     while (!pq.empty())
+    //     {
+    //         auto [u, cost] = pq.top();
+    //         pq.pop();
+    //         visited[(std::size_t)u] = true;
+    //         res += cost;
+
+    //         for (const auto& [v, w] : m_AdjacencyList[u])
+    //         {
+
+    //         }
+    //     }
+
+    //     return res;
+    // }
 
     //---------------------------_print_--------------------------//
     void Graph::print() const

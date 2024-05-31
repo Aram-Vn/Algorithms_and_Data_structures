@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <iostream>
 #include <limits>
@@ -26,7 +27,7 @@ namespace my {
         void add_edge(std::size_t vertex1, std::size_t vertex2);    //
         void remove_edge(std::size_t vertex1, std::size_t vertex2); //
 
-        bool has_cicle();
+        bool has_cycle();
 
         void dfs_rec(std::size_t start_vertex, bool print_preorder = true); //
         void dfs_iter(std::size_t start_vertex);                            //
@@ -39,9 +40,9 @@ namespace my {
     private:
         std::vector<std::size_t> get_vertices_input() const;
 
-        void has_cicle_undirected(std::size_t vert, std::size_t parent, std::unordered_set<std::size_t>,
-                                  bool& has_sycle);
-        void has_cicle_directed(std::size_t vert, std::unordered_set<std::size_t>& visited,
+        void has_cycle_undirected(std::size_t vert, std::size_t parent, std::unordered_set<std::size_t>,
+                                  bool& has_sycl);
+        void has_cycle_directed(std::size_t vert, std::unordered_set<std::size_t>& visited,
                                 std::unordered_set<std::size_t>& current_path, bool& hasCycle);
 
     private:

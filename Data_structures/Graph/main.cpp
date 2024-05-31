@@ -44,7 +44,7 @@ int main()
     g.dfs_rec(0);
     g.dfs_rec(0, false);
 
-    if (g.has_cicle())
+    if (g.has_cycle())
     {
         std::cout << "yes" << std::endl;
     }
