@@ -1,8 +1,8 @@
 
 #include "../include/weighted_graph_adj_list.h"
-#include <cstdio>
-#include <stack>
+#include <queue>
 #include <stdexcept>
+#include <tuple>
 #include <vector>
 
 namespace my {
@@ -563,9 +563,14 @@ namespace my {
     //---------------------------_print_paths_--------------------------//
     long weighted_graph::ptims_MST(vertex_t start_vert) const
     {
-        long                  total_weight = 0;               // Total weight of the minimum spanning tree
-        std::vector<bool>     visited(m_graph.size(), false); // Tracks vertices included in MST
-        std::vector<inf_t>    key(m_graph.size(), INF);       // Tracks the minimum edge
+        if (m_is_directed)
+        {
+            throw std::logic_error("cant do ptims_MST on directed graph");
+        }
+
+        long               total_weight = 0;               // Total weight of the minimum spanning tree
+        std::vector<bool>  visited(m_graph.size(), false); // Tracks vertices included in MST
+        std::vector<inf_t> key(m_graph.size(), INF);       // Tracks the minimum edge
         // std::vector<vertex_t> MST(m_graph.size());            // Track MST edges
 
         auto cmp = [](const auto& pair1, const auto& pair2) -> bool {
@@ -611,15 +616,65 @@ namespace my {
         return total_weight;
     }
 
+    //---------------------------_kruskal_MST_--------------------------//
+    long weighted_graph::kruskal_MST() const
+    {
+        if (m_is_directed)
+        {
+            throw std::logic_error("Cannot perform Kruskal's algorithm on a directed graph");
+        }
+
+        long                                       total_weight = 0;
+        std::vector<std::pair<vertex_t, vertex_t>> mst_edges;
+        using Edge_tuple = std::tuple<weight_t, vertex_t, vertex_t>;
+
+        auto cmp = [](const Edge_tuple& edge1, const Edge_tuple& edge2) -> bool {
+            return std::get<0>(edge1) > std::get<0>(edge2);
+        };
+
+        std::priority_queue<Edge_tuple, std::vector<Edge_tuple>, decltype(cmp)> pq(cmp);
+
+        for (vertex_t U_vert = 0; U_vert < m_graph.size(); ++U_vert)
+        {
+            for (const auto& [V_vert, weight] : m_graph[U_vert])
+            {
+                if (U_vert < V_vert) // only uniques
+                {
+                    pq.emplace(weight, U_vert, V_vert);
+                }
+            }
+        }
+
+        util::UnionFind uf(m_graph.size());
+
+        while (!pq.empty())
+        {
+            auto [weight, U_vert, V_vert] = pq.top();
+            pq.pop();
+
+            if (uf.find(U_vert) != uf.find(V_vert))
+            {
+                uf.unify(U_vert, V_vert);
+                total_weight += weight;
+                mst_edges.emplace_back(U_vert, V_vert);
+            }
+        }
+
+        this->print_MST(mst_edges);
+
+        return total_weight;
+    }
+
     //---------------------------_print_MST_--------------------------//
-    // void weighted_graph::print_MST(const std::vector<vertex_t>& MST) const
-    // {
-    //     std::cout << "Minimum Spanning Tree:\n";
-    //     for (std::size_t i = 0; i < MST.size(); ++i)
-    //     {
-    //         std::cout << i << " -- " << MST[i] << std::endl;
-    //     }
-    // }
+    void weighted_graph::print_MST(const std::vector<std::pair<vertex_t, vertex_t>>& mst_edges) const
+    {
+        // Print the edges of the MST
+        std::cout << "Minimum Spanning Tree (MST) Edges:\n";
+        for (const auto& [u, v] : mst_edges)
+        {
+            std::cout << u << " - " << v << "\n";
+        }
+    }
 
     //---------------------------_print_paths_--------------------------//
     void weighted_graph::print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const

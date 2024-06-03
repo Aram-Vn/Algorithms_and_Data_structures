@@ -2,16 +2,22 @@
 #ifndef WEIGHTED_GRAPH_ADJ_LIST_INCLUDE_WEIGHTED_GRAPH_ADJ_LIST_H
 #define WEIGHTED_GRAPH_ADJ_LIST_INCLUDE_WEIGHTED_GRAPH_ADJ_LIST_H
 
+#include "UnionFind.h"
+
+#include "UnionFind.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <functional>
 #include <iostream>
 #include <limits>
+#include <numeric>
 #include <queue>
 #include <sstream>
 #include <stack>
 #include <stdexcept>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -49,8 +55,9 @@ namespace my {
         bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const;
 
         long ptims_MST(vertex_t start_vert) const;
+        long kruskal_MST() const;
 
-        void print_MST(const std::vector<vertex_t>& MST) const;
+        void print_MST(const std::vector<std::pair<vertex_t, vertex_t>>& mst_edges) const;
         void print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const; //
         void print() const;                                                               //
 

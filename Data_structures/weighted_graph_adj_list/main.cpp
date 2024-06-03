@@ -80,6 +80,7 @@ int main()
     // }
 
     std::cout << a.ptims_MST(0) << "  mst " << std::endl;
+    std::cout << a.kruskal_MST() << "  mst " << std::endl;
 
     std::vector<my::weighted_graph::inf_t> distances;
     if (a.bellman_ford(1, distances))
