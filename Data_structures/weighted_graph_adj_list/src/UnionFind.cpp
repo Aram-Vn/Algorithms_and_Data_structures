@@ -1,5 +1,4 @@
 #include "../include/UnionFind.h"
-#include <cstddef>
 
 namespace util {
 
@@ -22,7 +21,7 @@ namespace util {
         }
     }
 
-    void UnionFind::unify(vertex_t U_vert, vertex_t V_vert)
+    bool UnionFind::unify(vertex_t U_vert, vertex_t V_vert)
     {
         U_vert = find(U_vert);
         V_vert = find(V_vert);
@@ -39,7 +38,11 @@ namespace util {
                 m_parent[U_vert] = V_vert;
                 m_size[V_vert] += m_size[U_vert];
             }
+
+            return true;
         }
+
+        return false;
     }
 
 } // namespace util

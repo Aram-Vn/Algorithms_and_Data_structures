@@ -1,9 +1,4 @@
-
 #include "../include/weighted_graph_adj_list.h"
-#include <queue>
-#include <stdexcept>
-#include <tuple>
-#include <vector>
 
 namespace my {
     weighted_graph::weighted_graph(std::size_t size, bool is_directed)
@@ -571,7 +566,9 @@ namespace my {
         long               total_weight = 0;               // Total weight of the minimum spanning tree
         std::vector<bool>  visited(m_graph.size(), false); // Tracks vertices included in MST
         std::vector<inf_t> key(m_graph.size(), INF);       // Tracks the minimum edge
-        // std::vector<vertex_t> MST(m_graph.size());            // Track MST edges
+
+        const vertex_t        NO_PARENT = std::numeric_limits<vertex_t>::max();
+        std::vector<vertex_t> parent(m_graph.size(), NO_PARENT);
 
         auto cmp = [](const auto& pair1, const auto& pair2) -> bool {
             return pair1.first > pair2.first;
@@ -605,14 +602,20 @@ namespace my {
                     // Update the minimum edge weight to connect the adjacent vertex to the MST
                     key[neighbor] = neighb_weight;
                     pq.emplace(key[neighbor], neighbor);
-
-                    // Add the edge to the MST
-                    // MST[current_vertex] = neighbor;
+                    parent[neighbor] = current_vertex;
                 }
             }
         }
 
-        // print_MST(MST); // Print MST
+        std::cout << "Minimum Spanning Tree (MST) Edges:\n";
+        for (vertex_t v = 0; v < m_graph.size(); ++v)
+        {
+            if (parent[v] != NO_PARENT)
+            {
+                std::cout << parent[v] << " - " << v << "\n";
+            }
+        }
+
         return total_weight;
     }
 
@@ -626,6 +629,7 @@ namespace my {
 
         long                                       total_weight = 0;
         std::vector<std::pair<vertex_t, vertex_t>> mst_edges;
+
         using Edge_tuple = std::tuple<weight_t, vertex_t, vertex_t>;
 
         auto cmp = [](const Edge_tuple& edge1, const Edge_tuple& edge2) -> bool {
@@ -670,9 +674,9 @@ namespace my {
     {
         // Print the edges of the MST
         std::cout << "Minimum Spanning Tree (MST) Edges:\n";
-        for (const auto& [u, v] : mst_edges)
+        for (const auto& [U_vert, V_vert] : mst_edges)
         {
-            std::cout << u << " - " << v << "\n";
+            std::cout << U_vert << " - " << V_vert << "\n";
         }
     }
 

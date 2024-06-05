@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import subprocess
+import sys
 import os
 import signal
 from types import FrameType
@@ -28,7 +29,7 @@ def test_Quick_Sort(chise: str, pivot: str) -> None:
                 console.print(f"\nError: '{Quick_Sort_test_path}' not found.", style='bold red')
             return
            
-        subprocess.run(['g++', Quick_Sort_path, Quick_Sort_test_path, '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'])
+        subprocess.run(['g++', Quick_Sort_path, Quick_Sort_test_path, '-o', 'quick_sort_test', '-lgtest', '-lgtest_main'], check=True)
         console.print(f'\n--------------quick_sort_test_{pivot}--------------\n', style='bold cyan')
         TEST_FILES.append('quick_sort_test')
         subprocess.run(['./quick_sort_test'], check=True)
@@ -42,17 +43,17 @@ def test_Quick_Sort(chise: str, pivot: str) -> None:
 
 def compile_and_run_test(test_file: str, algorithm_source: str, z: str) -> None:
     try:
-        sorthing_algorithm_path: str = f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}'
+        sorting_algorithm_path: str = f'{SORTING_ALGORITHMS_PATH}/{algorithm_source}'
         test_path: str = f'{TESTS_PATH}/{test_file}.cpp'
         
-        if not os.path.exists(sorthing_algorithm_path) or not os.path.exists(test_path):
-            if not os.path.exists(sorthing_algorithm_path):
-                console.print(f'\nError: {sorthing_algorithm_path} not found.', style='bold red')
+        if not os.path.exists(sorting_algorithm_path) or not os.path.exists(test_path):
+            if not os.path.exists(sorting_algorithm_path):
+                console.print(f'\nError: {sorting_algorithm_path} not found.', style='bold red')
             if not os.path.exists(test_path):
                 console.print(f'\nError: {test_path} not found.', style='bold red')
             return
 
-        subprocess.run(['g++', test_path, sorthing_algorithm_path, '-o', f'{z}', '-lgtest', '-lgtest_main'])
+        subprocess.run(['g++', test_path, sorting_algorithm_path, '-o', f'{z}', '-lgtest', '-lgtest_main'], check=True)
         console.print(f'\n{test_file:-^55}\n', style='bold cyan')
         TEST_FILES.append(z)
         subprocess.run([f'./{z}'], check=True)
@@ -79,7 +80,7 @@ def exit_gracefully(signal: signal.Signals, frame: Union[FrameType, None]) -> No
     cleanup_test_files(TEST_FILES)
     console.print('\nCleanup complete.', style='bold cyan')
     console.print('Ending the loop.', style='bold green')
-    exit()
+    sys.exit(signal)
 
 
 def main() -> None:

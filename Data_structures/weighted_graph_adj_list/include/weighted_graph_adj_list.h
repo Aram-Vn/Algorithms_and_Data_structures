@@ -4,7 +4,6 @@
 
 #include "UnionFind.h"
 
-#include "UnionFind.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -51,15 +50,15 @@ namespace my {
         std::stack<vertex_t> topological_sort() const; //
         void                 dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const;
 
-        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const; // (V + E)log(V)
-        bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const;
+        void dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const;     // (V + E)log(V)
+        bool bellman_ford(vertex_t start_vert, std::vector<inf_t>& distances) const; //
 
-        long ptims_MST(vertex_t start_vert) const;
-        long kruskal_MST() const;
+        long ptims_MST(vertex_t start_vert) const; //
+        long kruskal_MST() const;                  //
 
-        void print_MST(const std::vector<std::pair<vertex_t, vertex_t>>& mst_edges) const;
-        void print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const; //
-        void print() const;                                                               //
+        void print_MST(const std::vector<std::pair<vertex_t, vertex_t>>& mst_edges) const; //
+        void print_paths(vertex_t start_vert, const std::vector<inf_t>& distances) const;  //
+        void print() const;                                                                //
 
     private:
         void dfs(vertex_t src, std::vector<bool>& visited, bool print_preorder) const; //

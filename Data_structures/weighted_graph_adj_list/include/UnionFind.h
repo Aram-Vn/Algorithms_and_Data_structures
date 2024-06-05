@@ -17,7 +17,7 @@ namespace util {
 
     public:
         vertex_t find(vertex_t vert);
-        void unify(vertex_t U_vert, vertex_t V_vert);
+        bool     unify(vertex_t U_vert, vertex_t V_vert);
 
     private:
         std::vector<vertex_t>    m_parent;
