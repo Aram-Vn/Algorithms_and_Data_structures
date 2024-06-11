@@ -16,10 +16,11 @@ namespace my {
     //--------------------------_add_edge_-----------------------//
     void weighted_graph::add_edge(const vertex_t src_vertex1, const vertex_t vertex2, const weight_t weight)
     {
-        if (src_vertex1 >= m_graph.size() || vertex2 >= m_graph.size())
+        if (src_vertex1 >= m_graph.size() || vertex2 >= m_graph.size()) // Check if the vertices are out of the range
         {
             std::ostringstream errorMessage;
 
+            // Construct an error message based on which vertices are out of range
             if (src_vertex1 >= m_graph.size() && vertex2 >= m_graph.size())
             {
                 errorMessage << "Cannot add edge:\nvertex: " << src_vertex1 << " and vertex: " << vertex2
@@ -39,7 +40,7 @@ namespace my {
 
         if (m_is_directed)
         {
-            std::vector<Edge>& edges = m_graph[src_vertex1];
+            std::vector<Edge>& edges = m_graph[src_vertex1]; // Get the edges from the source vertex
 
             // check if the edge already exists
             auto it = std::find_if(edges.begin(), edges.end(), [vertex2](const Edge& edge) {
@@ -55,11 +56,12 @@ namespace my {
                 it->second = weight;
             }
         }
-        else
+        else // if undirected
         {
             // Add edge from src_vertex1 to vertex2
             std::vector<Edge>& edges_from_src = m_graph[src_vertex1];
 
+            // Check if the edge already exists
             auto it_src = std::find_if(edges_from_src.begin(), edges_from_src.end(), [vertex2](const Edge& edge) {
                 return edge.first == vertex2;
             });
@@ -95,15 +97,18 @@ namespace my {
     //-----------------------------_-dfs_rec-_----------------------//
     void weighted_graph::dfs(const vertex_t start_vert, bool print_preorder) const
     {
+        // Initialize a visited vector to keep track of visited vertices
         std::vector<bool> visited(m_graph.size(), false);
 
+        // Perform DFS starting from the start vertex
         dfs(start_vert, visited, print_preorder);
 
-        for (vertex_t i = 0; i < m_graph.size(); ++i)
+        // Ensure all vertices are visited (if graph is disconnected)
+        for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
         {
-            if (visited[i] == false)
+            if (visited[V_vert] == false) // if vertex is not visited
             {
-                dfs(i, visited, print_preorder);
+                dfs(V_vert, visited, print_preorder); // call  dfs with that vertex
             }
         }
 
@@ -112,18 +117,19 @@ namespace my {
 
     void weighted_graph::dfs(vertex_t src, std::vector<bool>& visited, bool print_preorder) const
     {
-        visited[src] = true;
+        visited[src] = true; // Mark the current vertex as visited
 
         if (print_preorder)
         {
             std::cout << src << " ";
         }
 
+        // Iterate through all adjacent vertices (neighbors) of the current vertex
         for (const auto& u_vert : m_graph[src])
         {
-            if (!visited[u_vert.first])
+            if (!visited[u_vert.first]) // if vertex is not visited
             {
-                dfs(u_vert.first, visited, print_preorder);
+                dfs(u_vert.first, visited, print_preorder); // call dfs with that vertex
             }
         }
 
@@ -136,15 +142,18 @@ namespace my {
     //-----------------------------_-bfs-_----------------------//
     void weighted_graph::bfs(const vertex_t start_vert) const
     {
+        // Initialize a visited vector to keep track of visited vertices
         std::vector<bool> visited(m_graph.size(), false);
 
+        // Perform BFS starting from the start vertex
         bfs(start_vert, visited);
 
+        // Ensure all vertices are visited (if graph is disconnected)
         for (vertex_t vertex = 0; vertex < m_graph.size(); ++vertex)
         {
-            if (!visited[vertex])
+            if (!visited[vertex]) // if vertex is not visited
             {
-                bfs(vertex, visited);
+                bfs(vertex, visited); // call bfs with that vertex
             }
         }
         std::cout << std::endl;
@@ -152,22 +161,23 @@ namespace my {
 
     void weighted_graph::bfs(vertex_t start_vertex, std::vector<bool>& visited) const
     {
-        std::queue<vertex_t> qu;
+        std::queue<vertex_t> qu; // Create a queue for BFS
 
+        // Enqueue the start vertex and mark as visited
         qu.push(start_vertex);
         visited[start_vertex] = true;
 
-        while (!qu.empty())
+        while (!qu.empty()) // Continue until the queue is empty
         {
-            vertex_t current_vert = qu.front();
-            std::cout << current_vert << " ";
+            vertex_t curr_vert = qu.front();
+            std::cout << curr_vert << " ";
             qu.pop();
 
-            for (const auto& neighbor : m_graph[current_vert])
+            for (const auto& neighbor : m_graph[curr_vert]) // iterate true adjacent vertices curr_vertex
             {
-                if (!visited[neighbor.first])
+                if (!visited[neighbor.first]) // if curr vert not visited
                 {
-                    qu.push(neighbor.first);
+                    qu.push(neighbor.first); // push it in que ant mark visited
                     visited[neighbor.first] = true;
                 }
             }
@@ -177,44 +187,53 @@ namespace my {
     /*---------------------------------------------------------------------*/
     /*---------------------------*_kosaraju_scc_*--------------------------*/
     /*---------------------------------------------------------------------*/
+    /**
+     * Method to find Strongly Connected Components (SCCs) using Kosaraju's algorithm.
+     * This method works only for directed graphs !!!.
+     */
     void weighted_graph::kosaraju_scc() const
     {
-        if (!m_is_directed)
+        if (!m_is_directed) // Ensure the graph is directed as SCCs are defined for directed graphs
         {
             throw std::logic_error("cant find SCCs in underacted graph");
         }
 
         std::cout << "kosaraju_scc: " << std::endl;
 
+        // Stack to store the order of completion of DFS
         std::stack<vertex_t> finish_stack;
-        std::vector<bool>    visited(m_graph.size(), false);
+        // Vector to track visited vertices
+        std::vector<bool> visited(m_graph.size(), false);
 
         // Step 1: Perform DFS and push vertices to finish_stack
-        for (vertex_t i = 0; i < m_graph.size(); ++i)
+        for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
         {
-            if (!visited[i])
+            if (!visited[V_vert]) // if curr vert not visited
             {
-                dfs_kosaraju(i, visited, finish_stack);
+                dfs_kosaraju(V_vert, visited, finish_stack); // call dfs on it
             }
         }
 
         // Step 2: Transpose the graph
         AdjacencyList transposed_graph = this->transpose();
 
-        std::fill(visited.begin(), visited.end(), false);
+        std::fill(visited.begin(), visited.end(), false); // reset the visited
 
         // Step 3: Perform DFS on the transposed graph
         while (!finish_stack.empty())
         {
-            vertex_t v = finish_stack.top();
+            // Get the top vertex from the finish stack and pop
+            vertex_t SCC_start_vert = finish_stack.top();
             finish_stack.pop();
 
-            if (!visited[v])
+            if (!visited[SCC_start_vert]) // If the vertex is not yet visited, it's the start of a new SCC
             {
+                // Vector to store the current SCC
                 std::vector<vertex_t> component;
-                dfs_transposed(v, transposed_graph, visited, component);
+                // Perform DFS on the transposed graph starting from vertex v
+                dfs_transposed(SCC_start_vert, transposed_graph, visited, component);
 
-                // Output the current SCC
+                // printing the current SCC
                 std::cout << "SCC: ";
                 for (vertex_t vert : component)
                 {
@@ -226,15 +245,21 @@ namespace my {
     }
 
     //---------------------------_transpose_--------------------------//
+    /**
+     * Method to get the transpose of the graph.
+     * In the transposed graph, all edges are reversed.
+     *
+     * @return The transposed graph as an adjacency list.
+     */
     weighted_graph::AdjacencyList weighted_graph::transpose() const
     {
         AdjacencyList transposed(m_graph.size());
 
-        for (vertex_t v = 0; v < m_graph.size(); ++v)
+        for (vertex_t V_vert = 0; V_vert < m_graph.size(); ++V_vert)
         {
-            for (const auto& neighbor : m_graph[v])
+            for (const auto& [neighbor_edge, neighbor_weight] : m_graph[V_vert])
             {
-                transposed[neighbor.first].emplace_back(v, neighbor.second);
+                transposed[neighbor_edge].emplace_back(V_vert, neighbor_weight); // reversing
             }
         }
 
@@ -242,6 +267,13 @@ namespace my {
     }
 
     //---------------------------_dfs_kosaraju_--------------------------//
+    /**
+     * Private helper method to perform DFS on the original graph and push vertices to finish_stack.
+     *
+     * @param vertex The current vertex to process.
+     * @param visited A vector to track visited vertices.
+     * @param finish_stack A stack to store vertices in the order of their finishing times.
+     */
     void weighted_graph::dfs_kosaraju(vertex_t vertex, std::vector<bool>& visited,
                                       std::stack<vertex_t>& finish_stack) const
     {
@@ -255,20 +287,32 @@ namespace my {
             }
         }
 
+        // Push the current vertex to the stack after all its adjacent vertices are visited
         finish_stack.push(vertex);
     }
 
     //---------------------------_dfs_transposed_--------------------------//
+    /**
+     * Private helper method to perform DFS on the transposed graph and collect SCCs.
+     *
+     * @param vertex The current vertex to process.
+     * @param transposed_graph The transposed graph.
+     * @param visited A vector to track visited vertices.
+     * @param component A vector to store the current SCC.
+     */
     void weighted_graph::dfs_transposed(vertex_t vertex, const AdjacencyList& transposed_graph,
                                         std::vector<bool>& visited, std::vector<vertex_t>& component) const
     {
         visited[vertex] = true;
-        component.push_back(vertex);
+        component.push_back(vertex); // Add the current vertex to the current component (SCC)
+
         for (const auto& neighbor : transposed_graph[vertex])
         {
-            if (!visited[neighbor.first])
+            vertex_t neigh_vert = neighbor.first;
+
+            if (!visited[neigh_vert])
             {
-                dfs_transposed(neighbor.first, transposed_graph, visited, component);
+                dfs_transposed(neigh_vert, transposed_graph, visited, component);
             }
         }
     }
@@ -276,6 +320,10 @@ namespace my {
     /*---------------------------------------------------------------------*/
     /*----------------------------*_TARJAN_SCC_-*--------------------------*/
     /*---------------------------------------------------------------------*/
+    /**
+     * Method to find Strongly Connected Components (SCCs) using Tarjan's algorithm.
+     * This method works only for directed graphs !!!.
+     */
     void weighted_graph::tarjan_scc() const
     {
         if (!m_is_directed)
@@ -283,23 +331,24 @@ namespace my {
             throw std::logic_error("cant find SCCs in underacted graph");
         }
 
-        std::vector<long>                  ids(m_graph.size(), -1);
-        std::vector<long>                  low(m_graph.size(), -1);
-        std::vector<bool>                  on_stack(m_graph.size(), false);
-        std::stack<vertex_t>               stack;
-        std::vector<std::vector<vertex_t>> sccs;
-        vertex_t                           id = 0;
+        std::vector<long>                  ids(m_graph.size(), -1);         // To store the id of each vertex
+        std::vector<long>                  low(m_graph.size(), -1);         // To store the lowest reachable vertex ID
+        std::vector<bool>                  on_stack(m_graph.size(), false); // To track whether a vertex is on the stack
+        std::stack<vertex_t>               stack;                           // Stack to manage vertices being processed
+        std::vector<std::vector<vertex_t>> sccs;                            // To store the SCCs
+        vertex_t                           id = 0;                          // The current ID counter
 
-        for (vertex_t vertex = 0; vertex < m_graph.size(); ++vertex)
+        // Perform DFS for each vertex
+        for (vertex_t V_vertex = 0; V_vertex < m_graph.size(); ++V_vertex)
         {
-            if (ids[vertex] == -1)
+            if (ids[V_vertex] == -1) // If the vertex has not been visited call dfs for it
             {
-                tarjan_scc_util(vertex, ids, low, on_stack, stack, sccs, id);
+                tarjan_scc_util(V_vertex, ids, low, on_stack, stack, sccs, id);
             }
         }
 
+        // Print the SCCs
         std::cout << "tarjan_scc: " << std::endl;
-
         for (const auto& scc : sccs)
         {
             std::cout << "SCC: ";
@@ -311,44 +360,60 @@ namespace my {
         }
     }
 
+    /**
+     * Private helper method for Tarjan's algorithm.
+     * This method finds and collects SCCs using DFS and low-link values.
+     *
+     * @param vertex The current vertex to process.
+     * @param ids A vector to store the ID of each vertex.
+     * @param low A vector to store the lowest reachable vertex ID.
+     * @param on_stack A vector to track whether a vertex is on the stack.
+     * @param stack A stack to manage the vertices being processed.
+     * @param sccs A vector to store the SCCs.
+     * @param id The current ID counter.
+     */
     void weighted_graph::tarjan_scc_util(vertex_t vertex, std::vector<long>& ids, std::vector<long>& low,
                                          std::vector<bool>& on_stack, std::stack<vertex_t>& stack,
                                          std::vector<std::vector<vertex_t>>& sccs, vertex_t& id) const
     {
-        ids[vertex] = low[vertex] = static_cast<long>(id++);
-        stack.push(vertex);
-        on_stack[vertex] = true;
+        // Set the id and low-link value for the current vertex
+        ids[vertex] = static_cast<long>(id++);
+        low[vertex] = ids[vertex];
 
+        stack.push(vertex);      // Push the current vertex onto the stack
+        on_stack[vertex] = true; // Mark the current vertex as being on the stack
+
+        // iterate through all adjacent vertices
         for (const auto& neighbor : m_graph[vertex])
         {
-            vertex_t next_vertex = neighbor.first;
+            vertex_t neighbor_vert = neighbor.first;
 
-            if (ids[next_vertex] == -1)
+            if (ids[neighbor_vert] == -1) // If the vertex has not been visited
             {
-                tarjan_scc_util(next_vertex, ids, low, on_stack, stack, sccs, id);
+                tarjan_scc_util(neighbor_vert, ids, low, on_stack, stack, sccs, id);
             }
 
-            if (on_stack[next_vertex])
+            if (on_stack[neighbor_vert]) // If the next vertex is on the stack, update the low-link value
             {
-                low[vertex] = std::min(low[vertex], low[next_vertex]);
+                low[vertex] = std::min(low[vertex], low[neighbor_vert]);
             }
         }
 
-        if (ids[vertex] == low[vertex])
+        if (ids[vertex] == low[vertex]) // If the current vertex is a root node, pop the stack and generate an SCC
         {
             std::vector<vertex_t> scc;
             vertex_t              top_vertex;
 
             do
             {
-                top_vertex = stack.top();
-                stack.pop();
-                on_stack[top_vertex] = false;
-                scc.push_back(top_vertex);
+                top_vertex = stack.top();     // Get the top vertex from the stack
+                stack.pop();                  // Remove the top vertex from the stack
+                on_stack[top_vertex] = false; // Mark the top vertex as not being on the stack
+                scc.push_back(top_vertex);    // Add the top vertex to the current SCC
 
-            } while (top_vertex != vertex);
+            } while (top_vertex != vertex); // Continue until the current vertex is reached
 
-            sccs.push_back(scc);
+            sccs.push_back(scc); // Add the current SCC to the list of SCCs
         }
     }
 
@@ -487,7 +552,7 @@ namespace my {
         }
 
         res.assign(m_graph.size(), INF);
-        for (size_t i = 0; i < distances.size(); ++i)
+        for (std::size_t i = 0; i < distances.size(); ++i)
         {
             if (distances[i] != INF)
             {
@@ -556,11 +621,11 @@ namespace my {
     }
 
     //---------------------------_print_paths_--------------------------//
-    long weighted_graph::ptims_MST(vertex_t start_vert) const
+    long weighted_graph::prims_MST(vertex_t start_vert) const
     {
         if (m_is_directed)
         {
-            throw std::logic_error("cant do ptims_MST on directed graph");
+            throw std::logic_error("cant do prims_MST on directed graph");
         }
 
         long               total_weight = 0;               // Total weight of the minimum spanning tree

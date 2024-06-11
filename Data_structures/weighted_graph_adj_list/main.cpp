@@ -4,7 +4,7 @@
 
 int main()
 {
-    my::weighted_graph a{ 10, false };
+    my::weighted_graph a{ 10, true };
 
     try
     {
@@ -64,7 +64,7 @@ int main()
     // a.tarjan_scc();
     // a.kosaraju_scc();
 
-    // my::weighted_graph::AdjacencyList tr = a.transpose();
+    my::weighted_graph::AdjacencyList tr = a.transpose();
 
     // std::cout << "TR" << std::endl;
 
@@ -79,8 +79,9 @@ int main()
     //     std::cout << std::endl;
     // }
 
-    std::cout << a.ptims_MST(0) << "  mst " << std::endl;
-    std::cout << a.kruskal_MST() << "  mst " << std::endl;
+    // std::cout << a.prims_MST(0) << "  mst " << std::endl;
+    // std::cout << a.kruskal_MST() << "  mst " << std::endl;
+    a.kosaraju_scc();
 
     std::vector<my::weighted_graph::inf_t> distances;
     if (a.bellman_ford(1, distances))
