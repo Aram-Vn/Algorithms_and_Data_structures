@@ -64,7 +64,7 @@ int main()
     // a.tarjan_scc();
     // a.kosaraju_scc();
 
-    my::weighted_graph::AdjacencyList tr = a.transpose();
+    // my::weighted_graph::AdjacencyList tr = a.transpose();
 
     // std::cout << "TR" << std::endl;
 

@@ -286,13 +286,13 @@ namespace my {
         }
 
         std::vector<int>         inDegree(m_AdjacencyList.size(), 0);
-        std::vector<std::size_t> res;
+        std::vector<std::size_t> top_sort;
 
-        res.reserve(m_AdjacencyList.size());
+        top_sort.reserve(m_AdjacencyList.size());
 
-        for (std::size_t U = 0; U < m_AdjacencyList.size(); ++U)
+        for (std::size_t U_vert = 0; U_vert < m_AdjacencyList.size(); ++U_vert)
         {
-            for (const auto Vert : m_AdjacencyList[U])
+            for (const auto Vert : m_AdjacencyList[U_vert])
             {
                 ++inDegree[Vert];
             }
@@ -312,7 +312,7 @@ namespace my {
         {
             std::size_t node = queue.front();
             queue.pop();
-            res.push_back(node);
+            top_sort.push_back(node);
             for (const auto elem : m_AdjacencyList[node])
             {
                 --inDegree[elem];
@@ -323,15 +323,15 @@ namespace my {
             }
         }
 
-        if (res.size() == m_AdjacencyList.size())
+        if (top_sort.size() == m_AdjacencyList.size())
         {
-            for (const auto elem : res)
+            for (const auto elem : top_sort)
             {
                 std::cout << elem << " ";
             }
 
             std::cout << std::endl;
-            return res;
+            return top_sort;
         }
 
         throw std::logic_error("the graph hes loop can't do Topological_sort\n");

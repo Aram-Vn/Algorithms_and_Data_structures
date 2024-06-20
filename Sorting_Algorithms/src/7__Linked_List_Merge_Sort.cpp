@@ -101,7 +101,9 @@ void Forward_list::splitList(Node* source, Node*& firstRef, Node*& secondRef)
 void Forward_list::MergeSorthelper(Node*& head)
 {
     if (head == nullptr || head->next == nullptr)
+    {
         return;
+    }
 
     Node* firstHalf;
     Node* secondHalf;

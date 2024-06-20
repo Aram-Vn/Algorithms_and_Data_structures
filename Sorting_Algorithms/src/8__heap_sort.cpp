@@ -5,7 +5,8 @@
 void heap_sort(std::vector<int>& vec)
 {
     size_t size = vec.size();
-    for (int i = size / 2 - 1; i >= 0; i--)
+
+    for (int i = (size / 2) - 1; i >= 0; i--)
     {
         heapify(vec, i, size);
     }
