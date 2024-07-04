@@ -418,6 +418,12 @@ namespace my {
     }
 
     //---------------------------_topological_sort_--------------------------//
+    /**
+     * @brief Performs topological sort on the graph.
+     *
+     * @return A stack containing vertices in topologically sorted order.
+     * @throws std::runtime_error if the graph contains a cycle.
+     */
     std::stack<weighted_graph::vertex_t> weighted_graph::topological_sort() const
     {
         std::stack<vertex_t> Stack;
@@ -438,6 +444,15 @@ namespace my {
         return Stack;
     }
 
+    /**
+     * @brief Utility function for topological sort.
+     *
+     * @param cur_vert The current vertex.
+     * @param visited Vector tracking visited vertices.
+     * @param rec_stack Vector tracking recursion stack.
+     * @param Stack Stack to store the topological sort result.
+     * @return True if a cycle is detected, otherwise false.
+     */
     bool weighted_graph::topological_sort_util(vertex_t cur_vert, std::vector<bool>& visited,
                                                std::vector<bool>& rec_stack, std::stack<vertex_t>& Stack) const
     {
@@ -460,7 +475,15 @@ namespace my {
         Stack.push(cur_vert);
         return false;
     }
+
     //---------------------------_dag_SSSP_top_sort_--------------------------//
+    /**
+     * @brief Computes Single Source Shortest Path (SSSP) for Directed Acyclic Graph (DAG) using topological sort.
+     *
+     * @param start_vertex The starting vertex.
+     * @param distances Vector to store shortest distances from the start_vertex.
+     * @throws std::logic_error if the graph is undirected.
+     */
     void weighted_graph::dag_SSSP_top_sort(vertex_t start_vertex, std::vector<inf_t>& distances) const
     {
         if (!m_is_directed)
@@ -500,6 +523,13 @@ namespace my {
     }
 
     //---------------------------_dijkstra_--------------------------//
+    /**
+     * @brief Performs Dijkstra's algorithm to find the shortest paths from a starting vertex.
+     *
+     * @param start_vert The starting vertex.
+     * @param res Vector to store shortest distances from the start_vert.
+     * @throws std::runtime_error if the graph contains a negative weight edge.
+     */
     void weighted_graph::dijkstra(const vertex_t start_vert, std::vector<inf_t>& res) const
     {
         std::vector<inf_t> distances(m_graph.size(), INF);
@@ -564,6 +594,13 @@ namespace my {
     }
 
     //---------------------------_bellman_ford_--------------------------//
+    /**
+     * @brief Performs Bellman-Ford algorithm to find the shortest paths from a starting vertex.
+     *
+     * @param start_vertex The starting vertex.
+     * @param distances Vector to store shortest distances from the start_vertex.
+     * @return True if no negative weight cycle is detected, otherwise false.
+     */
     bool weighted_graph::bellman_ford(vertex_t start_vertex, std::vector<inf_t>& distances) const
     {
         distances.assign(m_graph.size(), INF);
@@ -621,6 +658,13 @@ namespace my {
     }
 
     //---------------------------_print_paths_--------------------------//
+    /**
+     * @brief Performs Prim's algorithm to find the Minimum Spanning Tree (MST) of the graph.
+     *
+     * @param start_vert The starting vertex.
+     * @return The total weight of the MST.
+     * @throws std::logic_error if the graph is directed.
+     */
     long weighted_graph::prims_MST(vertex_t start_vert) const
     {
         if (m_is_directed)
@@ -685,6 +729,12 @@ namespace my {
     }
 
     //---------------------------_kruskal_MST_--------------------------//
+    /**
+     * @brief Performs Kruskal's algorithm to find the Minimum Spanning Tree (MST) of the graph.
+     *
+     * @return The total weight of the MST.
+     * @throws std::logic_error if the graph is directed.
+     */
     long weighted_graph::kruskal_MST() const
     {
         if (m_is_directed)

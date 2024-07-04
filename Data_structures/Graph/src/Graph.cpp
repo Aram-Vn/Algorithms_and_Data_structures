@@ -292,9 +292,9 @@ namespace my {
 
         for (std::size_t U_vert = 0; U_vert < m_AdjacencyList.size(); ++U_vert)
         {
-            for (const auto Vert : m_AdjacencyList[U_vert])
+            for (const auto neighbor_Vert : m_AdjacencyList[U_vert])
             {
-                ++inDegree[Vert];
+                ++inDegree[neighbor_Vert];
             }
         }
 
@@ -313,21 +313,21 @@ namespace my {
             std::size_t node = queue.front();
             queue.pop();
             top_sort.push_back(node);
-            for (const auto elem : m_AdjacencyList[node])
+            for (const auto neighbor_Vert : m_AdjacencyList[node])
             {
-                --inDegree[elem];
-                if (inDegree[elem] == 0)
+                --inDegree[neighbor_Vert];
+                if (inDegree[neighbor_Vert] == 0)
                 {
-                    queue.push(elem);
+                    queue.push(neighbor_Vert);
                 }
             }
         }
 
         if (top_sort.size() == m_AdjacencyList.size())
         {
-            for (const auto elem : top_sort)
+            for (const auto Vert : top_sort)
             {
-                std::cout << elem << " ";
+                std::cout << Vert << " ";
             }
 
             std::cout << std::endl;
