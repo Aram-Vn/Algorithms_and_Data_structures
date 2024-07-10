@@ -6,6 +6,30 @@
 
 int main()
 {
+    std::vector<int> input = { 30, 10, 20 };
+
+    auto custom_cmp = [](int a, int b)
+    {
+        return a > b; // Max-heap behavior
+    };
+
+    int                                           arr[] = { 30, 10, 20 };
+    my::priority_queue<int, decltype(custom_cmp)> pq3(std::begin(arr), std::end(arr), custom_cmp);
+
+    my::priority_queue<int> pq4(std::begin(arr), std::end(arr));
+
+    my::priority_queue<int, decltype(custom_cmp)> pq2({ 30, 10, 20 }, custom_cmp);
+
+    my::priority_queue<int, decltype(custom_cmp), std::vector<int>> pq1(input, custom_cmp);
+
+    my::priority_queue<int, decltype(custom_cmp)> pq(custom_cmp);
+
+    pq.push(10);
+    pq.push(30);
+    pq.push(20);
+
+    pq.print();
+
     std::vector<int>        vec = { 3, 2, 4, 1, 5, 9, 10, 55, 88, 77, 12 };
     my::priority_queue<int> min(vec);
     min.print_level();

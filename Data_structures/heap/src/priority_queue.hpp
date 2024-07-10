@@ -2,30 +2,30 @@
 namespace my {
 
     template <typename T, typename Compare, typename Container>
-    priority_queue<T, Compare, Container>::priority_queue(const container_type& input)
+    priority_queue<T, Compare, Container>::priority_queue(const value_compare& cmp)
+        : m_heap(),
+          m_size(0),
+          m_cmp(cmp)
+    {
+    }
+
+    template <typename T, typename Compare, typename Container>
+    priority_queue<T, Compare, Container>::priority_queue(const container_type& input, const value_compare& cmp)
         : m_heap(input),
           m_size(input.size()),
-          m_cmp(Compare{})
+          m_cmp(cmp)
     {
         this->make_heap();
     }
 
     template <typename T, typename Compare, typename Container>
-    priority_queue<T, Compare, Container>::priority_queue()
-        : m_heap{},
-          m_size(0),
-          m_cmp(Compare{})
+    priority_queue<T, Compare, Container>::priority_queue(std::initializer_list<value_type> initList,
+                                                          const value_compare&              cmp)
+        : m_heap(initList),
+          m_size(initList.size()),
+          m_cmp(cmp)
     {
-    }
-
-    template <typename T, typename Compare, typename Container>
-    priority_queue<T, Compare, Container>::priority_queue(std::initializer_list<value_type> init_list)
-        : m_heap(Container{}),
-          m_size(init_list.size()),
-          m_cmp(Compare{})
-
-    {
-        for (const_reference elem : init_list)
+        for (const_reference elem : initList)
         {
             m_heap.push_back(elem);
         }
@@ -35,10 +35,11 @@ namespace my {
 
     template <typename T, typename Compare, typename Container>
     template <typename RandomAccessIterator>
-    priority_queue<T, Compare, Container>::priority_queue(RandomAccessIterator first, RandomAccessIterator last)
+    priority_queue<T, Compare, Container>::priority_queue(RandomAccessIterator first, RandomAccessIterator last,
+                                                          const value_compare& cmp)
         : m_heap(first, last),
-          m_size(last - first),
-          m_cmp()
+          m_size(std::distance(first, last)),
+          m_cmp(cmp)
     {
         this->make_heap();
     }
@@ -61,6 +62,7 @@ namespace my {
             m_size = other.m_size;
             m_cmp  = other.m_cmp;
         }
+        
         return *this;
     }
 
@@ -85,6 +87,7 @@ namespace my {
             m_cmp        = std::move(other.m_cmp);
             other.m_size = 0;
         }
+        
         return *this;
     }
 
@@ -92,7 +95,7 @@ namespace my {
     template <typename T, typename Compare, typename Container>
     void priority_queue<T, Compare, Container>::make_heap()
     {
-        for (int i = (m_size / 2) - 1; i >= 0; --i)
+        for (long i = (m_size / 2) - 1; i >= 0; --i)
         {
             this->heapify_down(i);
         }
@@ -101,32 +104,35 @@ namespace my {
     //-----------------------------_-parent-_-------------------------------//
 
     template <typename T, typename Compare, typename Container>
-    inline size_t priority_queue<T, Compare, Container>::parent(const size_t ind) const noexcept
+    inline typename priority_queue<T, Compare, Container>::index_t priority_queue<T, Compare, Container>::parent(
+        const index_t ind) const noexcept
     {
         return (ind - 1) / 2;
     }
 
     //-----------------------------_-left-_-------------------------------//
     template <typename T, typename Compare, typename Container>
-    inline size_t priority_queue<T, Compare, Container>::left(const size_t ind) const noexcept
+    inline typename priority_queue<T, Compare, Container>::index_t priority_queue<T, Compare, Container>::left(
+        const index_t ind) const noexcept
     {
         return 2 * ind + 1;
     }
 
     //-----------------------------_-right-_-------------------------------//
     template <typename T, typename Compare, typename Container>
-    inline size_t priority_queue<T, Compare, Container>::right(const size_t ind) const noexcept
+    inline typename priority_queue<T, Compare, Container>::index_t priority_queue<T, Compare, Container>::right(
+        const index_t ind) const noexcept
     {
         return 2 * ind + 2;
     }
 
     //-----------------------------_-heapify_down-_-------------------------------//
     template <typename T, typename Compare, typename Container>
-    void priority_queue<T, Compare, Container>::heapify_down(const size_t ind)
+    void priority_queue<T, Compare, Container>::heapify_down(const std::size_t ind)
     {
-        size_t largest  = ind;
-        size_t leftInd  = left(ind);
-        size_t rightInd = right(ind);
+        index_t largest  = ind;
+        index_t leftInd  = left(ind);
+        index_t rightInd = right(ind);
 
         if (leftInd < m_size && m_cmp(m_heap[leftInd], m_heap[largest]))
             largest = leftInd;
@@ -148,7 +154,7 @@ namespace my {
         m_heap.push_back(val);
         ++m_size;
 
-        size_t index = m_size - 1;
+        index_t index = m_size - 1;
         while (index > 0 && m_cmp(val, m_heap[parent(index)]))
         {
             std::swap(m_heap[index], m_heap[parent(index)]);
@@ -181,7 +187,7 @@ namespace my {
             throw std::out_of_range("priority_queue is empty");
         }
 
-        value_type top_value = m_heap.front();
+        value_type topValue = m_heap.front();
 
         std::swap(m_heap[0], m_heap[m_size - 1]);
         m_heap.pop_back();
@@ -189,7 +195,7 @@ namespace my {
 
         this->heapify_down(0); // Restore the heap property
 
-        return top_value;
+        return topValue;
     }
 
     //-----------------------------_-top-_-------------------------------//
@@ -230,7 +236,7 @@ namespace my {
             return;
         }
 
-        for (int i = 0; i < m_size; ++i)
+        for (index_t i = 0; i < m_size; ++i)
         {
             std::cout << m_heap[i] << " ";
         }
@@ -246,17 +252,17 @@ namespace my {
             return;
         }
 
-        size_t level_size = 1;
-        size_t i          = 0;
+        std::size_t levelSize = 1;
+        index_t     curIndex  = 0;
 
-        while (i < m_size)
+        while (curIndex < m_size)
         {
-            for (size_t j = 0; j < level_size && i < m_size; ++j)
+            for (std::size_t j = 0; j < levelSize && curIndex < m_size; ++j)
             {
-                std::cout << m_heap[i++] << " ";
+                std::cout << m_heap[curIndex++] << " ";
             }
             std::cout << std::endl;
-            level_size *= 2;
+            levelSize *= 2;
         }
         std::cout << std::endl;
     }
@@ -269,10 +275,10 @@ namespace my {
             return true;
         }
 
-        for (size_t i = 0; i < m_size; ++i)
+        for (std::size_t i = 0; i < m_size; ++i)
         {
-            size_t leftInd  = left(i);
-            size_t rightInd = right(i);
+            index_t leftInd  = left(i);
+            index_t rightInd = right(i);
 
             if (leftInd < m_size && m_cmp(m_heap[leftInd], m_heap[i]))
             {

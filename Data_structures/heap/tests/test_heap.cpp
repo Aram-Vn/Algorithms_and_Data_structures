@@ -5,7 +5,38 @@
 #include <sstream>
 #include <vector>
 
-TEST(HeapTest, MinHeap_validConvertintToheap)
+auto custom_cmp = [](int a, int b)
+{
+    return a > b; // Max-heap behavior
+};
+
+TEST(HeapTest, CustomComparator_Push_PopTest)
+{
+    int arr[] = { 30, 10, 20 };
+
+    my::priority_queue<int, decltype(custom_cmp)> pq3(std::begin(arr), std::end(arr), custom_cmp);
+
+    ASSERT_EQ(pq3.top(), 30);
+    ASSERT_TRUE(pq3.is_valid_heap());
+
+    my::priority_queue<int> pq4(std::begin(arr), std::end(arr));
+    ASSERT_EQ(pq4.top(), 10); 
+    ASSERT_TRUE(pq4.is_valid_heap());
+
+    my::priority_queue<int, decltype(custom_cmp)> pq2({ 30, 10, 20 }, custom_cmp);
+    ASSERT_EQ(pq2.top(), 30); 
+    ASSERT_TRUE(pq2.is_valid_heap());
+
+    std::vector<int>                                                input = { 30, 10, 20 };
+    my::priority_queue<int, decltype(custom_cmp), std::vector<int>> pq1(input, custom_cmp);
+    ASSERT_EQ(pq1.top(), 30);
+    ASSERT_TRUE(pq1.is_valid_heap());
+
+    my::priority_queue<int, decltype(custom_cmp)> pq(custom_cmp);
+    ASSERT_TRUE(pq.empty()); 
+}
+
+TEST(HeapTest, MinHeap_validConversionToHeap)
 {
     std::vector<int>        data = { 9, 7, 5, 11, 12, 2, 14, 3, 10, 6 };
     my::priority_queue<int> MinHeap(data);
@@ -30,7 +61,7 @@ TEST(HeapTest, MinHeap_validConvertintToheap)
     ASSERT_TRUE(MinHeap.is_valid_heap());
 }
 
-TEST(HeapTest, MaxHeap_validConvertintToheap)
+TEST(HeapTest, MaxHeap_validConversionToHeap)
 {
     std::vector<int>                           data = { 9, 7, 5, 11, 12, 2, 14, 3, 10, 6 };
     my::priority_queue<int, std::greater<int>> MaxHeap(data);
