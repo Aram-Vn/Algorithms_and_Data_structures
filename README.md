@@ -2,14 +2,24 @@
 
 This repository contains implementations of various sorting algorithms and data structures. The project aims to provide efficient and well-documented code for educational purposes and practical use cases.
 
+## Table of Contents
+
+- [Features](#features)
+- [Directory Structure](#directory-structure)
+- [Sorting Algorithms](#sorting-algorithms)
+  - [Pre requirements for auto test](#pre-requirements-for-sorting-algorithms-test-auto-run)
+  - [Manual Testing](#for-manual-testing)
+
+
 ## Features
 
 - Implementations of common data structures like AVL Trees, Binary Search Trees, Graphs, and more.
 - Various sorting algorithms including Bubble Sort, Quick Sort, Merge Sort, and others.
 - Test cases for each data structure and sorting algorithm to ensure correctness.
-- Easy-to-run test scripts for automated testing.
+- Easy-to-run test scripts for automated Sorting Algorithms testing, including measuring the time required for each sorting algorithm with the same amount of elements to see time that this or other sorting algorithms need to run with same amount of elements.
 
 ## Directory Structure
+
 ```bash
 .
 │
@@ -140,9 +150,8 @@ This repository contains implementations of various sorting algorithms and data 
 ├── requirements.txt
 ├── test_runner.py
 └── test_runner.sh
-
-
 ```
+
 ## Sorting Algorithms
 
 ## pre requirements for Sorting Algorithms test auto run
@@ -177,6 +186,8 @@ You can choose from the following sorting algorithms to test:
 
 
 ## for manual testing
+
+To manually test individual sorting algorithms, you can compile and run the test files using the following
 
 ```bash
 g++ <path_to_test_file > <path_to_according_src_file> -o <result_name>  -lgtest -lgtest_main -pthread
