@@ -10,7 +10,7 @@
 				{
 					"includeDirectories" : 
 					[
-						"/usr/lib/clang/17/include",
+						"/usr/lib/clang/18/include",
 						"/usr/local/include",
 						"/usr/include"
 					],
@@ -33,7 +33,7 @@
 					]
 				},
 				"path" : "/usr/bin/clang",
-				"version" : "17.0.6"
+				"version" : "18.1.8"
 			},
 			"language" : "C",
 			"sourceFileExtensions" : 
@@ -53,7 +53,7 @@
 						"/usr/include/c++/14.1.1",
 						"/usr/include/c++/14.1.1/x86_64-pc-linux-gnu",
 						"/usr/include/c++/14.1.1/backward",
-						"/usr/lib/clang/17/include",
+						"/usr/lib/clang/18/include",
 						"/usr/local/include",
 						"/usr/include"
 					],
@@ -78,7 +78,7 @@
 					]
 				},
 				"path" : "/usr/bin/clang++",
-				"version" : "17.0.6"
+				"version" : "18.1.8"
 			},
 			"language" : "CXX",
 			"sourceFileExtensions" : 
