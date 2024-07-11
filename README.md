@@ -1,6 +1,15 @@
-[Sorting Algorithms](#sorting-algorithms)
+# Algorithms and Data Structures
 
-# Directory Structure
+This repository contains implementations of various sorting algorithms and data structures. The project aims to provide efficient and well-documented code for educational purposes and practical use cases.
+
+## Features
+
+- Implementations of common data structures like AVL Trees, Binary Search Trees, Graphs, and more.
+- Various sorting algorithms including Bubble Sort, Quick Sort, Merge Sort, and others.
+- Test cases for each data structure and sorting algorithm to ensure correctness.
+- Easy-to-run test scripts for automated testing.
+
+## Directory Structure
 ```bash
 .
 │
@@ -134,8 +143,7 @@
 
 
 ```
-
-# Sorting Algorithms
+## Sorting Algorithms
 
 ## pre requirements for Sorting Algorithms test auto run
 
@@ -161,6 +169,12 @@ after you can run `test_runner.py` by
 #or 
 python test_runner.py
 ```
+You can choose from the following sorting algorithms to test:
+<p align="center">
+  <img src="https://github.com/Aram-Vn/Algorithms_and_Data_structures/assets/118690340/0b0b01bf-563d-4271-895d-c1557dc655d3" alt="Centered Image">
+</p>
+
+
 
 ## for manual testing
 
