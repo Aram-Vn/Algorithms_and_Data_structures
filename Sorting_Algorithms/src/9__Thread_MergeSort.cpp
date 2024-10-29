@@ -1,5 +1,6 @@
 #include "../include/Thread_MergeSort.h"
 
+// Merge two sorted halves
 void merge(std::vector<int>& arr, int left, int mid, int right)
 {
     int n1 = mid - left + 1;
@@ -15,32 +16,25 @@ void merge(std::vector<int>& arr, int left, int mid, int right)
     {
         if (arr[leftIdx] <= arr[rightIdx])
         {
-            merged.push_back(arr[leftIdx]);
-            leftIdx++;
+            merged.push_back(arr[leftIdx++]);
         }
         else
         {
-            merged.push_back(arr[rightIdx]);
-            rightIdx++;
+            merged.push_back(arr[rightIdx++]);
         }
     }
 
     while (leftIdx <= mid)
     {
-        merged.push_back(arr[leftIdx]);
-        leftIdx++;
+        merged.push_back(arr[leftIdx++]);
     }
 
     while (rightIdx <= right)
     {
-        merged.push_back(arr[rightIdx]);
-        rightIdx++;
+        merged.push_back(arr[rightIdx++]);
     }
 
-    for (int i = left; i <= right; i++)
-    {
-        arr[i] = merged[i - left];
-    }
+    std::move(merged.begin(), merged.end(), arr.begin() + left);
 }
 
 void mergeSort(std::vector<int>& arr, int left, int right, int depth)
