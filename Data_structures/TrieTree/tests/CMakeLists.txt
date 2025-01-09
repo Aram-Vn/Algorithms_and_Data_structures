@@ -54,7 +54,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 file(GLOB_RECURSE SRC_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 file(GLOB_RECURSE HDR_FILES "${CMAKE_SOURCE_DIR}/include/*.h")
 
-add_executable(TrieTree_test TrieTree_test.cpp)
+add_executable(TrieTree_test TrieTree_test.cpp ${SRC_FILES})
 
 target_include_directories(TrieTree_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(TrieTree_test ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
