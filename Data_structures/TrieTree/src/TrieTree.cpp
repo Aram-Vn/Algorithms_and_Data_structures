@@ -26,12 +26,13 @@ namespace my {
     }
 
     // Insert a word into the Trie
-    void Trie::insert(const std::string& word)
+    void Trie::insert(std::string_view word)
     {
         TrieNode* node = m_root;
+
         for (char ch : word)
         {
-            if (!node->children.count(ch))
+            if (!node->children.contains(ch))
             {
                 node->children[ch] = new TrieNode();
             }
@@ -41,20 +42,20 @@ namespace my {
     }
 
     // Search for a word in the Trie
-    bool Trie::search(const std::string& word) const
+    bool Trie::search(std::string_view word) const
     {
         TrieNode* node = find_node(word);
         return node != nullptr && node->is_end_of_word;
     }
 
     // Check if any word starts with the given prefix
-    bool Trie::starts_with(const std::string& prefix) const
+    bool Trie::starts_with(std::string_view prefix) const
     {
         return find_node(prefix) != nullptr;
     }
 
     // Remove a word from the Trie
-    void Trie::remove(const std::string& word)
+    void Trie::remove(std::string_view word)
     {
         remove_helper(m_root, word, 0);
     }
@@ -71,7 +72,9 @@ namespace my {
     void Trie::destroy_node(TrieNode* node)
     {
         if (!node)
+        {
             return;
+        }
 
         for (auto& [ch, child] : node->children)
         {
@@ -81,7 +84,7 @@ namespace my {
     }
 
     // Helper function to find the node corresponding to a given prefix
-    Trie::TrieNode* Trie::find_node(const std::string& prefix) const
+    Trie::TrieNode* Trie::find_node(std::string_view prefix) const
     {
         TrieNode* node = m_root;
         for (char ch : prefix)
@@ -109,21 +112,26 @@ namespace my {
     }
 
     // Helper function to remove a word from the Trie
-    bool Trie::remove_helper(TrieNode* node, const std::string& word, size_t depth)
+    bool Trie::remove_helper(TrieNode* node, std::string_view word, size_t depth)
     {
         if (!node)
+        {
             return false;
+        }
 
         if (depth == word.size())
         {
             if (!node->is_end_of_word)
+            {
                 return false;
+            }
+
             node->is_end_of_word = false;
             return node->children.empty();
         }
 
         char ch = word[depth];
-        if (!node->children.count(ch) || !remove_helper(node->children[ch], word, depth + 1))
+        if (!node->children.contains(ch) || !remove_helper(node->children[ch], word, ++depth))
         {
             return false;
         }

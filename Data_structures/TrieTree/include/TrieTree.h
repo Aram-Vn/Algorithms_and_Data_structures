@@ -29,16 +29,16 @@ namespace my {
         Trie(std::initializer_list<std::string> init_list);
 
     public:
-        void                     insert(const std::string& word);
-        bool                     search(const std::string& word) const;
-        bool                     starts_with(const std::string& prefix) const;
-        void                     remove(const std::string& word);
+        void                     insert(std::string_view word);
+        bool                     search(std::string_view word) const;
+        bool                     starts_with(std::string_view prefix) const;
+        void                     remove(std::string_view word);
         std::vector<std::string> get_all_words() const;
 
     private:
-        bool      remove_helper(TrieNode* node, const std::string& word, size_t depth);
+        bool      remove_helper(TrieNode* node, std::string_view, size_t depth);
         void      destroy_node(TrieNode* node);
-        TrieNode* find_node(const std::string& prefix) const;
+        TrieNode* find_node(std::string_view prefix) const;
         void get_words_from_node(TrieNode* node, std::string current_prefix, std::vector<std::string>& words) const;
 
     private:
