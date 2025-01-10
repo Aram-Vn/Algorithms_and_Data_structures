@@ -1,10 +1,12 @@
 
 #include "../include/TrieTree.h"
+#include <initializer_list>
 
 namespace my {
 
     // Constructor
     Trie::Trie()
+        : m_root(nullptr)
     {
         m_root = new TrieNode();
     }
@@ -13,6 +15,17 @@ namespace my {
     Trie::~Trie()
     {
         destroy_node(m_root);
+    }
+
+    Trie::Trie(std::initializer_list<std::string> init_list)
+        : m_root(nullptr)
+    {
+        m_root = new TrieNode();
+        
+        for (const auto& word : init_list)
+        {
+            this->insert(word);
+        }
     }
 
     // Insert a word into the Trie
@@ -62,6 +75,7 @@ namespace my {
     {
         if (!node)
             return;
+
         for (auto& [ch, child] : node->children)
         {
             destroy_node(child);

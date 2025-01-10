@@ -8,23 +8,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE SOURCE_FILES 
+file(GLOB_RECURSE SOURCE_FILES
     src/*.cpp
 )
 
-file(GLOB_RECURSE HEADER_FILES 
+file(GLOB_RECURSE HEADER_FILES
     include/*.h
 )
 
-add_executable(${TARGET_NAME} 
-    main.cpp  
-    ${SOURCE_FILES} 
+add_executable(${TARGET_NAME}
+    main.cpp
+    ${SOURCE_FILES}
     ${HEADER_FILES}
 )
 
 target_include_directories(${TARGET_NAME}
-    PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 include(CTest)
@@ -54,7 +54,8 @@ set(COMMON_ERROR_OPTIONS
 set(SANITIZER_FLAGS
     -fsanitize=undefined
     -fsanitize=address
-    # -fsanitize=thread 
+
+    # -fsanitize=thread
     -fsanitize=address
     -fno-omit-frame-pointer
 )
@@ -68,11 +69,11 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     ${SANITIZER_FLAGS}
 )
 
-#-----------------------------------------------------------------------#
-# if need to remove flags set lib as SYSTEM 
+# -----------------------------------------------------------------------#
+# if need to remove flags set lib as SYSTEM
 # to suppress warnings in external headers
-#-----------------------------------------------------------------------#
-# Remove -pedantic from the target’s options 
+# -----------------------------------------------------------------------#
+# Remove -pedantic from the target’s options
 # get_target_property(target_options ${TARGET_NAME} COMPILE_OPTIONS)
 # list(REMOVE_ITEM target_options "-pedantic")
 # set_property(TARGET ${TARGET_NAME} PROPERTY COMPILE_OPTIONS ${target_options})
@@ -90,4 +91,3 @@ if(NOT CMAKE_GENERATOR MATCHES "Visual Studio")
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
     )
 endif()
-        
