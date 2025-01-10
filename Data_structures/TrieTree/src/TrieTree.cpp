@@ -6,9 +6,8 @@ namespace my {
 
     // Constructor
     Trie::Trie()
-        : m_root(nullptr)
+        : m_root(new TrieNode())
     {
-        m_root = new TrieNode();
     }
 
     // Destructor
@@ -18,10 +17,8 @@ namespace my {
     }
 
     Trie::Trie(std::initializer_list<std::string> init_list)
-        : m_root(nullptr)
+        : Trie()
     {
-        m_root = new TrieNode();
-        
         for (const auto& word : init_list)
         {
             this->insert(word);
